@@ -1,0 +1,109 @@
+﻿@model IEnumerable<MyBank.Models.Item>
+
+<div 
+    class="dialogbody" 
+    categoryid="@ViewData["categoryid"]"
+    style="overflow: visible;"
+>
+    <p>
+    <a class="btn btn-success" onclick="ItemEditDialog(0, this)">@R.R.Add</a>
+    <a class="btn btn-info" onclick="ItemListRefresh(this)">@R.R.Refersh</a>
+        
+    <p></p>
+    @R.R.Filter (xxx,yy,z)
+    @Html.TextBox("Filter", null, new { onkeyup = "FilterItems($(this)[0].value)" })
+    <p></p>
+
+    <table class="table table-bordered" style="width: auto"><tbody>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Deleted)
+            </th>
+            <th>
+                @R.R.Merge
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        @Html.Partial("ItemListItem", item)
+    }
+
+    </tbody></table>
+
+    <div id="dlgMerge">
+        <a class="btn" onclick="Merge(this)">@R.R.Merge</a>
+        <p></p>
+        <div id="list">
+
+        </div>
+    </div>
+
+    <div id="mergeLine" class="hidden">
+        <div>
+            <input class="merge" name="mainmerge" type="radio" value="true"> 
+            <input class="merge" type="checkbox" value="true"> 
+            <span></span>
+        </div>
+    </div>
+</div>
+
+@*<script>
+        
+    function RefreshItemList() {
+        $("#dlgMerge > #list").html("");
+        LoadDiv('dItemList');
+    }
+
+    
+    function Merge() {
+        var list = [];
+        var main = "";
+        $("#dlgMerge > #list >").each(function () {
+            list.push($(this).attr("itemid"));
+            if ($(this)[0].children[0].checked)
+                main = $($(this)[0].children[0]).attr("itemid");;
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Content("~/References/ItemMerge")',
+            traditional: true,
+            data: {
+                main: main,
+                list: list
+            },
+            dataType: 'json',
+            success: function (data) {
+                RefreshItemList();
+            }
+        });
+    }
+
+    function ItemRefresh(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/ItemListItem")',
+            data: {
+                item: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $("[itemid^=" + data.id + "]").replaceWith(data.html);
+            },
+            error: function () {
+            }
+        });
+    }
+</script>*@

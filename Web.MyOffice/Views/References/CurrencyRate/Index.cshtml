@@ -1,0 +1,36 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.CurrencyRate>
+
+@{
+    ViewBag.Title = S.CurrencyRates;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.Row())
+{
+    using (Html.Col(9))
+    {
+        @Html.ActionLinkPrimary(S.Add, "Create", new { currencyId = ViewBag.currencyId });
+    }
+    using (Html.Col(3))
+    {
+        @Html.TextBoxFilter("Filter", new { @class = "focus" })
+    }
+}
+
+@Html.RowDivider(20)
+
+@Html.PartialBlock("data", "IndexList", Model)
+
+@using (Html.Row("data"))
+{
+    if (User.IsInRole("Devs"))
+    {
+        using (Html.Col(12))
+        {
+            @Html.ActionLinkPrimary("Сгененрировать 50", "Generate");
+        }
+    }
+}
+
+@Html.BackToIndex("Currency", null)

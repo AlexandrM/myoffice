@@ -1,0 +1,19 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.Member>
+
+@{
+    ViewBag.Title = S.Members;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.Row())
+{
+    using (Html.Col(9))
+    {
+        @Html.ActionLinkPrimary(S.Add, "Create");
+    }
+}
+
+@Html.RowDivider(20)
+
+@Html.PartialBlock("data", "IndexList", Model)

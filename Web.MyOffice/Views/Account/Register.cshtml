@@ -1,0 +1,42 @@
+﻿@using BotDetect.Web.Mvc;
+
+@model ASE.MVC.RegisterViewModel
+
+@{
+    ViewBag.Title = "Регистрация";
+}
+
+<link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl" rel="stylesheet" type="text/css" />
+
+<h2>@ViewBag.Title.</h2>
+
+<div class="row">
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal col-md-6", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h4>Новая учетная запись.</h4>
+        <hr />
+        @Html.ValidationSummary()
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label">Captcha</label>
+            <div class="col-md-8">
+                @{ MvcCaptcha captcha = new MvcCaptcha("RegisterCaptcha"); }
+                @Html.Captcha(captcha)
+                @Html.TextBox("CaptchaCode", "", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="Регистрация" />
+            </div>
+        </div>
+    }
+</div>

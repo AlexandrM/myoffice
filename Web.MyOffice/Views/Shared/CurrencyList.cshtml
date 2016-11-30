@@ -1,0 +1,25 @@
+﻿@{
+    Layout = null;
+}
+
+<div ng-controller="currencyCtrl">
+    <div class="form-inline">
+        <input class="focus pull-right clearable" placeholder="@S.Filter" type="text" ng-model="edFilter">
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>@S.Select</th>
+            <th>@S.Name</th>
+            <th>@S.ShortName</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="currency in currencies | filter:edFilter">
+            <td>
+                <button class="btn btn-primary glyphicon glyphicon-ok" ng-click="currencySelect(currency)"></button>
+            </td>
+            <td>{{currency.Name}}</td>
+            <td>{{currency.ShortName}}</td>
+            <td></td>
+        </tr>
+    </table>
+</div>

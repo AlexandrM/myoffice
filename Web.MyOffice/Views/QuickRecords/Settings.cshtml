@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = S.Settings;
+}
+
+@Styles.Render("~/Content/tree")
+@Scripts.Render("~/bundles/tree")
+
+
+<h2>@S.Settings</h2>
+
+<button class="btn btn-success" onclick="AddCaregory('')">@S.Add</button>
+
+<div id="html" class="ase-html">
+    @Html.Partial("SettingsTree")
+</div>
+
+<script>
+    $(function () {
+        $('.dd').nestable({ });
+    });
+
+    function AddCaregory(parent) {
+        bootbox.prompt('@S.NewCategory', function (result) {
+            if (result === null) {
+            } else {
+                ASE.PostState("AddCaregory", "QuickRecords", { category: result, parent: parent },
+                    { 
+                        onsuccess: function() {
+                            $('.dd').nestable({ })
+                        }
+                    })
+            }
+        });
+    }
+
+    function RemoveCaregory(name, category) {
+        bootbox.confirm('@S.ConfirmDelete: ' + name + "?", function (result) {
+            if (result)
+                ASE.PostState("RemoveCategory", "QuickRecords", { category: category },
+                    {
+                        onsuccess: function () {
+                            $('.dd').nestable({})
+                        }
+                    })
+        });
+    }
+</script>

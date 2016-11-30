@@ -1,0 +1,190 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="exportable" ng-controller="memberMotionsCtrl" ng-init="refresh()">
+
+    <div class="row">
+        <div class="col-md-9">
+            <h2>
+                <a class="btn btn-default" ng-href="#/project">@S.Projects</a>
+
+                <b>
+                    @S.Motions -
+                </b>
+                @S.Project:
+                <a class="" role="button" data-toggle="collapse" href="" data-target="#details" aria-expanded="false" aria-controls="details">
+                    {{project.Name}}
+                </a>
+                <a class="btn btn-primary" ng-if="project.IsMy" ng-href="#/project/{{project.Id}}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-primary" ng-href="#/finance/{{project.Id}}"><span class="glyphicon glyphicon-euro"></span></a>
+                <a class="btn btn-primary" ng-click="toPDF()"><span class="glyphicon glyphicon-save"></span></a>
+            </h2>
+        </div>
+        <div class="col-md-3 text-right">
+            <a class="btn btn-warning" ng-if="project.IsMy" ng-href="#/memberdayreport/0/{{project.Id}}/{{project.CurrencyId}}">@S.DayReport</a>
+            <a class="btn btn-success" ng-if="project.IsMy" ng-href="#/memberpayment/0/{{project.Id}}/{{project.CurrencyId}}">@S.Payment</a>
+        </div>
+    </div>
+
+    <div class="collapse" id="details">
+        <div class="well">
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.State</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.StateS}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Date</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.DateTime | amDateFormat:'L LT'}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Description</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.Description}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Author</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.AuthorFullName}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Members</p>
+                </div>
+                <div class="col-md-9">
+                    <div ng-repeat="member in project.Members | filter:edFilter">
+                        <p title="{{member.Member.Email}}">{{member.Member.FullName}}<b> ({{member.MemberTypeS}})</b></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-inline">
+        <div class="form-group">
+            <label class="padr10 " for="">@S.Period @S.DateFrom</label>
+            <input class="form-control datepicker" type="text" ng-model="edDateFrom">
+        </div>
+        <div class="form-group">
+            <label class="padr10 " for="">@S.DateTo</label>
+            <input class="form-control datepicker" type="text" id="DateTo" name="DateTo" ng-model="edDateTo" value="">
+        </div>
+        <button class="btn btn-primary" ng-click="refresh()">@S.Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+
+        <input class="focus pull-right clearable" placeholder="@S.Filter" type="text" ng-model="edFilter">
+    </div>
+
+    <table class="table table-striped">
+        <tr class="warning">
+            <td><b>@S.OnDate:</b></td>
+            <td><b>{{edDateFrom}}</b></td>
+            <td><b>{{project.DebtStart | number:2}}</b></td>
+            <td><b>{{currencyById(project.Currency.CurrencyType).ShortName}}</b></td>
+            <td></td>
+            <td></td>
+            <td class="notPrintable"><b>{{project.DebtStart * currencyById(project.Currency.CurrencyType).Rate.Value | number:2}}</b></td>
+            <td class="notPrintable"><b>{{myCurrency().ShortName}}</b></td>
+            <td class="notPrintable" width="250px"></td>
+        </tr>
+        <tr>
+            <th>
+                <div>@S.Date</div>
+                <div>@S.Time</div>
+            </th>
+            <th>@S.Description</th>
+            <th>@S.Work</th>
+            <th>@S.Summ</th>
+            <th>@S.Payments</th>
+            <th>
+                @S.Currency
+            </th>
+            <th class="notPrintable">
+                @S.Total {{myCurrency().ShortName}} +
+            </th>
+            <th class="notPrintable">
+                @S.Total {{myCurrency().ShortName}} -
+            </th>
+            <th class="notPrintable">
+            </th>
+        </tr>
+        <tr ng-repeat="motion in project.Motions | orderBy:'DateTime':false" ng-class="{true:  'success', false: ''}[motion.Value === undefined]">
+            <td>
+                <div>{{motion.DateTime | amDateFormat:'L'}}</div>
+                <div ng-if="motion.Value !== undefined">{{motion.DateTime | amDateFormat:'LT'}}</div>
+            </td>
+            <td>{{motion.Description}}</td>
+            <td>
+                <span ng-if="motion.Value !== undefined">{{motion.Amount}} ({{motion.RateTypeS}})</span>
+            </td>
+            <td>
+                <span ng-if="motion.Value !== undefined">{{motion.Amount * motion.Value | number:2}}</span>
+            </td>
+            <td>
+                <span ng-if="motion.Value === undefined">{{motion.Amount  | number:2}}</span>
+            </td>
+            <td>
+                {{currencyById(project.RateCurrencyType).ShortName}}
+            </td>
+            <td class="notPrintable">
+                <span ng-if="motion.Value !== undefined">
+                    <i>{{motion.Amount * motion.Value * currencyById(project.RateCurrencyType).Value | number:2}}</i>
+                </span>
+            </td>
+            <td class="notPrintable">
+                <span ng-if="motion.Value === undefined">
+                    <i>{{motion.Amount * currencyById(project.RateCurrencyType).Value | number:2}}</i>
+                </span>
+            </td>
+            <th class="notPrintable">
+                <a class="btn btn-warning" ng-if="motion.UserId == project.UserId && motion.Value !== undefined" ng-href="#/memberdayreport/{{motion.Id}}/{{project.Id}}/{{project.CurrencyId}}">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+                <a class="btn btn-warning" ng-if="motion.UserId == project.UserId && motion.Value === undefined" ng-href="#/memberpayment/{{motion.Id}}/{{project.Id}}/{{project.CurrencyId}}">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+                <button class="btn btn-danger" ng-if="motion.UserId == project.UserId && motion.Value !== undefined" ng-click="delete(motion, 1)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button class="btn btn-danger" ng-if="motion.UserId == project.UserId && motion.Value === undefined" ng-click="delete(motion, 2)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </th>
+        </tr>
+        <tr class="info">
+            <td><b>@S.Total</b></td>
+            <td></td>
+            <td></td>
+            <td><b>+{{getTotal(true) | number:2}}</b></td>
+            <td><b>-{{getTotal(false) | number:2}}</b></td>
+            <td>{{currencyById(project.CurrencyId).ShortName}}</td>
+            <td class="notPrintable"><b>+{{getTotal(true) * currencyById(project.Currency.CurrencyType).Rate.Value | number:2}}</b></td>
+            <td class="notPrintable"><b>-{{getTotal(false) * currencyById(project.Currency.CurrencyType).Rate.Value | number:2}}</b></td>
+            <td class="notPrintable"><b>{{myCurrency().ShortName}}</b></td>
+        </tr>
+        <tr class="warning">
+            <td><b>@S.OnDate:</b></td>
+            <td><b>{{edDateTo}}</b></td>
+            <td><b>{{project.DebtEnd | number:2}}</b></td>
+            <td><b>{{currencyById(project.CurrencyId).ShortName}}</b></td>
+            <td></td>
+            <td></td>
+            <td class="notPrintable"></td>
+            <td class="notPrintable"><b>{{project.DebtEnd * currencyById(project.Currency.CurrencyType).Rate.Value | number:2}}</b></td>
+            <td class="notPrintable"><b>{{myCurrency().ShortName}}</b></td>
+        </tr>
+        </table>
+</div>

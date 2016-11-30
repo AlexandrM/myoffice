@@ -1,0 +1,26 @@
+﻿
+@helper RenderTree(Guid? parent){
+
+    DB db = new DB();
+
+    foreach (var item in db.QuickRecordCategories.Where(x => x.UserId == UserId & x.ParentId == parent).OrderBy(x => x.Name).ToList())
+    {
+        <li class="dd-item" data-id="@item.Id">
+            <div class="dd-handle">
+                @item.Name
+                <button class="glyphicon glyphicon-minus allowclick" style="float: right;" onclick="RemoveCaregory('@item.Name', '@item.Id')"></button>
+                <button class="glyphicon glyphicon-plus allowclick" style="float: right;" onclick="AddCaregory('@item.Id')"></button>
+            </div>
+        </li>            
+            
+        <ol class="dd-list">
+            @RenderTree(item.Id)
+        </ol>
+    }
+}
+
+<div class="dd mtop15">
+    <ol class="dd-list">
+        @RenderTree(null)
+    </ol>
+</div>

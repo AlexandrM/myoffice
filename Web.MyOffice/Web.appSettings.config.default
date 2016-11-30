@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appSettings>
+  <add key="webpages:Version" value="3.0.0.0" />
+  <add key="webpages:Enabled" value="false" />
+  <add key="ClientValidationEnabled" value="true" />
+  <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+
+  <add key="ASE.AllowRegistration" value="true" />
+  <add key="ASE.SiteName" value="office.ase.com.ua" />
+
+  <add key="Microsoft.Auth.ClientId" value="" />
+  <add key="Microsoft.Auth.ClientSecret" value="" />
+
+  <add key="Twitter.Auth.ConsumerKey" value="" />
+  <add key="Twitter.Auth.ConsumerSecret" value="" />
+
+  <add key="Facebook.Auth.AppId" value="" />
+  <add key="Facebook.Auth.AppSecret" value="" />
+
+  <add key="Google.Auth.ClientId" value="" />
+  <add key="Google.Auth.ClientSecret" value="" />
+</appSettings>

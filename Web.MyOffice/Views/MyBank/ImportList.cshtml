@@ -1,0 +1,64 @@
+﻿@model List<Record>
+
+<table class="table table-striped">
+    <tr>
+        <th>@R.R.Sum</th>
+        <th>@R.R.Name</th>
+        <th>@R.R.DateTime</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Sum</td>
+            <td>@item.Name</td>
+            <td>@item.DateTime</td>
+            <td>
+                <button class="btn btn-success" onclick="DoImportMotion('@ViewBag.AccountId', '@item.Name', @item.Sum.ToString("0.00").Replace(",", "."), '@item.DateTime')">@R.R.Import</button>
+                <button class="btn btn-danger" onclick="DeleteImportMotion('@ViewBag.AccountId', '@item.Id', '@item.Name @item.DateTime')">@R.R.Delete</button>
+            </td>
+        </tr>
+    }
+</table>           
+
+<script>
+    function DoImportMotion(accountId, name, sum, dt) {
+        $("#ImportDialog").modal('hide');
+        var tr = $("tr[accountid='" + accountId + "']");
+        $(tr).find(".edMotionDT").val(dt);
+        $(tr).find(".edMotionItem").val(name);
+        $(tr).find(".edMotionNote").val(name);
+        $(tr).find(".edMotionDT").attr("usethis", "true");
+        if (sum < 0) {
+            $(tr).find(".edMotionSumM").val(sum * -1);
+        }
+        else {
+            $(tr).find(".edMotionSumP").val(sum);
+        }
+    }
+
+    function DeleteImportMotion(accountId, id, text) {
+        bootbox.confirm('@R.R.ConfirmDelete' + text, function (r) {
+            if (r) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Content("~/MyBank/DeleteImport")',
+                    data: {
+                        accountId: accountId,
+                        id: id
+                    },
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+                    },
+                    success: function (data) {
+                        $('#ImportDialog').find(".modal-body").html(data.html);
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        });
+    }
+</script>

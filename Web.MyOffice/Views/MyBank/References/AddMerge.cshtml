@@ -1,0 +1,16 @@
+﻿@model Item
+
+<tr class=@("MergeItem_" + Model.Id)>
+    <td style="max-width: 50px">
+        @Html.RadioButton("leave", Model.Id, true, new { name = "Leave"})
+    </td>
+    <td>
+        @Model.Id
+        <input type="hidden" name="items" value="@Model.Id" />
+    </td>
+    <td>@Model.Name</td>
+    <td>@Model.Category.Name</td>
+    <td>
+        <button class="btn btn-warning" onclick="$(this).parent().parent().remove();; return false;">@R.R.Delete</button>
+    </td>
+</tr>

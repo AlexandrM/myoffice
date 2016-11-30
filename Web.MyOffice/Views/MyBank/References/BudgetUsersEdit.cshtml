@@ -1,0 +1,19 @@
+﻿@model MyBank.Models.Budget
+
+<div id="CategoryItemEdit">
+    @using (Html.BeginForm("BudgetUserEdit", "References", FormMethod.Post, new { role = "form" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">@R.R.Edit</h4>
+        </div>
+        
+        <div class="modal-body">
+            @Html.Partial("BudgetUsersEditList", Model)
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
+        </div>
+    }
+</div>

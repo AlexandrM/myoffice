@@ -1,0 +1,17 @@
+﻿<link href="@Url.Content("~/Content/bootstrap/css/bootstrap-cosmo.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/bootstrap/css/bootstrap-select.css")" rel="stylesheet" />
+<style>
+    body {
+        margin-left: 25px;
+    }
+</style>
+
+<body>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - @S.AppName @@ ase.com.ua</p>
+        </footer>
+    </div>
+</body>

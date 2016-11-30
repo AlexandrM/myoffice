@@ -1,0 +1,44 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.Currency>
+
+@{
+    ViewBag.Title = S.Currencies;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.Row())
+{
+    using (Html.Col(9))
+    {
+        @Html.ActionLinkPrimary(S.Add, "Create");
+    }
+    <div class="col-sm-3">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                @S.ImportRates
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("ImportRates", new { mode = 1 })">@S.ImportRatesPrivatbank1</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("ImportRates", new { mode = 2 })">@S.ImportRatesPrivatbank2</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("ImportRates", new { mode = 3 })">@S.ImportRatesNBU</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("ImportRates", new { mode = 4 })">@S.ImportRatesCBR</a></li>
+            </ul>
+        </div>
+    </div>
+}
+
+@Html.RowDivider(20)
+
+@Html.PartialBlock("data", "IndexList", Model)
+
+@using (Html.Row("data"))
+{
+    if (User.IsInRole("Devs"))
+    {
+        using (Html.Col(12))
+        {
+            @Html.ActionLinkPrimary("Сгененрировать 50", "Generate");
+        }
+    }
+}

@@ -1,0 +1,128 @@
+﻿@{
+    Layout = null;
+}
+
+<div ng-init="refreshTasks()">
+    <div class="row">
+        <div class="col-md-9">
+            <h2>
+                <a class="btn btn-default" ng-href="#/project">@S.Projects</a>
+
+                <b>
+                    @S.Tasks -
+                </b>
+                @S.Project:
+                <a class="" role="button" data-toggle="collapse" href="" data-target="#details" aria-expanded="false" aria-controls="details">
+                    {{project.Name}}
+                </a>
+                <a class="btn btn-primary" ng-if="project.IsMy" ng-href="#/project/{{project.Id}}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-primary" ng-href="#/finance/{{project.Id}}"><span class="glyphicon glyphicon-euro"></span></a>
+            </h2>
+        </div>
+        <div class="col-md-3 text-right">
+            <a class="btn btn-primary" ng-href="#/projectTask/@Guid.Empty/{{project.Id}}">@S.AddTask</a>
+        </div>
+    </div>
+
+    <div class="collapse" id="details">
+        <div class="well">
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.State</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.StateS}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Date</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.DateTime | amDateFormat:'L LT'}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Description</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.Description}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Author</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.Author.FullName}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Members</p>
+                </div>
+                <div class="col-md-9">
+                    <div ng-repeat="member in project.Members | filter:edFilter">
+                        <p title="{{member.Member.Email}}">{{member.Member.FullName}}<b> ({{member.MemberTypeS}})</b></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <hr />
+
+    <input type="hidden" id="ProjectId" ng-model="project.Id" />
+
+    <div class="form-inline">
+        <div class="form-group">
+            <label class="padr10 " for="">@S.Period @S.DateFrom</label>
+            <input class="form-control datepicker" type="text" ng-model="edDateFrom">
+        </div>
+        <div class="form-group">
+            <label class="padr10 " for="">@S.DateTo</label>
+            <input class="form-control datepicker" type="text" id="DateTo" name="DateTo" ng-model="edDateTo" value="">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="checkbox" ng-model="notAccepted" value="">
+            <label class="padr10 " for="">@S.NotAccepted</label>
+        </div>
+        <button class="btn btn-primary" ng-click="refreshTasks()">@S.Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+
+        <input class="focus pull-right clearable" placeholder="@S.Filter" type="text" ng-model="edFilter">
+    </div>
+    <hr />
+
+    <table class="table table-striped">
+        <tr class="">
+            <th>@S.State</th>
+            <th>@S.Name</th>
+            <th>@S.Description</th>
+            <th>@S.DateTime</th>
+            <th>@S.Limitation</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="projectTask in projectTasks | filter:edFilter">
+            <td>
+                <b ng-class="{0:  'text-muted', '1': 'text-primary', 2: 'text-info', 3: 'text-success'}[projectTask.State]">
+                    {{projectTask.StateS}}
+                </b>
+            </td>
+            <td><b><a ng-href="#/projectTask/{{projectTask.Id}}/{{project.Id}}">{{projectTask.Name}}</a></b></td>
+            <td title="{{projectTask.Description}}">{{projectTask.Description | limitTo : 35}}</td>
+            <td>{{projectTask.DateTime | amDateFormat:'L'}}</td>
+            <td ng-class="{0: '', 1: 'warning', 2: 'danger'}[projectTask.Expired]">{{projectTask.Limitation  | amDateFormat:'L'}}</td>
+            <td>
+                <a ng-if="projectTask.State != 2 && projectTask.IsMy" class="btn btn-primary" ng-click="addDate(projectTask, 1)">+1</a>
+                <a ng-if="projectTask.State != 2 && projectTask.IsMy" class="btn btn-primary" ng-click="addDate(projectTask, 3)">+3</a>
+                <a ng-if="projectTask.State == 2 && projectTask.CanApprove" class="btn btn-success" ng-click="setState(projectTask, 3)">@S.Approve</a>
+            </td>
+            <td class="def">
+                <a ng-if="projectTask.IsMy" class="btn btn-danger" ng-click="deleteTask(projectTask)">@S.Delete</a>
+            </td>
+        </tr>
+    </table>
+</div>

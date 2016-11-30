@@ -1,0 +1,61 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.Member>
+
+@Html.TextBoxFilter("Filter", new { @class = "focus" })
+
+@using (Html.TableStripped(Model))
+{
+    <tr>
+        @if (this.IsSelect)
+        {
+            <th>
+                Выбрать
+            </th>
+        }
+        <th>
+            @Html.DisplayNameFor(model => model[0].FullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].MiddleName)
+        </th>
+        <th>
+        </th>
+    </tr>
+
+    foreach (var item in Model)
+    {
+        <tr class="@(item.Id == UserId ? "success" : "")">
+            @if (this.IsSelect)
+            {
+                <td>
+                    @Html.ButtonPrimarySelect(this.SelectResultField, item.SelectResult())
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(x => item.FullName)
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink(item.Email, "Edit", new { id = item.Id })
+                </b>
+            </td>
+            <td>
+                @Html.DisplayFor(x => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(x => item.MiddleName)
+            </td>
+            <td>
+                @if ((!this.IsSelect) & (item.Id != UserId))
+                {
+                    @Html.ActionLinkDanger(S.Delete, "Delete", new { item.Id }, String.Format("{0}: {1}", S.Delete, item.FullName))
+                }
+            </td>
+        </tr>
+    }
+}

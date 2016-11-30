@@ -1,0 +1,142 @@
+﻿@model IEnumerable<MyBank.Models.CategoryItem>
+
+<div id="CategoryItemList">
+    <p>
+    <a class="btn btn-success" onclick="CategoryItemEditDialog(0)">@R.R.Add</a>
+    </p>
+    <table class="table table-bordered" style="width: auto"><tbody>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Internal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr categoryitemid="@item.Id">
+            <td>
+                @(item.Internal ? R.R.Yes : "")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn" onclick="ItemList({ categoryid: @item.Id })">@R.R.Items</a>
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>                    
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" tabindex="-1" onclick="CategoryItemEditDialog(@item.Id)">@R.R.Edit</a>
+                        </li>
+                        @if (!item.Internal)
+                        {
+                            <li>
+                                <a href="#" tabindex="-1" class="" onclick="CategoryItemSetInternal(@item.Id, true)">@R.R.SetInternal</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="#" tabindex="-1" class="" onclick="CategoryItemSetInternal(@item.Id, false)">@R.R.UnSetInternal</a>
+                            </li>
+                        }
+                        @if(item.Items.Count == 0)
+                        {
+                            <li>
+                                <a href="#" tabindex="-1" class="label-warning" onclick="CategoryItemDelete(@item.Id)">@R.R.Delete</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+
+    </tbody></table>
+</div>
+<br />
+<br />
+<br />
+<br />
+
+<script>
+    function CategoryItemEditDialog(id) {
+        $('#Dialog').html('');
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CategoryItemEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').html(data.html);
+                $('#Dialog').dialog({
+                    height: 'auto',
+                    width: 'auto',
+                    modal: true,
+                    title: "Валюта",
+                    buttons: {},
+                    close: function (event, ui) {
+                        LoadDiv("dCategoryItemList");
+                    }
+                });
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CategoryItemDelete(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CategoryItemDelete")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                if (data.error != '')
+                    alert(data.error);
+
+                LoadDiv("dCategoryItemList");
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CategoryItemSetInternal(id, set) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CategoryItemSetInternal")',
+        data: {
+            id: id,
+            set: set
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.error != '')
+                alert(data.error);
+
+            LoadDiv("dCategoryItemList");
+        }
+    });
+}
+</script>

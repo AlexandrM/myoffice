@@ -1,0 +1,115 @@
+﻿@model List<MyBank.Models.CurrencyRate>
+
+<div class="row">
+    @Html.ActionLink(R.R.BackToCurrencies, "Currencies")
+</div>
+
+<div class="row">
+    <h2>@R.R.CurrencyRates: @ViewBag.Currency.Name</h2>
+</div>
+
+<div class="CurrencyRates row">
+    @using (Html.BeginForm("CurrencyRates", "References", FormMethod.Post, new { role = "form" }))
+    {
+        <div>
+            <a class="btn btn-success" onclick="CurrencyRateEditDialog(0, @ViewBag.Currency.Id)">@R.R.Add</a>        
+        </div>
+        <br />
+        
+        <table class="table table-bordered" style="width: 100%"><tbody>
+            <tr>
+                <th>
+                    @R.R.DateTime
+                </th>
+                <th>
+                    @R.R.Rate
+                </th>
+                <th>
+                    @R.R.Multiplicity
+                </th>
+                <th>
+                    @R.R.Actions
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.DateTime.ToShortDateString()
+                    </td>
+                    <td>
+                        @item.Rate
+                    </td>
+                    <td>
+                        @item.Multiplicity
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-primary" onclick="CurrencyRateEditDialog(@item.Id, @ViewBag.Currency.Id)">@R.R.Edit</a>
+                        <a chref="#" class="btn btn-danger" onclick="CurrencyRateDelete(@item.Id)">@R.R.Delete</a>
+                    </td>
+                </tr>
+            }
+        <tbody></table>
+    }  
+</div>
+
+<div class="modal" id="Dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<style>
+    .datepicker
+    {
+        z-index: 10000 !important;
+    }
+</style>
+
+<script>
+    function CurrencyRateEditDialog(id, currencyid) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CurrencyRateEdit")',
+            data: {
+                id: id,
+                currencyid: currencyid
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $("#Dialog").find("#DateTime").datepicker();
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CurrencyRateDelete(id, name) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.post('@Url.Content("~/References/CurrencyDelete")', { id: id }, function (data) {
+                            window.location = '@Url.Action("Currencies", "References")';
+                        });
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+</script>

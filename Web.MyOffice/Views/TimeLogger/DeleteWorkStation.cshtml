@@ -1,0 +1,11 @@
+﻿@model TimeLoggerSettingWorkStation
+
+@{
+    ViewBag.Title = S.Delete;
+}
+
+<h2>@String.Format(S.QDeleteTimeLoggerSettingWorkStation, Model.Name)</h2>
+
+@Html.ActionLink(S.Delete, "DeleteWorkstation", "TimeLogger", new { id = Model.Id, delete = true }, new { @class = "btn btn-danger" })
+@Html.ActionLink(S.Cancel, "Settings", "TimeLogger", null, new { @class = "btn btn-primary" })
+

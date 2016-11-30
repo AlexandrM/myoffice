@@ -1,0 +1,387 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.table {
+    margin-top: 15px;
+}
+
+.loading-indicator {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.panel-group {
+    margin-top: 15px;
+}
+
+.mtop15 {
+    margin-top: 15px;
+}
+.input-fullwidth {
+  display: block !important;
+  width: 100% !important;
+  min-height: 28px !important;
+  box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle !important;
+}
+
+.clearable{
+  background: #fff url(data:image/gif;base64,R0lGODlhBwAHAIAAAP///5KSkiH5BAAAAAAALAAAAAAHAAcAAAIMTICmsGrIXnLxuDMLADs=) no-repeat right -10px center;
+  border: 1px solid #999;
+  padding: 3px 18px 3px 4px; /* Use the same right padding (18) in jQ! */
+  transition: background 0.4s;
+  height: 43px;
+}
+.clearable.x  { background-position: right 5px center; }
+.clearable.onX { cursor: pointer; }
+
+.datepicker, .datetimepicker {
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+}
+
+.padr10 {
+    padding-right: 10px;
+}
+
+.padl10 {
+    padding-left: 10px;
+}
+
+.modal-body {
+    overflow: auto;
+}
+
+.TableRowDescription {
+    font-size: small;
+    font-style: italic;
+}
+
+.table tr.TableRowDescription td {
+    border-top: 0px;
+    padding: 0px;
+}
+
+.table > thead > tr > td.success,
+.table > tbody > tr > td.success,
+.table > tfoot > tr > td.success,
+.table > thead > tr > th.success,
+.table > tbody > tr > th.success,
+.table > tfoot > tr > th.success,
+.table > thead > tr.success > td,
+.table > tbody > tr.success > td,
+.table > tfoot > tr.success > td,
+.table > thead > tr.success > th,
+.table > tbody > tr.success > th,
+.table > tfoot > tr.success > th {
+  background-color: #3fb618;
+}
+
+table a.btn, .table a.btn {
+    text-decoration: none !important;
+}
+
+.accountName
+{
+	color: #3399FF;
+}
+
+.accountRest
+{
+	color: #3333CC;
+}
+
+a.cssbutton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+	background-color:#79bbff;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #528ecc;
+}.cssbutton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+	background-color:#378de5;
+    cursor: pointer;
+}.cssbutton:focus
+{
+    background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+    border: 1px dashed #0000FF;
+    background: -moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+    background-color: #378de5;
+    cursor: pointer;
+}.cssbutton:active {
+	position:relative;
+	top:1px;
+}
+
+ a.cssbutton_red {
+	-moz-box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+	box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fc8d83), color-stop(1, #e4685d) );
+	background:-moz-linear-gradient( center top, #fc8d83 5%, #e4685d 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fc8d83', endColorstr='#e4685d');
+	background-color:#fc8d83;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #d83526;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #b23e35;
+}.cssbutton_red:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e4685d), color-stop(1, #fc8d83) );
+	background:-moz-linear-gradient( center top, #e4685d 5%, #fc8d83 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e4685d', endColorstr='#fc8d83');
+	background-color:#e4685d;
+    cursor: pointer;
+}.cssbutton_red:focus
+{
+    background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e4685d), color-stop(1, #fc8d83) );
+    border: 1px dashed #FF0000;
+    background: -moz-linear-gradient( center top, #e4685d 5%, #fc8d83 100% );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e4685d', endColorstr='#fc8d83');
+    background-color: #e4685d;
+    cursor: pointer;
+}.cssbutton_red:active {
+	position:relative;
+	top:1px;
+}
+
+input[type="text"][mode="noborder"]
+{
+    border: 0px solid #66CCFF;
+    font-weight: normal;
+    font-weight: bold;
+}
+
+input[type="text"][mode="noborder"][color="red"]
+{
+    border: 0px solid #66CCFF;
+    font-weight: bold;
+    color: #FF0000;
+}
+
+input[type="text"][mode="noborder"]:focus,
+input[type="text"][mode="noborder"]:hover,
+input[type="text"][mode="noborder"][color="red"]:focus,
+input[type="text"][mode="noborder"][color="red"]:hover
+{
+    border: 1px solid #66CCFF;
+    font-weight: bold;
+}
+
+input[type="text"]:focus,
+input[type="text"]:hover,
+input[type="text"][color="red"]:focus,
+input[type="text"][color="red"]:hover
+{
+    border: 1px solid #66CCFF;
+    font-weight: normal;
+}
+
+.italic_nb_grey
+{
+    font-style: italic;
+    font-weight: normal;
+    color: #C0C0C0;
+}
+
+.btnAction:focus
+{
+    border: 1px dashed #0000FF;
+}
+
+img:focus
+{
+    border: 1px dashed #0000FF;
+}
+img:hover
+{
+    border: 1px dashed #0000FF;
+}
+
+.noborder
+{
+    border: none;
+}
+
+.inline
+{
+    display: inline;
+}
+
+.message_ok
+{
+    color: #008000;
+}
+
+.text_right
+{
+    text-align: right;
+}
+
+.hidden
+{
+    display: none;
+}
+
+.red
+{
+    color: #FF0000;
+}
+
+.green
+{
+    color: #008000;
+}
+
+.ui-dialog .ui-dialog-content
+{
+    overflow: hidden;
+}
+
+.typeahead a {
+    color: black !important;
+    text-decoration: none !important;
+}
+
+.menu .header
+{
+    background-color: #ECFFFF;
+    font-size: large;
+    font-weight: bold;
+    margin: 2px;
+}
+
+.menu .accordion-heading {
+    position: relative; 
+
+}
+
+.menu .accordion-heading .edit {
+      position: absolute;
+      top: 8px;
+      right: 30px; 
+
+}
+
+.menu .area
+{
+    /*border-left: 4px solid #f38787;*/
+    padding: 2px;
+    border-bottom: 2px solid #f38787;
+    border-bottom-color: #66CCFF;
+}
+
+.menu .equipamento {
+    border-left: 4px solid #65c465; 
+
+}
+
+.menu .ponto {
+    border-left: 4px solid #98b3fa; 
+
+}
+
+.menu .collapse.in {
+    overflow: visible; 
+}
+
+.form-control {
+    padding: 10px 18px !important; 
+}
+
+/* bootstrap full-size dialog */
+
+.modal-dialog-fs {
+    width: 80% !important;
+    overflow-y: initial !important;
+}
+
+.modal-dialog-bootbox > .modal-dialog {
+    width: 80% !important;
+    overflow-y: initial !important;
+}
+
+.modal-body-fs {
+    max-height: calc(100vh - 230px);
+    overflow-y: auto;
+}
+
+.modal-dialog-bootbox > .modal-dialog > .modal-content > .modal-body {
+    max-height: calc(100vh - 230px);
+    overflow-y: auto;
+}
+
+.w100 {
+    width: 100%;
+}

@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = @S.AppName;
+}
+
+<div class="jumbotron">
+    <h1>@S.AppName</h1>
+    <p class="lead"></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>@S.ForFreelancer</h2>
+        <li>@S.ForFreelancer1</li>
+        <p></p>
+        <li>@S.ForFreelancer2</li>
+        <p></p>
+        <li>@S.ForFreelancer3</li>
+        <p></p>
+        <li>@S.ForFreelancer4</li>
+        <p></p>
+        <p><a class="btn btn-default" href="@Url.Action("ForFreelancer")">@S.MoveTo &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>@S.Finance</h2>
+        <li>@S.Finance1</li>
+        <p></p>
+        <li>@S.Finance2</li>
+        <p></p>
+        <p><a class="btn btn-default" href="@Url.Action("Finance")">@S.MoveTo &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>@S.ForCustomer</h2>
+        <li>@S.ForCustomer1</li>
+        <p></p>
+        <li>@S.ForCustomer2</li>
+        <p></p>
+        <p><a class="btn btn-default" href="@Url.Action("ForCustomer")">@S.MoveTo &raquo;</a></p>
+    </div>
+</div>

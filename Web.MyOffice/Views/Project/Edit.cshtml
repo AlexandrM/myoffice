@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="form-horizontal container" ng-init="get()">
+    <h2>@S.Edit: {{project.Name}}</h2><hr>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="State">@S.State</label>
+            <div class="col-md-4">
+                @Html.DropDownList("StateType", new Project().State.ToSelectListIntId(), new { @class = "form-control", ng_model = "project.State", convert_to_number = "", ng_disabled = "!project.IsMy" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2">@S.Name</label>
+            <div class="col-md-4">
+                <input class="form-control required text-box single-line" ng-model="project.Name" ng-disabled="!project.IsMy">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2">@S.Date</label>
+            <div class="col-md-4">
+                <input class="form-control required text-box single-line" ng-model="project.DateTime" mo-date-input="L" ng-disabled="!project.IsMy">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2">@S.Rate</label>
+            <div class="col-md-4">
+                <input class="form-control required text-box single-line" ng-model="project.RateValue" ng-disabled="!project.IsMy">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="State">@S.Currency</label>
+            <div class="col-md-4">
+                @Html.DropDownList("RateCurrencyType", new Project().RateCurrencyType.ToSelectListIntId(), new { @class = "form-control", ng_model = "project.RateCurrencyType", convert_to_number = "", ng_disabled = "!project.IsMy" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="State">@S.Type</label>
+            <div class="col-md-4">
+                @Html.DropDownList("RateType", new Project().RateType.ToSelectListIntId(), new { @class = "form-control", ng_model = "project.RateType", convert_to_number = "", ng_disabled = "!project.IsMy" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2">@S.Description</label>
+            <div class="col-md-4">
+                <textarea class="form-control text-box multi-line" style="height: 150px;" ng-model="project.Description" ng-disabled="!project.IsMy"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" ng-show="project.IsMy">
+        <div class="col-md-offset-2 col-md-10">
+            <button class="btn btn-primary" ng-click="save()">@S.Save</button>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-default" ng-href="#/project">@S.Projects</a>
+    <a class="btn btn-success" ng-href="#/project/members/{{project.Id}}">@S.Members</a>
+</div>

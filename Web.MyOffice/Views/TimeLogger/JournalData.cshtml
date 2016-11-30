@@ -1,0 +1,44 @@
+﻿@model List<Web.MyOffice.Controllers.TimeLoggerController.LogItemData>
+
+@{
+    ViewBag.Title = S.Journal;
+}
+
+@functions 
+{
+    public string Time(int seconds)
+    {
+        int h = seconds / 60 / 60;
+        seconds = seconds - (h * 60 * 60);
+        
+        int m = seconds / 60;
+        seconds = seconds - (m * 60);
+        
+        string ret = "";
+        if (h > 0)
+            ret = ret + h.ToString() + " " + S.HoursS;
+        if (m > 0)
+            ret = ret + m.ToString() + " " + S.MinitesS;
+
+        return ret + seconds.ToString() + " " + S.SecondsS;
+        
+    }
+}
+
+<table class="table table-striped" style="table-layout: fixed;">
+    <tr>
+        <th width="10%">@S.WorkStation</th>
+        <th width="15%">@S.Application</th>
+        <th width="65%">@S.Params</th>
+        <th width="10%">@S.Time</th>
+    </tr>
+    @foreach(var item in Model.OrderByDescending(x => x.Time))
+    {
+        <tr>
+            <td>@item.WorkStation.Name</td>
+            <td title="@item.ApplicationArgument.Id">@item.ApplicationArgument.AppExe</td>
+            <td>@item.ApplicationArgument.Argument</td>
+            <td title="@item.Time @S.SecondsS">@Time(item.Time.Value)</td>
+        </tr>
+    }
+</table>

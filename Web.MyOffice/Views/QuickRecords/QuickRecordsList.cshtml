@@ -1,0 +1,27 @@
+﻿@model List<QuickRecord>
+
+<table class="table table-striped">
+    <tr>
+        <th>Текст</th>
+        <th>Дата</th>
+        <th style="min-width: 140px;"></th>
+        <th style="min-width: 100px;"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="record">@Html.NewLine2Br(item.Record)</td>
+            <td>@item.DateTime.ToStringDT()</td>
+            <td>
+                @item.Priority
+                <button class="btn glyphicon glyphicon glyphicon-chevron-up" onclick="PreiorityRecord('@item.Id', 1)"></button>
+                <button class="btn glyphicon glyphicon glyphicon-chevron-down" onclick="PreiorityRecord('@item.Id', -1)"></button>
+            </td>
+            <td>
+                <button class="btn btn-warning glyphicon glyphicon-edit" onclick="EditRecord('@item.Id')"></button>
+                <button class="btn btn-danger glyphicon glyphicon-remove" onclick="RemoveRecord(this, '@item.Id')"></button>
+            </td>
+        </tr>
+    }
+</table>

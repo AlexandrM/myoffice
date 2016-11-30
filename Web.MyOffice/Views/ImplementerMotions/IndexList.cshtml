@@ -1,0 +1,121 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.MemberMotion>
+
+@{
+    Member member = (Member)ViewBag.Member;
+    Currency currency = (Currency)ViewBag.Currency;
+}
+
+@using (Html.Row())
+{
+    using(Html.Col(6))
+    {
+        <h2>@member.FullName</h2>
+        <h3><b>@S.Debt: </b><b><i>@ViewData["Rest"].AsDecimal().ToString("0.00") @currency.ShortName</i></b></h3>
+    }
+
+    using (Html.Col(6))
+    {
+    }
+}
+
+@Html.RowDivider(20)
+
+@using (Html.BeginFormInline(true))
+{
+    @Html.Hidden("MemberId", member.Id)
+    @Html.Hidden("CurrencyId", currency.Id)
+
+    using (Html.Row())
+    {
+        @Html.LabelEditorValidation(String.Format("{0} {1}", S.Period, S.DateFrom), "DateFrom", ViewData["DateFrom"], new { @class = "datepicker" })
+        @Html.LabelEditorValidation(S.DateTo, "DateTo", ViewData["DateTo"], new { @class = "datepicker", data_valmsg_for = "DateTime" })
+        @Html.ButtonSubmitPrimaryRefresh()
+    }
+           
+    @Html.RowDivider(20)
+
+    @Html.TextBoxFilter("Filter", new { @class = "focus" })
+
+    using (Html.Table(Model))
+    {
+        <tr class="warning">
+            <td><b>@S.OnDate:</b></td>
+            <td><b>@ViewData["DateTo"]</b></td>
+            <td><b>@ViewData["OnEnd"].AsDecimal().ToString("0.00")</b></td>
+            <td><b>@currency.ShortName</b></td>
+            <td><b>@currency.ShortName</b></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>
+                <div>@S.Date</div>
+                <div>@S.Time</div>
+            </th>
+            <th>@S.Description</th>
+            <th>@S.Rate</th>
+            <th>@S.SummWork</th>
+            <th>@S.SummPay</th>
+            <th>
+                @S.Currency
+            </th>
+        </tr>
+    <tr class="info">
+        <td><b>@S.Total</b></td>
+        <td></td>
+        <td></td>
+        <td><b>@Model.Where(x => x is MemberDayReport).Sum(x => x.Amount * (x as MemberDayReport).Value).AsDecimal().ToString("0.00")</b></td>
+        <td><b>@Model.Where(x => x is MemberPayment).Sum(x => x.Amount).AsDecimal().ToString("0.00")</b></td>
+        <td>@currency.ShortName</td>
+        <td></td>
+    </tr>
+
+        foreach (var item in Model.OrderBy(x => x.DateTime))
+        {
+            item.DateTime = (item is MemberPayment) ? (item as MemberPayment).DateTime : (item as MemberDayReport).DateTime;
+        }
+        foreach (var item in Model.OrderByDescending(x => x.DateTime))
+        {
+            var item1 = (item as MemberPayment);
+            var item2 = (item as MemberDayReport);
+
+            <tr class="@(item1 == null ? "" : "")">
+                <td>
+                    @if (item1 != null)
+                    { 
+                        <div>@item1.DateTime.ToStringD()</div>
+                    }
+                    else
+                    {
+                        <div>@item2.DateTime.ToStringD()</div>
+                        <div>@item2.DateTime.ToStringT()</div>
+                    }
+                </td>
+                <td>@item.Description</td>
+                @if (item1 != null)
+                {
+                    <td></td>
+                    <td></td>
+                    <td>@item1.Amount.ToString("0.00")</td>
+                    <td>@item1.Currency.CurrencyByUser(db).ShortName</td>
+                }
+                else
+                {
+                    <td>@item.Amount (@item2.RateType.ToDisplayName())</td>
+                    <td>@((item2.Amount * item2.Value).ToString("0.00"))</td>
+                    <td></td>
+                    <td>@item2.Currency.CurrencyByUser(db).ShortName</td>
+                }
+                <td>
+                </td>
+            </tr>
+        }
+        <tr class="info">
+            <td><b>@S.OnStart:</b></td>
+            <td><b>@ViewData["DebtStart"].AsDecimal().ToString("0.00")</b></td>
+            <td colspan="5"></td>
+        </tr>
+    }
+}
+
+@Html.BackToIndex("ImplementerDebt", null)

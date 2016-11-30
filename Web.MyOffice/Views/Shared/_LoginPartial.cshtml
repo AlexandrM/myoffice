@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNet.Identity
+
+@{
+    string email = "";
+    if (Request.IsAuthenticated)
+    {
+        email = User.Identity.Name;
+        if (Request.Cookies["UserEmail"] != null)
+        {
+            email = Request.Cookies["UserEmail"].Value;
+        }
+    }
+}
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="@Url.Action("MyProfile", "Member")" title="@email">
+                    @(S.Welcome + " " + (email.Length > 20 ? email.Substring(0, 19) : email) + "!")
+                    <span class="glyphicon glyphicon-cog"></span>
+                </a>
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">@S.LogOff</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @if (System.Configuration.ConfigurationManager.AppSettings["ASE.AllowRegistration"] == "true")
+        {
+            <li>@Html.ActionLink(S.Register, "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        }
+        <li>@Html.ActionLink(S.Login, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}

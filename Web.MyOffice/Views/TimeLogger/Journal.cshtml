@@ -1,0 +1,57 @@
+﻿@model List<TimeLoggerSettingWorkStation>
+
+@{
+    ViewBag.Title = S.Journal;
+}
+
+<div class="Journal">
+    <form class="form-inline" role="form">
+        <div class="form-group">
+            <label class="sr-only">@S.PeriodFrom</label>
+            @Html.TextBox("dateFrom", DateTime.Now.ToStringD(), null, new { @class = "form-control datepicker post1" })
+        </div>
+        <div class="form-group">
+            <label class="sr-only">@S.To</label>
+            @Html.TextBox("dateTo", DateTime.Now.ToStringD(), null, new { @class = "form-control datepicker post1" })
+        </div>
+        <button type="button" class="btn btn-primary" onclick="Refresh()">@S.Refresh</button>
+    </form>
+
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                        @S.Settings
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body" style="min-height: 250px;">
+                    <label class="control-label">@S.Databases</label>
+                    <select id="dataBases" class="selectpicker dataBases post1" multiple>
+                        @foreach (var item in Model)
+                        {
+                            <option selected="selected" value="@item.WorkStationId">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="table" class="ase-html">
+
+</div>
+
+<script>
+    $(function () {
+        $(".selectpicker").selectpicker();
+        Refresh();
+    });
+
+    function Refresh() {
+        ASE.PostState('@Url.Action("JournalData", "TimeLogger")', $(".Journal").find(".post1"));
+    }
+</script>

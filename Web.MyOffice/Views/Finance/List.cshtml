@@ -1,0 +1,155 @@
+﻿@{
+    Layout = null;
+}
+
+<div ng-init="refresh()" ng-showaa="isLoaded">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>
+                <a class="btn btn-default" ng-href="#/project">@S.Projects</a>
+
+                <b>
+                    @S.Debt -
+                </b>
+                @S.Project:
+                <a class="" role="button" data-toggle="collapse" href="" data-target="#details" aria-expanded="false" aria-controls="details">
+                    {{project.Name}}
+                </a>
+                <a class="btn btn-primary" ng-href="#/project/{{project.Id}}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-primary" ng-click="toPDF()"><span class="glyphicon glyphicon-save"></span></a>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-envelope">&nbsp;</span><span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="member in project.Members">
+                            <a href="" ng-click="sendPDF(project, member)" title="{{member.Member.Email}}">{{member.Member.FullName}} ({{member.MemberTypeS}})</a>
+                        </li>
+                    </ul>
+                </div>
+            </h2>
+        </div>
+    </div>
+
+    <div class="collapse" id="details">
+        <div class="well">
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.State</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.StateS}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Date</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.DateTime | amDateFormat:'L LT'}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Description</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.Description}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Author</p>
+                </div>
+                <div class="col-md-9">
+                    <p>{{project.Author.FullName}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <p>@S.Members</p>
+                </div>
+                <div class="col-md-9">
+                    <div ng-repeat="member in project.Members | filter:edFilter">
+                        <p title="{{member.Member.Email}}">{{member.Member.FullName}}<b> ({{member.MemberTypeS}})</b></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <table class="table table-striped">
+        <tr>
+            <th>
+            </th>
+            <th>@S.Currency</th>
+            <th>@S.Summ</th>
+            <th class="notPrintable">@S.Total ({{myCurrency().ShortName}})</th>
+            <th class="notPrintable">
+                <a class="btn btn-warning" ng-if="myMemberType().MemberType == 0" ng-href="#/memberdayreport/0/{{project.Id}}">@S.DayReport</a>
+                <a class="btn btn-success" ng-if="myMemberType().MemberType == 0" ng-href="#/memberpayment/0/{{project.Id}}">@S.Payment</a>
+                <a class="btn btn-primary" ng-href="#/membermotions/{{project.Id}}">@S.Motions</a>
+            </th>
+        </tr>
+        <tbody ng-repeat="rest in project.Rests" ng-init="rest.expanded=false">
+            <tr class="info">
+                <td>
+                    <button ng-if="rest.expanded" ng-click="rest.expanded=false" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                    <button ng-if="!rest.expanded" ng-click="rest.expanded=true" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                </td>
+                <td>
+                    <span title="{{currencyById(rest.Project.RateCurrencyType).Value}}">{{currencyById(rest.Project.RateCurrencyType).ShortName}}</span>
+                </td>
+                <td>{{rest.Amount | number:2}}</td>
+                <td class="notPrintable"><b>{{rest.Amount * currencyById(rest.Project.RateCurrencyType).Value | number:2}}</b></td>
+                <td class="notPrintable"></td>
+            </tr>
+            <tr ng-show="rest.expanded">
+                <td colspan="6">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>
+                                <div>@S.Date</div>
+                                <div>@S.Time</div>
+                            </th>
+                            <th>@S.Description</th>
+                            <th>@S.Amount</th>
+                            <th>@S.Summ</th>
+                            <th>@S.Currency</th>
+                            <th class="notPrintable">@S.Total ({{myCurrency().ShortName}})</th>
+                            <th class="notPrintable"></th>
+                        </tr>
+                        <tr ng-repeat="details in rest.Details">
+                            <td>
+                                <div>{{details.DateTime | amDateFormat:'L'}}</div>
+                                <div>{{details.DateTime | amDateFormat:'LT'}}</div>
+                            </td>
+                            <td>{{details.Description}}</td>
+                            <td>{{details.Amount}}</td>
+                            <td>
+                                {{details.Amount * details.Value | number:2}}
+                                <span ng-if="details.Rest != 0">
+                                    &nbsp;({{details.Rest | number:2}})
+                                </span>
+                            </td>
+                            <td>{{currencyById(project.RateCurrencyType).ShortName}}</td>
+                            <td class="notPrintable">
+                                <b>
+                                    {{details.Amount * details.Value * currencyById(rest.Project.RateCurrencyType).Value | number:2}}
+                                    <span ng-if="details.Rest != 0">
+                                        &nbsp;({{details.Rest * currencyById(rest.Project.RateCurrencyType).Value | number:2}})
+                                    </span>
+                                </b>
+                            </td>
+                            <td class="notPrintable w100">
+                                <a class="btn btn-warning" ng-if="details.IsMy" ng-href="#/memberdayreport/{{details.Id}}/0">@S.Edit</a>
+                                <button class="btn btn-danger" ng-if="details.IsMy" ng-click="deleteDR(details)">@S.Delete</button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

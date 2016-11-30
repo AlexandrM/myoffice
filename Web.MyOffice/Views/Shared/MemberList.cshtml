@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+
+<div ng-controller="memberCtrl">
+    <div class="form-inline">
+        <input class="focus pull-right clearable" placeholder="@S.Filter" type="text" ng-model="edFilter">
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>@S.Select</th>
+            <th>@S.View</th>
+            <th>Email</th>
+            <th>@S.LastName</th>
+            <th>@S.MiddleName</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="member in members | filter:edFilter">
+            <td>
+                <button class="btn btn-primary glyphicon glyphicon-ok" ng-click="memberSelect(member)"></button>
+            </td>
+            <td>{{member.FullName}}</td>
+            <td>{{member.Email}}</td>
+            <td>{{member.LastName}}</td>
+            <td>{{member.MiddleName}}</td>
+            <td></td>
+        </tr>
+    </table>
+</div>

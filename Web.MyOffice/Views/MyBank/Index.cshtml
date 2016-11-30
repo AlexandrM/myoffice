@@ -1,0 +1,79 @@
+﻿@model List<Account>
+
+@{
+    ViewBag.Title = R.R.MyBank + " - " + R.R.HomePage;
+}
+
+@Scripts.Render("~/JS/typehead")
+
+@Html.Partial("Accounts", Model)
+
+<script>
+    var aValues = {};
+
+    $(function () {
+        InitAccount($('body'));
+    })
+
+    function InitAccount(root) {
+
+        $('.datepicker_p').on('change', function (ev) {
+            ReloadAccount($(this).attr('accountid'));
+        });
+
+        /*
+        $('.datepicker').datepicker({});
+
+        $('.datepicker_p').datetimepicker({ pickTime: false })
+            .on('changeDate', function (ev) {
+                ReloadAccount($(this).attr('accountid'));
+            });
+
+        $('.datetimepicker').datetimepicker({});
+        */
+
+        $('.numeric').numeric({
+            negative: false
+        });
+
+        root.find($('.edMotionItem')).typeahead({
+            minLength: 0,
+            items: 99,
+            source: function (query, process) {
+                ASE.LOnLOffEnabled = false;
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Content("~/MyBank/AutocompleteItem")',
+                    data: {
+                        term: query,
+                    },
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+                    },
+                    success: function (data) {
+                        var newData = [];
+
+                        $.each(data, function () {
+                            newData.push(this.name);
+                            aValues[this.name] = this.id;
+                        });
+
+                        process(newData);
+                    },
+                    error: function () {
+                    },
+                    complete: function () {
+                        ASE.LOnLOffEnabled = true;
+                    }
+                });
+            },
+            updater: function (item) {
+                lastTypehead = this.$element;
+
+                $(this.$element).attr("selectaccount", aValues[item]);
+
+                return item;
+            }
+        });
+    }
+</script>

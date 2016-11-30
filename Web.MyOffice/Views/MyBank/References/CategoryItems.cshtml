@@ -1,0 +1,123 @@
+﻿@model List<CategoryItem>
+
+@{
+    ViewBag.Title = @R.R.MyBank + " - " + R.R.CategoryItems;
+}
+
+<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+</style>
+
+<h2>@R.R.CategoryItems</h2>
+
+<div id="CategoryAccountList">
+    <p>
+    <a class="btn btn-success" onclick="CategoryItemEditDialog()">@R.R.Add</a>
+    </p>
+
+    <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+        <tr>
+            <th>
+                @R.R.Name
+            </th>
+            <th>
+                @R.R.Description
+            </th>
+            <th>@R.R.Actions</th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr accountcategoryid="@item.Id">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a href="#" class="btn btn-primary" onclick="CategoryItemEditDialog('@item.Id')">@R.R.Edit</a>
+                <a href="#" class="btn btn-success" onclick="CategoryItemsList('@item.Id')">@R.R.Items</a>
+                @if(item.Items.Count == 0)
+                {
+                    <a chref="#" class="btn btn-danger" onclick="CategoryItemDelete('@item.Id', '@item.Name')">@R.R.Delete</a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody></table>
+</div>
+
+<div class="modal" id="Dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script>
+    function CategoryItemEditDialog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CategoryItemEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CategoryItemsList(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CategoryItemsList")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CategoryItemDelete(id, name) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.post('@Url.Content("~/References/CategoryItemDelete")', { id: id }, function (data) {
+                            window.location = '@Url.Action("CategoryItems", "References")';
+                        });
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+</script>

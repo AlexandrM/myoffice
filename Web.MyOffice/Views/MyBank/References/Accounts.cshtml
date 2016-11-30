@@ -1,0 +1,153 @@
+﻿@model List<Account>
+
+@{
+    ViewBag.Title = @R.R.MyBank + " - " + R.R.Accounts;
+}
+
+<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+</style>
+
+<h2>@R.R.Accounts</h2>
+
+<div id="AccountList">
+    <p>
+    <a class="btn btn-success" onclick="AccountEditDialog()">@R.R.Add</a>
+    </p>
+
+    @{
+        var dal = GlobalDAL.CreateInstance;
+        List<CategoryAccount> cats = dal.CategoryAccounts.OrderBy(x => x.Name).ToList();
+        if (cats.Count > 0)
+        {
+            ViewBag.CategoryId = ViewBag.CategoryId ?? cats[0].Id;
+        }
+        <ul class="nav nav-tabs" id="myTab">
+
+        @foreach (CategoryAccount cat in cats)
+        {
+            <li class="@(cat.Id == ViewBag.CategoryId ? "active" : "")"><a href="@("#category" + cat.Id)" data-toggle="tab"><h4>@cat.Name</h4></a></li>
+        }
+        
+        </ul>
+        <div class="tab-content">
+        
+            @{
+                foreach(CategoryAccount cat in cats)
+                {
+                    var accounts = dal.AccountsFor(null, cat.Id);
+
+                    <div class="@(cat.Id == ViewBag.CategoryId ? "tab-pane active" : "tab-pane")" id="@("category" + cat.Id)">
+
+                        <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+                        <tr>
+                            <th>@R.R.Name</th>
+                            <th>@R.R.Description</th>
+                            <th>@R.R.CreditLimit</th>
+                            <th>@R.R.Actions</th>
+                        </tr>
+
+                        @foreach (var item in accounts.OrderBy(x => x.Name).ToList()) 
+                        {
+                            <tr accountid="@item.Id">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreditLimit)
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-primary" onclick="AccountEditDialog('@item.Id')">@R.R.Edit</a>
+                                    @if(item.Motions.Count == 0)
+                                    {
+                                        <a chref="#" class="btn btn-danger" onclick="AccountDelete('@item.Id', '@item.Name')">@R.R.Delete</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody></table>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+<div class="modal" id="Dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script>
+    function AccountEditDialog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/AccountEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function AccountDelete(id, name) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.post('@Url.Content("~/References/AccountDelete")', { id: id }, function (data) {
+                            window.location = '@Url.Action("Accounts", "References")';
+                        });
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+
+    function AccountUserDialog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/AccountUserEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+</script>

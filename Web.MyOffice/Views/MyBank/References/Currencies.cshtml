@@ -1,0 +1,129 @@
+﻿@model List<Currency>
+
+@{
+    ViewBag.Title = @R.R.MyBank + " - " + R.R.Currencies;
+}
+
+<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+</style>
+
+<h2>@R.R.Currencies</h2>
+
+<div id="CurrencyList">
+    <p>
+    <a class="btn btn-success" onclick="CurrencyEditDialog(0)">@R.R.Add</a>
+    </p>
+
+    <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+        <tr>
+            <th>
+                @R.R.Name
+            </th>
+            <th>
+                @R.R.Rate
+            </th>
+            <th>
+                @R.R.Rates
+            </th>
+            <th>@R.R.Actions</th>
+        </tr>
+
+        @foreach (var item in Model) 
+        {
+            <tr currencyid="@item.Id" class="@(item.Primary ? "success" : "")">
+                @using (Html.BeginForm("CurrencySetPrimary", "References", FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.Hidden("Id", item.Id);
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @{
+                            CurrencyRate rate = @item.Rates.OrderByDescending(x => x.DateTime).FirstOrDefault();
+                        }
+                        @if (rate == null)
+                        {
+                            <text>-</text>
+                        }
+                        else
+                        {
+                            <text>
+                                @rate.Rate (@rate.Multiplicity)
+                            </text>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink(R.R.Rates, "CurrencyRates", new { id = item.Id}, new { @class = "btn btn-warning" })
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-primary" onclick="CurrencyEditDialog(@item.Id)">@R.R.Edit</a>
+                        @if (!item.Primary)
+                        {
+                            <button type="submit" class="btn btn-info">@R.R.SetPrimary</button>
+                        }
+                        @if (item.Accounts.Count == 0)
+                        {
+                            <a chref="#" class="btn btn-danger" onclick="CurrencyDelete(@item.Id, @item.Name)">@R.R.Delete</a>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody></table>
+</div>
+
+<div class="modal" id="Dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script>
+    function CurrencyEditDialog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CurrencyEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CurrencyDelete(id, name) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.post('@Url.Content("~/References/CurrencyDelete")', { id: id }, function (data) {
+                            window.location = '@Url.Action("Currencies", "References")';
+                        });
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,38 @@
+﻿@model Web.MyOffice.Models.Member
+
+@{
+    ViewBag.Title = String.Format("{0}: {1}", S.Edit, Model.FullName);
+}
+
+@Html.Top()
+
+@using (Html.FormHorizontal())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Id)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.RowLabelEditorAndValidation(x => x.Email)
+    @Html.IsReadonly(x => x.Email)
+
+    @Html.RowLabelEditorAndValidation(x => x.LastName)
+
+    @Html.RowLabelEditorAndValidation(x => x.FirstName)
+
+    @Html.RowLabelEditorAndValidation(x => x.MiddleName)
+
+    @Html.RowLabelEditorAndValidation(x => x.FullName)
+
+    @Html.ButtonSave();
+}
+
+@Html.BackToIndex()
+
+<script>
+    $(function () {
+        $("#LastName, #FirstName, #MiddleName").change(function () {
+            $("#FullName")[0].value = $("#LastName")[0].value + ' ' + $("#FirstName")[0].value + ' ' + $("#MiddleName")[0].value
+        });
+    });
+</script>

@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = @R.R.MyBank + " - " + R.R.References;
+}
+
+<ul class="nav nav-pills nav-stacked">
+  <li class="active">
+    <a href="#">
+      <span class="badge pull-right">42</span>
+      Home
+    </a>
+  </li>
+  ...
+</ul>
+
+<div id="tabs">
+    
+    <ul>
+        <li><a href="#dCurrencyList">@R.R.Currencies</a></li>
+        <li><a href="#dCategoryAccountList">@R.R.CategoryAccounts</a></li>
+        <li><a href="#dAccountList">@R.R.Accounts</a></li>
+        <li><a href="#dCategoryItemList">@R.R.CategoryItems</a></li>
+        <li><a href="#dItemList">@R.R.Items</a></li>
+    </ul>
+    
+    <div id="dCurrencyList">
+    </div>
+
+    <div id="dCategoryAccountList">
+    </div>
+    
+    <div id="dAccountList">
+    </div>
+
+    <div id="dCategoryItemList">
+    </div>
+
+    <div id="dItemList">
+    </div>
+</div>
+
+<div id="Dialog"></div>
+
+<script>
+    $(function () {
+        $('#tabs').tabs({
+            activate: function (event, ui) {
+                LoadDiv($(ui.newPanel).attr('id'));
+            }
+        });
+        //$('#tabs').tabs("option", "active", 4);
+        LoadDiv("dCurrencyList");
+    });
+
+    function LoadDiv(name, filterItems) {
+        if (name == 'dAccountList') {
+            AccountList({}, $("#dAccountList"));
+        }
+        else if (name == 'dItemList') {
+            ItemList({}, $("#dItemList"));
+        }
+        else {
+            $('#' + name).html("@Html.Raw(MyBank.Controllers.HomeController.LoadingImage)");
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Content("~/References/Index")',
+                data: {
+                    name: name
+                },
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                },
+                success: function (data) {
+                    $('#' + data.div).html(data.html);
+                    if (filterItems != null) {
+                        $("#Filter")[0].value = filterItems;
+                        FilterItems(filterItems);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+    }
+
+    function FilterItems(filter) {
+        console.log(filter);
+        var vals = filter.toLowerCase().split(",");
+
+        $.each($('#tblItemList').children()[0].rows, function () {
+            var td = $(this).find(".name");
+            if (td.length != 0) {
+                if (vals.length == 0)
+                    $(this).css('display', '');
+                else {
+                    var display = 'none';
+                    for (var i = 0; i < vals.length; i++) {
+                        if ($(td)[0].innerHTML.trim().toLowerCase().indexOf(vals[i]) != -1)
+                            display = '';
+                    }
+
+                    $(this).css('display', display);
+                }
+            }
+        });
+    }
+</script>

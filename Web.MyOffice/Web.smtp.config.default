@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<smtp from="xxx@xxx.com.ua" deliveryMethod="Network">
+	<network defaultCredentials="false" enableSsl="true" host="smtp.gmail.com" port="587" userName="xxx@xxx.com.ua" password="" />
+</smtp>

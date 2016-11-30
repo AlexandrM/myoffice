@@ -1,0 +1,466 @@
+﻿@using ASE.MVC;
+
+@{
+    DateTime dtFrom = DateTime.Now.AddMonths(-1);
+    if (ViewData["dtfrom"] != null)
+    {
+        dtFrom = DateTime.Parse(ViewData["dtfrom"].ToString());
+    }
+    DateTime dtTo = DateTime.Now;
+    if (ViewData["dtTo"] != null)
+    {
+        dtTo = DateTime.Parse(ViewData["dtTo"].ToString());
+    }
+    DB db = new DB();
+    GlobalDAL dal = new GlobalDAL();
+    Currency primary = db.DefaultCurrency();
+}
+
+<!--[if IE]><script language="javascript" type="text/javascript" src="@Url.Content("~/Scripts/jit/Extras/excanvas.js")"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="@Url.Content("~/Scripts/jit/jit.js")"></script> 
+
+<div id="options">
+    <h1>
+        @R.R.Report 
+        "@R.R.Outcome"
+        @R.R.From
+        @dtFrom.ToShortDateString()
+        @R.R.To
+        @dtTo.ToShortDateString()
+    </h1>
+    
+</div>
+
+<div class="well row">
+    <div class="form-inline">
+        <div class="form-group">
+            <label style="display: inline-block">@R.R.From</label>
+        </div>
+        <div class="form-group">
+            @Html.TextBox("dtFrom", dtFrom.ToShortDateString(), null, new { @class = "form-control datepicker" })
+        </div>
+        <div class="form-group">
+            <label>@R.R.To</label>
+        </div>
+        <div class="form-group">
+            @Html.TextBox("dtTo", dtTo.ToShortDateString(), null, new { @class = "form-control datepicker" })
+        </div>
+        <div class="form-group">
+            <a href="#" class="btn btn-success" onclick="@(String.Format("Refresh{0}('{0}')", ViewData["name"]))">@R.R.Refersh</a>
+        </div>
+    </div>
+</div>
+
+<div id="report">
+    @{
+        List<dynamic> data = new List<dynamic>();
+
+        dtFrom = dtFrom.Date;
+        dtTo = dtTo.Date.AddDays(1).AddMilliseconds(-1);
+
+        var q = from items in
+                    (
+                        from items in db.Motions
+                        let rate = db.CurrencyRates.Where(x => x.Currency.Id == items.Account.Currency.Id).Where(x => x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).FirstOrDefault()
+                        where
+                             items.Account.BudgetId == dal.CurrentOwner.Id
+                            && items.DateTime >= dtFrom.Date
+                            && items.DateTime <= dtTo
+                            && !items.Item.Category.Internal
+                            && !items.Deleted
+                        select new
+                        {
+                            AccountId = items.AccountId,
+                            Sum = items.SumM * (rate == null ? 1 : (rate.Value)),
+                            SumO = items.SumM
+                        }
+                     )
+                group items by new
+                {
+                    AccountId = items.AccountId
+
+                } into Group
+                select new
+                {
+                    AccountId = Group.Key.AccountId,
+                    Sum = Group.Sum(x => x.Sum),
+                    SumO = Group.Sum(x => x.SumO)
+                };
+
+        var list = q
+            .ToList()
+            .Select(x => new
+            {
+                AccountId = x.AccountId,
+                Account = db.Accounts.Include(z => z.Currency).FirstOrDefault(z => z.Id == x.AccountId),
+                Sum = x.Sum,
+                SumO = x.SumO,
+            })
+            .OrderBy(x => x.Account.Name);
+
+        foreach (var item in list)
+        {
+            List<dynamic> details = new List<dynamic>();
+
+            var qC = from items in
+                     (
+                        from items in db.Motions
+                        let rate = db.CurrencyRates.Where(x => x.Currency.Id == items.Account.Currency.Id).Where(x => x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).FirstOrDefault()
+                        where
+                            items.Account.BudgetId == dal.CurrentOwner.Id
+                            && items.Account.Id == item.Account.Id
+                            && items.DateTime >= dtFrom.Date
+                            && items.DateTime <= dtTo
+                            && !items.Item.Category.Internal
+                            && !items.Deleted
+                        select new
+                        {
+                            CategoryId = items.Item.CategoryId,
+                            Sum = items.SumM * (rate == null ? 1 : (rate.Value)),
+                            SumO = items.SumM
+                        }
+                     )
+                     group items by new
+                     {
+                         CategoryId = items.CategoryId
+
+                     } into Group
+                     select new
+                     {
+                         CategoryId = Group.Key.CategoryId,
+                         Sum = Group.Sum(x => x.Sum),
+                         SumO = Group.Sum(x => x.SumO),
+                     };
+
+            var listC = qC
+                .ToList()
+                .Select(x => new
+                {
+                    CategoryId = x.CategoryId,
+                    Category = db.CategoryItems.FirstOrDefault(z => z.Id == x.CategoryId),
+                    Sum = x.Sum,
+                    SumO = x.SumO,
+                })
+                .OrderBy(x => x.Category.Name);
+
+            foreach (var itemC in listC)
+            {
+                var qI = from items in
+                             (
+                                from items in db.Motions
+                                let rate = db.CurrencyRates.Where(x => x.Currency.Id == items.Account.Currency.Id).Where(x => x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).FirstOrDefault()
+                                where
+                                    items.Account.BudgetId == dal.CurrentOwner.OwnerId
+                                    && items.Account.Id == item.Account.Id
+                                    && items.Item.Category.Id == itemC.Category.Id
+                                    && items.DateTime >= dtFrom.Date
+                                    && items.DateTime <= dtTo
+                                    && !items.Item.Category.Internal
+                                    && !items.Deleted
+                                select new
+                                {
+                                    ItemId = items.ItemId,
+                                    Sum = items.SumM * (rate == null ? 1 : (rate.Value)),
+                                    SumO = items.SumM
+                                }
+                            )
+                         group items by new
+                         {
+                             ItemId = items.ItemId
+
+                         } into Group
+                         select new
+                         {
+                             ItemId = Group.Key.ItemId,
+                             Sum = Group.Sum(x => x.Sum),
+                             SumO = Group.Sum(x => x.SumO),
+                         };
+
+                var listI = qI
+                    .ToList()
+                    .Select(x => new
+                    {
+                        ItemId = x.ItemId,
+                        Item = db.Items.FirstOrDefault(z => z.Id == x.ItemId),
+                        Sum = x.Sum,
+                        SumO = x.SumO,
+                    })
+                    .OrderBy(x => x.Item.Name);
+
+                List<dynamic> details2 = new List<dynamic>();
+                foreach (var itemI in listI)
+                {
+                    details2.Add(new
+                    {
+                        id = "" + item.Account.Id + "_" + itemC.Category.Id + "_" + itemI.Item.Id,
+                        name = itemI.Item.Name + " " + Math.Round(itemI.Sum, 2) + " " + primary.ShortName,
+                        data = new
+                        {
+                            area = Math.Round(itemI.Sum, 2),
+                            sum = Math.Round(itemI.SumO, 2).ToString() + " " + item.Account.Currency.ShortName
+                        }
+                    });
+                }
+                details.Add(new
+                {
+                    id = "" + item.Account.Id + "_" + itemC.Category.Id,
+                    name = itemC.Category.Name + " " + Math.Round(itemC.Sum, 2) + " " + primary.ShortName,
+                    data = new
+                    {
+                        area = Math.Round(itemC.Sum, 2),
+                        sum = Math.Round(itemC.SumO, 2).ToString() + " " + item.Account.Currency.ShortName
+                    },
+                    children = details2.ToArray()
+                });
+            }
+            data.Add(new
+            {
+                id = item.Account.Id,
+                name = item.Account.Name + " " + Math.Round(item.Sum, 2) + " " + primary.ShortName,
+                data = new
+                {
+                    area = Math.Round(item.Sum, 2),
+                    sum = Math.Round(item.SumO, 2).ToString() + " " + item.Account.Currency.ShortName
+                },
+                children = details.ToArray()
+            });
+        }
+        var max = data.FirstOrDefault(x => x.data.area == data.Max(y => y.data.area));
+        if (max != null)
+        {
+            data[data.IndexOf(max)] = new
+            {
+                id = max.id,
+                name = max.name,
+                data = new
+                {
+                    area = max.data.area,
+                    sum = max.data.sum,
+                    color = "#F2112F"
+                },
+                children = max.children
+            };
+
+
+            max = data.FirstOrDefault(x => x.data.area == data.Where(z => z.data.area < max.data.area).Max(y => y.data.area));
+            if (max != null)
+            {
+                data[data.IndexOf(max)] = new
+                {
+                    id = max.id,
+                    name = max.name,
+                    data = new
+                    {
+                        area = max.data.area,
+                        sum = max.data.sum,
+                        color = "#BFB332"
+                    },
+                    children = max.children
+                };
+
+                max = data.FirstOrDefault(x => x.data.area == data.Where(z => z.data.area < max.data.area).Max(y => y.data.area));
+                if (max != null)
+                {
+                    data[data.IndexOf(max)] = new
+                    {
+                        id = max.id,
+                        name = max.name,
+                        data = new
+                        {
+                            area = max.data.area,
+                            sum = max.data.sum,
+                            color = "#3F996C"
+                        },
+                        children = max.children
+                    };
+                }
+            }
+        }
+    }
+</div>
+
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+<table class="table table-striped">
+    <tr>
+        <th>@R.R.Currency</th>
+        <th>@R.R.Sum</th>
+        <th>@R.R.Sum</th>
+    </tr>
+@{
+    decimal total = 0;
+    var qT = from items in db.Motions
+             where
+                 items.Account.BudgetId == dal.CurrentOwnerId
+                 && items.DateTime >= dtFrom.Date
+                 && items.DateTime <= dtTo
+                 && !items.Item.Category.Internal
+                 && !items.Deleted
+             group items by new
+             {
+                 Item = items.Account.Currency
+
+             } into Group
+             orderby Group.Key.Item.Name
+             select new
+             {
+                 SumM = Group.Sum(x => x.SumM),
+                 Item = Group.Key.Item
+             };
+
+    var listT = qT.ToList();
+    foreach (var item in listT)
+    {
+        CurrencyRate cr = db.CurrencyRates.Where(x => x.CurrencyId == item.Item.Id & x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).Take(1).FirstOrDefault();
+        decimal rate = 1;
+        rate = (cr != null) ? cr.Value : 1;
+
+        total = total + Math.Round(item.SumM * rate, 2);
+
+        <tr>
+            <td>@item.Item.Name</td>
+            <td>@item.SumM @item.Item.ShortName</td>
+            <td>@(Math.Round(item.SumM * rate, 2)) @primary.ShortName</td>
+        </tr>
+    }
+}
+        <tr>
+            <td><b>@R.R.Total</b></td>
+            <td></td>
+            <td><b>@total @primary.ShortName</b></td>
+        </tr>
+</table>
+
+<script>
+    json = '@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(new { children = data.ToArray() }, Newtonsoft.Json.Formatting.None)))'
+    json = json.replace(/area/g, "$area");
+    json = json.replace(/color/g, "$color");
+    json = eval('(' + json + ')');
+
+    @(String.Format("function Refresh{0}(name)", ViewData["name"]))
+    {
+        var param = new Object();
+        param['dtFrom'] = $("#dtFrom")[0].value;
+        param['dtTo'] = $("#dtTo")[0].value;
+
+        LoadReport(name, param);
+    }
+
+    var labelType, useGradients, nativeTextSupport, animate;
+    (function() {
+        var ua = navigator.userAgent,
+            iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),
+            typeOfCanvas = typeof HTMLCanvasElement,
+            nativeCanvasSupport = (typeOfCanvas == 'object' || typeOfCanvas == 'function'),
+            textSupport = nativeCanvasSupport
+              && (typeof document.createElement('canvas').getContext('2d').fillText == 'function');
+        //I'm setting this based on the fact that ExCanvas provides text support for IE
+        //and that as of today iPhone/iPad current text support is lame
+        labelType = (!nativeCanvasSupport || (textSupport && !iStuff))? 'Native' : 'HTML';
+        nativeTextSupport = labelType == 'Native';
+        useGradients = nativeCanvasSupport;
+        animate = !(iStuff || !nativeCanvasSupport);
+    })();
+
+    $(document).ready(function(){
+        //end
+        //init TreeMap
+        var tm = new $jit.TM.Squarified({
+            //where to inject the visualization
+            injectInto: 'chart_div',
+            //show only one tree level
+            levelsToShow: 1,
+            //parent box title heights
+            titleHeight: 0,
+            //enable animations
+            animate: animate,
+            //box offsets
+            offset: 1,
+            //use canvas text
+            Label: {
+                type: labelType,
+                size: 14,
+                family: 'Tahoma, Verdana, Arial'
+            },
+            //enable specific canvas styles
+            //when rendering nodes
+            Node: {
+                CanvasStyles: {
+                    shadowBlur: 0,
+                    shadowColor: '#2877F7'
+                },
+                color: '#2877F7'
+            },
+            //Attach left and right click events
+            Events: {
+                enable: true,
+                onClick: function(node) {
+                    if (node._depth == 3)
+                        return;
+                    if (node)
+                        tm.enter(node);
+                },
+                onRightClick: function() {
+                    tm.out();
+                },
+                //change node styles and canvas styles
+                //when hovering a node
+                onMouseEnter: function(node, eventInfo) {
+                    if(node) {
+                        //add node selected styles and replot node
+                        node.setCanvasStyle('shadowBlur', 7);
+                        node.data.colorP = node.getData('color');
+                        node.setData('color', '#87B1F5');
+                        tm.fx.plotNode(node, tm.canvas);
+                        tm.labels.plotLabel(tm.canvas, node);
+                    }
+                },
+                onMouseLeave: function (node) {
+                    if (node) {
+                        node.setData('color', node.data.colorP);
+                        node.removeCanvasStyle('shadowBlur');
+                        tm.plot();
+                    }
+                }
+            },
+            //duration of the animations
+            duration: 1000,
+            //Enable tips
+            Tips: {
+                enable: true,
+                type: 'Native',
+                //add positioning offsets
+                offsetX: 20,
+                offsetY: 20,
+                //implement the onShow method to
+                //add content to the tooltip when a node
+                //is hovered
+                onShow: function(tip, node, isLeaf, domElement) {
+                    tip.innerHTML = node.name + "<br />" + node.data.sum;
+                }
+            },
+            //Implement this method for retrieving a requested
+            //subtree that has as root a node with id = nodeId,
+            //and level as depth. This method could also make a server-side
+            //call for the requested subtree. When completed, the onComplete
+            //callback method should be called.
+            request: function(nodeId, level, onComplete){
+                var tree = eval('(' + json + ')');
+                var subtree = $jit.json.getSubtree(tree, nodeId);
+                $jit.json.prune(subtree, 1);
+                onComplete.onComplete(nodeId, subtree);
+            },
+            //Add the name of the node in the corresponding label
+            //This method is called once, on label creation and only for DOM labels.
+            onCreateLabel: function(domElement, node){
+                L(node.name);
+                domElement.innerHTML = node.name;
+            }
+        });
+
+        //tm.loadJSON(eval('(' + json + ')'));
+        tm.loadJSON(json);
+        //tm.loadJSON($jit.json.prune(json, 1));
+        tm.refresh();         //end
+    });
+</script>

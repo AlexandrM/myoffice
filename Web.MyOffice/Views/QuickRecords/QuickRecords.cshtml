@@ -1,0 +1,69 @@
+﻿@model Guid
+
+@{
+    ViewBag.Title = S.QuickRecords;
+    DB db = new DB();
+    var category = db.QuickRecordCategories.Find(Model, UserId);
+}
+
+<h2>@S.Category: @category.Name</h2>
+
+@Html.Hidden("category", Model, new { @class = "post1" })
+
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    @S.AddRecord
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body">
+                @Html.TextArea("text", "", 10, 100, new { @class = "post1", style = "width: 100%; max-width: 100%" })
+                <div>
+                    <button class="btn btn-success" onclick="AddRecord()">@S.Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<label class="">@S.Filter: </label>
+@Html.TextBox("filter", "", new { placeholder = S.ByComma, @class = "form-control post2", onkeyup = "Filter()" })
+
+<div id="html" class="ase-html">
+</div>
+
+<script>
+    $(function () {
+
+    });
+
+    function AddRecord() {
+        ASE.PostState("AddRecord", "QuickRecords", ".post1", {
+        });
+    }
+
+    function Filter() {
+        ASE.PostState("Filter", "QuickRecords", ".post1, .post2", {
+        });
+    }
+
+    function EditRecord() {
+    }
+
+    function RemoveRecord(elem, id) {
+        bootbox.confirm('@S.ConfirmDelete: ' + $(elem).parent().parent().children()[0].innerHTML.substring(0, 50) + "?", function (result) {
+            if (result)
+                ASE.PostState("RemoveRecord", "QuickRecords", { id: id },
+                    {
+                        success: function () {
+                            L(111);
+                            Filter();
+                        }
+                    })
+        });
+    }
+</script>

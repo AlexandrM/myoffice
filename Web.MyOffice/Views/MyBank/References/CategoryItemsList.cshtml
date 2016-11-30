@@ -1,0 +1,31 @@
+﻿@model List<Item>
+@{
+    ViewBag.Title = R.R.Items;
+}
+
+<div id="CategoryItemEdit">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">@R.R.Items</h4>
+    </div>
+
+    <div class="modal-body">
+        <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+            <tr>
+                <th>@R.R.Item</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                </tr>
+            }
+        </tbody></table>
+    </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
+        </div>
+</div>

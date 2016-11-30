@@ -1,0 +1,166 @@
+﻿@using ASE.MVC;
+
+@{
+    DateTime dtFrom = DateTime.Now;
+    if (ViewData["dtfrom"] != null)
+    {
+        dtFrom = DateTime.Parse(ViewData["dtfrom"].ToString());
+    }
+    DateTime dtTo = DateTime.Now;
+    if (ViewData["dtTo"] != null)
+    {
+        dtTo = DateTime.Parse(ViewData["dtTo"].ToString());
+    }
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot/jquery.jqplot.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot/plugins/jqplot.pieRenderer.js")"></script>
+<link rel="stylesheet" type="text/css" hrf="@Url.Content("~/Scripts/jqplot/jquery.jqplot.css")" />
+
+<div id="options" class="">
+    <h1>
+        @R.R.Report 
+        "@R.R.CurrentRests"
+        @R.R.on
+        @dtTo.ToShortDateString()
+    </h1>
+</div>
+
+<br />
+<div id="report">
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+    <table class="table table-striped table-hover" style="width: auto"><tbody>
+
+    @{
+        Dictionary<string, string> data = new Dictionary<string, string>();
+
+        for(int showInRest = 0; showInRest < 2; showInRest++)
+        {
+            DB db = new DB();
+            GlobalDAL dal = new GlobalDAL();
+            var q = from items in db.Motions
+                    .Include(x => x.Account.Currency)
+                    where items.Account.BudgetId == dal.CurrentOwner.Id & !items.Deleted & items.Account.ShowInRest == (showInRest == 0)
+
+                    group items by new
+                    {
+                        AccountId = items.AccountId
+                    } into gAccount
+                    select new
+                    {
+                        SumM = gAccount.Sum(x => x.SumM),
+                        SumP = gAccount.Sum(x => x.SumP),
+                        Group = gAccount.Key,
+                    };
+
+            var list = q
+                .ToList()
+                .Select(x => new
+                {
+                    AccountId = x.Group,
+                    Account = db.Accounts.Include(z => z.Currency).FirstOrDefault(z => z.Id == x.Group.AccountId),
+                    SumM = x.SumM,
+                    SumP = x.SumP,
+                })
+                .OrderBy(x => x.Account.Name);
+
+            Currency primary = db.DefaultCurrency();
+
+            decimal total = 0;
+            foreach (var item in list)
+            {
+                CurrencyRate cr = db.CurrencyRates.Where(x => x.CurrencyId == item.Account.CurrencyId & x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).Take(1).FirstOrDefault();
+                decimal rate = 1;
+                if (cr != null)
+                {
+                    rate = cr.Value;
+                }
+                decimal sum = (item.SumP - item.SumM) * rate;
+                total = total + sum;
+
+                if ((sum > 0) & (showInRest == 0))
+                {
+                    data.Add(item.Account.Name, sum.ToString("0.00").Replace(",", "."));
+                }
+                <tr>
+                    <td>
+                        <h5>@item.Account.Name</h5>
+                    </td>
+                    <td>
+                        <h4>@(String.Format("{0:0.00}", item.SumP - item.SumM))</h4>
+                    </td>
+                    <td>
+                        <h5>@item.Account.Currency.ShortName</h5>
+                    </td>
+                    <td>
+                        <h4>@(String.Format("{0:0.00}", sum))</h4>
+                    </td>
+                    <td>
+                        <h5>@primary.ShortName</h5>
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="5" style="text-align: right">
+                    <h4>@R.R.Total</h4>
+                    <h3>@String.Format("{0:0.00}", @total)</h3>
+                    <h5>@primary.ShortName</h5>
+                </td>
+            </tr>
+        }
+    }
+    </tbody></table>
+</div>
+
+<script>
+    var array = @(Html.Raw(Html.JsonSerialize(data.ToArray())));
+
+    var data = [];
+    for(i = 0; i < array.length; i++) {
+        data[i] = [];
+        data[i][0] = array[i].Key;
+        data[i][1] = parseInt(array[i].Value);
+        if (i == 0)
+            data[i][1] = parseFloat(array[i].Value);
+    }
+    $(document).ready(function(){
+        var plot8 = $.jqplot('chart_div', [data], {
+            grid: {
+                drawBorder: false,
+                drawGridlines: false,
+                background: '#ffffff',
+                shadow:false
+            },
+            axesDefaults: {
+
+            },
+            seriesDefaults:{
+                renderer:$.jqplot.PieRenderer,
+                rendererOptions: {
+                    showDataLabels: true
+                }
+            },
+            legend: {
+                show: false,
+                rendererOptions: {
+                    numberRows: 1
+                },
+                location: 's'
+            }
+        });
+
+        $("#chart_div").bind('jqplotDataHighlight', function(ev, seriesIndex, pointIndex, data) {
+            var $this = $(this);                
+
+            $this.attr('title', data[0] + ": " + data[1]);                               
+        }); 
+
+        $("#chart_div").bind('jqplotDataUnhighlight', function(ev, seriesIndex, pointIndex, data) {
+            var $this = $(this);                
+
+            $this.attr('title',""); 
+        });
+    });
+</script>

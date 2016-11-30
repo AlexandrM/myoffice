@@ -1,0 +1,91 @@
+﻿@using Microsoft.Owin.Security
+
+@model Web.MyOffice.Models.Member
+
+@{
+    ViewBag.Title = S.MyProfile;
+    ASE.MVC.ApplicationUser user = (ASE.MVC.ApplicationUser)ViewBag.User;
+}
+
+@Html.Top()
+
+<div class="row">
+    <div class="col-md-8">
+        @Html.ActionLinkPrimary(S.ChangePassword, "ChangePassword", "Account")
+
+        @using (Html.FormHorizontal())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.Id)
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.RowLabelEditorAndValidation(x => x.Email)
+            @Html.IsReadonly(x => x.Email)
+
+            @Html.RowLabelEditorAndValidation(x => x.LastName)
+
+            @Html.RowLabelEditorAndValidation(x => x.FirstName)
+
+            @Html.RowLabelEditorAndValidation(x => x.MiddleName)
+
+            @Html.RowLabelEditorAndValidation(x => x.FullName)
+
+            @Html.ButtonSave();
+        }
+    </div>
+    <div class="col-md-4">
+        <div>
+            <h4>@S.Associcate</h4>
+            <hr />
+            @{
+                var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+                using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Url.Action("MyProfile", "Member") }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div id="socialLoginList">
+                        <p>
+                            @foreach (AuthenticationDescription p in loginProviders)
+                            {
+                                if (!user.Logins.Select(x => x.LoginProvider).Contains(p.AuthenticationType))
+                                {
+                                    <button type="submit" class="btn btn-primary" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Войти через @p.Caption">@p.AuthenticationType</button>
+                                }
+                            }
+                        </p>
+                    </div>
+                }
+            }
+        </div>
+        <div style="height: 50px;"></div>
+        <div>
+            <h4>@S.Diasssocicate</h4>
+            <hr />
+            @{
+                <div>
+                    @foreach (AuthenticationDescription p in loginProviders)
+                    {
+                        if (user.Logins.Select(x => x.LoginProvider).Contains(p.AuthenticationType))
+                        {
+                            string loginProvider = user.Logins.FirstOrDefault(x => x.LoginProvider == p.AuthenticationType).LoginProvider;
+                            string providerKey = user.Logins.FirstOrDefault(x => x.LoginProvider == p.AuthenticationType).ProviderKey;
+
+                            <form method="post" style="display: inline-block" action="@Url.Action("Disassociate", "Account", new { loginProvider = loginProvider, providerKey = providerKey })">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-warning" title="Войти через @p.Caption">@p.AuthenticationType</button>
+                            </form>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#LastName, #FirstName, #MiddleName").change(function () {
+            $("#FullName")[0].value = $("#LastName")[0].value + ' ' + $("#FirstName")[0].value + ' ' + $("#MiddleName")[0].value
+        });
+    });
+</script>

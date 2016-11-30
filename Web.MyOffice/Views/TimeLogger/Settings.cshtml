@@ -1,0 +1,30 @@
+﻿@model List<TimeLoggerSettingWorkStation>
+
+@{
+    ViewBag.Title = S.Settings;
+}
+
+@Html.ActionLink(S.Add, "EditWorkStation", "TimeLogger", new { id = Guid.Empty }, new { @class = "btn btn-success" })
+
+<table class="table table-striped">
+    <tr>
+        <th></th>
+        <th>@S.Name</th>
+        <th>@S.WorkStationId</th>
+    </tr>
+    @foreach(var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(S.Edit, "EditWorkStation", "TimeLogger", new { id = item.Id }, new { @class = "btn btn-primary" })
+                @Html.ActionLink(S.Delete, "DeleteWorkStation", "TimeLogger", new { id = item.Id }, new { @class = "btn btn-danger" })
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.WorkStationId
+            </td>
+        </tr>
+    }
+</table>

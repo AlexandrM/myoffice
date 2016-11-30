@@ -1,0 +1,24 @@
+﻿@model Web.MyOffice.Models.Currency
+
+@{
+    ViewBag.Title = S.NewCurrency;
+}
+
+@Html.Top()
+
+@using (Html.FormHorizontal()) 
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.RowLabelEditorValidation(model => model.Name, model => model.Name)
+
+    @Html.RowLabelEditorValidation(model => model.ShortName, model => model.ShortName)
+
+    @Html.RowLabelDropBoxValidation(model => model.CurrencyType, model => model.CurrencyType, "CurrencyType", Model.CurrencyType.ToSelectList())
+
+    @Html.ButtonCreate();
+}
+
+@Html.BackToIndex()

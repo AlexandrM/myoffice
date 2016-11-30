@@ -1,0 +1,88 @@
+﻿@model List<Motion>
+
+<div id="ItemEdit">
+    @using (Html.BeginForm("ItemEdit", "References", FormMethod.Post, new { role = "form" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">@R.R.View</h4>
+        </div>
+        
+        <div class="modal-body">
+            <table class="table table-bordered" style="width: 100%">
+                <tr>
+                    <th>
+                        @R.R.Deleted
+                    </th>
+                    <th>
+                        @R.R.Account
+                    </th>
+                    <th>
+                        @R.R.DateTime
+                    </th>
+                    <th>
+                        @R.R.Item
+                        <br />
+                        @R.R.Note
+                    </th>
+                    <th>
+                        @R.R.Sum +
+                        <br />
+                        @R.R.Sum - 
+                    </th>
+                    <th>
+                        @R.R.Actions
+                    </th>
+                </tr>
+
+                @{
+                    Guid itemId = Guid.Empty;
+                }
+                @foreach (Motion motion in Model.OrderByDescending(x => x.DateTime))
+                {
+                    itemId = motion.Item.Id;
+                    <tr>
+                        <td>
+                            @(motion.Deleted ? R.R.Yes : "")
+                        </td>
+                        <td>
+                            @motion.Account.Name
+                        </td>
+                        <td>
+                            @motion.DateTime
+                        </td>
+                        <td>
+                            @motion.Item.Name
+                            <br />
+                            @motion.Note
+                        </td>
+                        <td class="text_right">
+                            <span class="green">@(motion.SumP == 0 ? "" :  motion.SumP.ToString("0.00"))</span>
+                            <br />
+                            <span class="red">@(motion.SumM == 0 ? "" :  motion.SumM.ToString("0.00"))</span>
+                        </td>
+                        <td>
+                            @*<a href="#" tabindex="-1" class="btn btn-primary"  onclick="MotionsEdit(@motion.Id, this)">@R.R.Edit</a>*@
+                            @{
+                                string info = @String.Format("{0} {1} {2} {3}", R.R.DateTime, motion.DateTime, R.R.Sum, motion.SumM == 0 ? motion.SumP : motion.SumM);
+                            }
+                            @if (motion.Deleted)
+                            {
+                                <a href="#" tabindex="-1" class="btn btn-success" onclick="MotionsDeleteInt(@motion.Id, false, @motion.Item.Id)">@R.R.UnDelete</a>
+                                <a href="#" tabindex="-1" class="btn btn-danger" onclick="MotionsDelete(@motion.Id, true, '@info', @motion.Item.Id)">@R.R.Delete</a>
+                            }
+                            else
+                            {
+                                <a href="#" tabindex="-1" class="btn btn-warning" onclick="MotionsDelete(@motion.Id, true, '@info', @motion.Item.Id)">@R.R.Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
+        </div>
+    }
+</div>

@@ -1,0 +1,24 @@
+﻿@model Web.MyOffice.Models.CurrencyRate
+
+@{
+    ViewBag.Title = String.Format("{0} - {1}: {2} ({3})", S.Edit, Model.Currency.Name, Model.Value, Model.DateTime.ToStringD());
+}
+
+@Html.Top()
+
+@using (Html.FormHorizontal())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.CurrencyId)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.RowLabelEditorValidation(model => model.DateTime, model => model.DateTime)
+
+    @Html.RowLabelEditorValidation(model => model.Value, model => model.Value)
+
+    @Html.ButtonSave();
+}
+
+@Html.BackToIndex()

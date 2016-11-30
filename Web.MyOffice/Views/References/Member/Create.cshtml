@@ -1,0 +1,68 @@
+﻿@model Web.MyOffice.Models.Member
+
+@{
+    ViewBag.Title = S.NewMember;
+}
+
+@Html.Top()
+
+@using (Html.FormHorizontal(null, null, false, new { onsubmit = "return doConfirm();", id = "Create" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.RowLabelEditorAndValidation(x => x.Email)
+    
+    @Html.RowLabelEditorAndValidation(x => x.LastName)
+    
+    @Html.RowLabelEditorAndValidation(x => x.FirstName)
+    
+    @Html.RowLabelEditorAndValidation(x => x.MiddleName)
+    
+    @Html.RowLabelEditorAndValidation(x => x.FullName)
+
+    @Html.ButtonCreate();
+}
+
+@Html.BackToIndex()
+
+<script>
+    $(function () {
+        $("#LastName, #FirstName, #MiddleName").change(function () {
+            $("#FullName")[0].value = $("#LastName")[0].value + ' ' + $("#FirstName")[0].value + ' ' + $("#MiddleName")[0].value
+        });
+
+        $("#Email").change(function () {
+            if ($("#FullName").val().length == 0)
+                $("#FullName")[0].value = $("#Email").val();
+        });
+    });
+
+    function doConfirm() {
+        if ($("#Create").valid())
+        {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("MemberExists")',
+                data: { email: $("#Email").val() },
+                dataType: "json",
+                success: function (response) {
+                    if (!response.result) {
+                        bootbox.confirm('@S.ReallyAddUserWithEmail :' + $("#Email").val() + '?', function (result) {
+                            if (result) {
+                                $("#Create").attr("onsubmit", "");
+                                $("#Create").submit();
+                            }
+                        });
+                    }
+                    else {
+                        $("#Create").attr("onsubmit", "");
+                        $("#Create").submit();
+                    }
+                }
+            });
+        }
+        return false;
+    }
+</script>

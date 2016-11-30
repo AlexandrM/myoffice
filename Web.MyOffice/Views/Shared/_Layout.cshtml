@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link id="linkRoot" href="~/" rel="tag" />
+
+    <title>@this.Title</title>
+
+    @Styles.Render("~/CSS/css")
+    @Styles.Render("~/CSS/bootstrap")
+
+    @Scripts.Render("~/JS/modernizr")
+    @Scripts.Render("~/JS/jquery")
+    @Scripts.Render("~/JS/jqueryval")
+    <script src="@Url.Content(String.Format("~/Scripts/locale/messages_{0}.js", CultureHelper.AcceptLanguage().ToString()))"></script>
+    @Scripts.Render("~/JS/moment")
+    @Scripts.Render("~/JS/bootstrap")
+    @Scripts.Render("~/JS/ASE")
+    @Scripts.Render("~/JS/PDF")
+
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/angular-resource.js")
+    @Scripts.Render("~/Scripts/angular-route.js")
+    @Scripts.Render("~/Scripts/angular-moment.js")
+
+    <script>
+        $.fn.datetimepicker.defaults.pickDate = true;
+        $.fn.datetimepicker.defaults.pickTime = true;
+        $.fn.datetimepicker.defaults.useMinutes = true;
+        $.fn.datetimepicker.defaults.useCurrent = true;
+        $.fn.datetimepicker.defaults.language = '@CultureHelper.AcceptLanguage().ToString().Substring(0, 2)';
+        $.fn.datetimepicker.defaults.showToday = true;
+
+        $.fn.fileinput.defaults.browseLabel = '@S.Select &hellip;',
+        $.fn.fileinput.defaults.removeLabel = '@S.Remove',
+        $.fn.fileinput.defaults.uploadLabel = '@S.Upload',
+        $.fn.fileinput.defaults.showUpload = false;
+
+        bootbox.setDefaults({ locale: '@CultureHelper.AcceptLanguage().ToString().Substring(0, 2)' });
+        moment.locale('@CultureHelper.AcceptLanguage().ToString().Substring(0, 2)');
+
+        ASE.Init('@Url.Content("~")');
+        ASE.UserId = '@UserId';
+    </script>
+
+    @Html.Partial("_JSLocalization")
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink(S.AppName, "Index", "Home", null, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                @if (Request.IsAuthenticated)
+                {
+                    <ul class="nav navbar-nav">
+                        @*<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.QuickRecords<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                @foreach (var item in db.QuickRecordCategories.Where(x => x.UserId == UserId & x.ParentId == null).OrderBy(x => x.Name).ToList())
+                                {
+                                    <li>@Html.ActionLink(@item.Name, "QuickRecords", "QuickRecords", new { category = item.Id }, null)</li>
+                                }
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink(@S.Settings, "Settings", "QuickRecords")</li>
+                            </ul>
+                        </li>*@
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.MenuTimeLogger<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink(@S.SummaryInformation, "SummaryInformation", "TimeLogger")</li>
+                                <li>@Html.ActionLink(@S.Journal, "Journal", "TimeLogger")</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink(@S.Applications, "Applications", "TimeLogger")</li>
+                                <li>@Html.ActionLink(@S.Settings, "Settings", "TimeLogger")</li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Projects<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink(@S.AllProjects, "Index", "Project")</li>
+                                <li class="dropdown-submenu">
+                                    <a data-target="#" class="dropdown-toggle angulare" data-toggle="dropdown">@S.Projects</a>
+                                    <ul class="dropdown-menu">
+                                        @foreach (var item in db.ProjectMembers
+                                            .Where(x => x.Member.MainMemberId == UserId & x.Project.State != ProjectState.Approved)
+                                            .Select(x => x.Project)
+                                            .ToList()
+                                            .Distinct()
+                                            .OrderBy(x => x.Name))
+                                        {
+                                            <li><a href="~/Project#/tasks/@item.Id">@item.Name</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                                <li><a href="~/Project#/project/0">@S.Add</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Settlements<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="~/Project#/Debts/1">@S.MemberDebt</a></li>
+                                <li><a href="~/Project#/Debts/2">@S.ImplementerDebt</a></li>
+                                <li class="divider"></li>
+                                <li><a href="~/Project#/memberdayreport">@S.MemberDayReports</a></li>
+                                <li><a href="~/Project#/memberpayment">@S.Payments</a></li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink(@S.Currencies, "Index", "Currency")</li>
+                                <li>@Html.ActionLink(@S.Members, "Index", "Member")</li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Finance<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                @{
+                                    Guid budgetId = Guid.Empty;
+                                    if (Request.Cookies["BudgetId"] != null)
+                                    {
+                                        Guid.TryParse(Request.Cookies["BudgetId"].Value, out budgetId);
+                                    }
+                                    var budget = db.Budgets.Find(budgetId);
+
+                                    <li class="dropdown-submenu">
+                                        @if (budget == null)
+                                        {
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@R.R.SelectBudget</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@R.R.Budget @budget.Name</a>
+                                        }
+                                        <ul class="dropdown-menu">
+                                            @foreach (var item in db.BudgetUsers
+                                                .Include(x => x.Budget.Owner)
+                                                .Where(x => x.UserId == UserId)
+                                                .Select(x => x.Budget)
+                                                .ToList()
+                                                .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
+                                            {
+                                                if (item.OwnerId != UserId)
+                                                {
+                                                    <li title="@R.R.Imported (@item.Owner.Email)">
+                                                        <a href="@Url.Action("SelectBudget", "References", new { id = item.Id })"><b>@item.Name</b></a>
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    <li>@Html.ActionLink(@item.Name, "SelectBudget", "References", new { id = item.Id }, null)</li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @foreach (var item in db.CategoryAccounts.Where(x => x.BudgetId == budgetId).OrderBy(x => x.Name).ToList())
+                                {
+                                    <li>@Html.ActionLink(item.Name, "Index", "MyBank", new { categoryId = item.Id }, null)</li>
+                                }
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink(S.Reports, "Index", "MyBankReports")</li>
+                                <li class="divider"></li>
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.References</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink(@R.R.Budgets, "Budgets", "References")</li>
+                                        @if ((budget != null) && (budget.OwnerId == UserId))
+                                        {
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink(@S.Currencies, "Index", "Currency")</li>
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink(@R.R.CategoryAccounts, "CategoryAccounts", "References")</li>
+                                            <li>@Html.ActionLink(@R.R.Accounts, "Accounts", "References")</li>
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink(@R.R.CategoryItems, "CategoryItems", "References")</li>
+                                            <li>@Html.ActionLink(@R.R.Items, "Items", "References")</li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+                else
+                {
+                    @Html.Partial("_LoginPartial")
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        <div id="content">
+            @RenderBody()
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - @S.AppName @@ ase.com.ua</p>
+        </footer>
+    </div>
+
+    <div class="navbar navbar-inverse navbar-fixed-bottom">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                @{
+                    List<KeyValuePair<string, string>> history = (Session["ASEHistory"] as List<KeyValuePair<string, string>>);
+                    history = history ?? new List<KeyValuePair<string, string>>();
+                }
+                <ul class="nav navbar-nav">
+                    @if (history.Count > 1)
+                    { 
+                        <li><a href="@history[history.Count - 2].Value"><span class="glyphicon glyphicon-chevron-left" title="@S.Back (@history[history.Count - 2].Key)"></span></a></li>
+                    }
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.History<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @{
+                                for (int i = history.Count - 2; i >= 0; i--)
+                                {
+                                    <li><a href="@history[i].Value">@history[i].Key</a></li>
+                                }
+                            }
+                        </ul>
+                    <li/>
+                </ul>
+                <ul class="nav navbar-nav">
+                    @Html.Partial("Language")
+                </ul>
+
+                @if (Request.IsAuthenticated)
+                {
+                    @Html.Partial("_LoginPartial")
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    "use strict";
+
+    var globalDateFormats = [];
+
+    $(function () {
+
+        globalDateFormats.push('@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern');
+        globalDateFormats.push('@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern.Replace("H", "HH")');
+        globalDateFormats.push('@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern.Replace("H", "HH").Replace(":ss", "")');
+        globalDateFormats.push('@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern');
+        globalDateFormats.push('@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern.Replace(":ss", "")');
+
+        jQuery.validator.addMethod("date", function (value, element) {
+            for (i = 0; i < globalDateFormats.length; i++)
+                if (Date.parseExact(value, globalDateFormats[i]))
+                    return true;
+
+            return false;
+        });
+        jQuery.validator.addMethod("number", function(value, element) {
+            return /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value) || /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\,\d+)?$/.test(value);
+        });
+
+        $('input[type=date]').attr("type", "text");
+
+        $("body").on("focus", ".datepicker", function () {
+            $(this).datetimepicker({ pickTime: false });
+            $(this).data("DateTimePicker").show();;
+        });
+
+        $("body").on("focus", ".datetimepicker", function () {
+            $(this).datetimepicker();
+            $(this).data("DateTimePicker").show();;
+        });
+
+        $('span').each(function () {
+            var req = $(this).attr('make-readonly');
+            if (undefined != req) {
+                var input = $("input[id='" + $(this).attr('for') + "']");
+                $(input).attr("readonly", "");
+            }
+        });
+
+        $(".fileupload").fileinput({ 'showUpload': false, 'previewFileType': 'any' });
+
+        ASE.ValidationInit();
+    });
+
+    $('.angulare').click(function (e) {
+        e.stopPropagation();
+    });
+</script>

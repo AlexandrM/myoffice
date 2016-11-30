@@ -1,0 +1,84 @@
+﻿@model IEnumerable<MyBank.Models.Account>
+
+<div 
+    class="dialogbody" 
+    currencyid="@ViewData["currencyid"]"
+    categoryid="@ViewData["categoryid"]"
+>
+
+    <p>
+    <a class="btn btn-success" onclick="AccountEditDialog(0, this)">@R.R.Add</a>
+    <a class="btn btn-info" onclick="AccountListRefresh(this)">@R.R.Refersh</a>
+        
+    <table class="table table-bordered" style="width: auto"><tbody>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Deleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Currency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreditLimit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr accountid="@item.Id">
+            <td>
+                @(item.Deleted ? R.R.Yes : "")
+            </td>
+            <td>
+                @Html.Label("", item.Name)
+            </td>
+            <td>
+                @Html.Label("", (item.Category == null) ? "" : item.Category.Name)
+            </td>
+            <td>
+                @Html.Label("", (item.Currency == null) ? "-" : item.Currency.ShortName)
+            </td>
+            <td class = "text_right">
+                @Html.Label("", item.CreditLimit.ToString())
+            </td>
+            <td>
+                @Html.Label("", item.Description ?? string.Empty)
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        @R.R.Actions
+                        <span class="caret"></span>
+                    </a>                    
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" tabindex="-1" onclick="AccountEditDialog(@item.Id, this)">@R.R.Edit</a>
+                        </li>
+                        @if (item.Motions.Count == 0)
+                        {
+                            <li>
+                                <a href="#" tabindex="-1" class="label-warning" onclick="AccountDelete(@item.Id, true, this)">@R.R.Delete</a>
+                            </li>
+                        }
+                        @if (item.Deleted)
+                        {
+                            <li>
+                                <a href="#" tabindex="-1" onclick="AccountDelete(@item.Id, false, this)">@R.R.UnDelete</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody></table>
+</div>

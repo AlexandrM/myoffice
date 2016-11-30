@@ -1,0 +1,102 @@
+﻿@model List<CategoryAccount>
+
+@{
+    ViewBag.Title = @R.R.MyBank + " - " + R.R.CategoryAccounts;
+}
+
+<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+</style>
+
+<h2>@R.R.CategoryAccounts</h2>
+
+<div id="CategoryAccountList">
+    <p>
+    <a class="btn btn-success" onclick="CategoryAccountEditDialog()">@R.R.Add</a>
+    </p>
+
+    <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+        <tr>
+            <th>
+                @R.R.Name
+            </th>
+            <th>
+                @R.R.Description
+            </th>
+            <th>@R.R.Actions</th>
+        </tr>
+
+    @foreach (var item in Model.OrderBy(x => x.Name)) {
+        <tr accountcategoryid="@item.Id">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a href="#" class="btn btn-primary" onclick="CategoryAccountEditDialog('@item.Id')">@R.R.Edit</a>
+                @if(item.Accounts.Count == 0)
+                {
+                    <a chref="#" class="btn btn-danger" onclick="CategoryAccountDelete('@item.Id', '@item.Name')">@R.R.Delete</a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody></table>
+</div>
+
+<div class="modal" id="Dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script>
+    function CategoryAccountEditDialog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/CategoryAccountEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CategoryAccountDelete(id, name) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.post('@Url.Content("~/References/CategoryAccountDelete")', { id: id }, function (data) {
+                            window.location = '@Url.Action("CategoryAccounts", "References")';
+                        });
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+</script>

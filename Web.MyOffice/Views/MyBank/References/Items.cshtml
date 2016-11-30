@@ -1,0 +1,262 @@
+﻿@model List<Item>
+
+@{
+    ViewBag.Title = @R.R.MyBank + " - " + R.R.Items;
+    Guid Active = ViewBag.Active;
+}
+
+<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+    #myTab {
+        width: 100%;
+        line-height: 2em;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 0;
+        overflow: scroll;
+        overflow-x: hidden;
+    }
+    #myTab, #tab-content {
+        overflow: scroll;
+        overflow-x: hidden;
+    }
+</style>
+
+<h2>@R.R.Items</h2>
+
+<div id="ItemsList" class="row">
+    <p>
+    <a class="btn btn-success" onclick="ItemEditDialog()">@R.R.Add</a>
+    <a class="btn btn-primary" onclick="$('#DialogMerge').modal();">@R.R.Merging</a>
+    </p>
+
+
+    @{
+
+        List<CategoryItem> cats = Model.Select(x => x.Category).OrderBy(x => x.Name).Distinct().ToList();
+        cats.Insert(0, new CategoryItem { Id = Guid.Empty, Name = R.R.All, Items = new List<Item>() });
+        <div class="col-lg-4">
+            <ul class="nav nav-pills nav-stacked" id="myTab">
+
+            @foreach (CategoryItem cat in cats)
+            {
+                <li class="@(cat.Id == Active ? "active" : "")"><a href="@("#category" + cat.Id)" data-toggle="tab"><h4>@cat.Name</h4></a></li>
+            }
+            </ul>
+        </div>
+        
+        <div id="tab-content" class="tab-content col-lg-8">
+
+            @{
+                foreach (CategoryItem cat in cats)
+                {
+                    var list = cat.Items.OrderBy(x => x.Name).ToList();
+                    if (cat.Id == Guid.Empty)
+                    {
+                        list = Model;
+                    }
+                    <div class="@(cat.Id == ViewBag.Active ? "tab-pane active" : "tab-pane")" id="@("category" + cat.Id)">
+
+                        <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+                        <tr>
+                            <th>@R.R.Name</th>
+                            <th style="min-width: 330px">@R.R.Actions</th>
+                        </tr>
+
+                        @foreach (var item in list) 
+                        {
+                            <tr itemid="@item.Id">
+                                <td>
+                                    <span title="@item.Description">
+                                        @item.Name
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-primary" onclick="ItemEditDialog('@item.Id')">@R.R.Edit</a>
+                                    @if (item.Motions.Count == 0)
+                                    {
+                                        <a chref="#" class="btn btn-danger" onclick="ItemDelete('@item.Id', '@item.Name', '@item.CategoryId')">@R.R.Delete</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-success" onclick="ItemMotionList('@item.Id')">@R.R.Motions</a>
+                                    }
+                                    <a href="#" class="btn btn-warning" onclick="ItemMerge('@item.Id')">@R.R.Merge</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody></table>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+<div class="modal" id="Dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="Dialog2">
+    <div class="modal-dialog" style="width: 80%; height: 80%">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="DialogMerge">
+    <div class="modal-dialog" style="width: 80%; height: 80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@R.R.Merging</h4>
+            </div>
+            
+            @using(Html.BeginForm("AddMerge", "References")) {
+                <table id="MergeTable" class="table table-bordered table-striped" style="width: 100%"><tbody>
+                    <tr>
+                        <th style="max-width: 50px">@R.R.Leave</th>
+                        <th>@R.R.ID</th>
+                        <th>@R.R.Name</th>
+                        <th>@R.R.Category</th>
+                        <th>@R.R.Actions</th>
+                    </tr>
+                </table>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">@R.R.Merge</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var h = "" + parseInt($("body").css("height")) * 0.7 + "px";
+        $("#ItemsList").find("ul").css("height", h);
+        $(".tab-pane").css("height", h);
+    });
+
+    function ItemEditDialog(id) {
+        console.log(1);
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/ItemEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function ItemDelete(id, name, categoryid) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.post('@Url.Content("~/References/ItemDelete")', { id: id, categoryId: categoryid }, function (data) {
+                            window.location = data.url;
+                        });
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+
+    function ItemMotionList(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/ItemMotionList")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog2').find(".modal-content").html(data.html);
+                $('#Dialog2').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function MotionsDeleteInt(id, del, itemid) {
+        $.post('@Url.Content("~/References/MotionDetele")', { id: id, delete: del }, function (data) {
+            ItemMotionList(itemid);
+        });
+    }
+
+    function MotionsDelete(id, del, name, itemid) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        MotionsDeleteInt(id, del, itemid);
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+
+    function ItemMerge(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/AddMerge")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $("#MergeTable > tbody").append(data.html);
+                $('#DialogMerge').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function RemoveMergeItem(item) {
+        $(item).parent().parent().remove();
+    }
+</script>

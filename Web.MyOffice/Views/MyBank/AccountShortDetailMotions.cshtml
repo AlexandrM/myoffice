@@ -1,0 +1,137 @@
+﻿@model Account
+
+@{
+    DateTime DTFrom = (DateTime) ViewData["From"];
+    DateTime DTTo = (DateTime) ViewData["To"];
+    DTTo = DTTo.AddDays(1).Date.AddMilliseconds(-1);
+}
+
+<div id="@("acce_" + Model.Id)" class="accordion-body collapse">
+
+    <div class="accordion-inner">
+
+        <!-- PERIOD -->
+        <form class="form-inline" role="form"> 
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-group">@R.R.Motions @R.R.From</label>
+                <div class="form-group">
+                    @Html.TextBox("IncomeDT" + Model.Id, DTFrom.ToShortDateString(), new { @class = "form-control datepicker datepicker_p", accountid = Model.Id })
+                </div>
+                <label for="exampleInputEmail1" class="form-group">@R.R.To </label>
+                <div class="form-group">
+                    @Html.TextBox("OutcomeDT" + Model.Id, DTTo.ToShortDateString(), new { @class = "form-control datepicker datepicker_p", accountid = Model.Id }) 
+                </div>
+            </div>
+        </form>
+        <br />
+
+        <!-- CURRENT REST -->
+        <table class="table table-bordered table-striped currentrest" style="width: 100%"><tbody>
+            <tr class="info">
+                <th>
+                    @R.R.RestOn
+                    <br />
+                    @DTFrom.ToShortDateString()
+                </th>
+                <th>
+                    @R.R.Income
+                </th>
+                <th>
+                    @R.R.Outcome
+                </th>
+                <th>
+                    @R.R.RestOn
+                    <br />
+                    @DTTo.ToShortDateString()
+                </th>
+                <th>
+                    @R.R.CurrentRest
+                    <br />
+                    @R.R.ItemForDifference
+                </th>
+                <th>
+                    @R.R.WritDifference
+                </th>
+            </tr>
+            <tr class="info">
+                <td style="vertical-align: middle">
+                    @Model.Motions.Where(x => !x.Deleted & x.DateTime <= DTFrom).Sum(x => x.SumP - x.SumM)
+                </td>
+                <td style="vertical-align: middle">
+                    @Model.Motions.Where(x => !x.Deleted & x.DateTime >= DTFrom.Date & x.DateTime <= DTTo).Sum(x => x.SumP)
+                </td>
+                <td style="vertical-align: middle">
+                    @Model.Motions.Where(x => !x.Deleted & x.DateTime >= DTFrom.Date & x.DateTime <= DTTo).Sum(x => x.SumM)
+                </td>
+                <td style="vertical-align: middle">
+                    @{
+                        decimal rest = Model.Motions.Where(x => !x.Deleted & x.DateTime <= DTTo).Sum(x => x.SumP - x.SumM);
+                    }
+                    @rest
+                </td>
+                <td>
+                    @Html.TextBox("edCurrentRest" + Model.Id, "", new { @class = "form-control numeric", placeholder = @R.R.SetSum })
+                    @Html.TextBox("edCurrentItem" + Model.Id, @R.R.Difference, new { @class = "form-control" })
+                </td>
+                <td>
+                    <img 
+                        class="btnActions"
+                        src="~/Images/save32.png" 
+                        tabindex="0"
+                        onkeypress="DoClick(this)"
+                        onclick="AddDifference(this, '@rest')"
+                        accountid="@Model.Id"
+                    />
+                </td>
+            </tr>
+        </tbody></table>
+        <br />
+
+        <!-- MOTIONS -->
+        <table class="table table-bordered table-striped motions" style="width: 100%"><tbody>
+            
+            <!-- ADD NEW -->
+            <tr>
+                <th width="33%">
+                    @R.R.DateTime
+                </th>
+                <th width="33%">
+                    @R.R.Item
+                    <br />
+                    @R.R.Note
+                </th>
+                <th width="33%">
+                    + (@Model.Motions.Where(x => !x.Deleted & x.DateTime >= DTFrom.Date & x.DateTime <= DTTo).Sum(x => x.SumP) @Model.Currency.ShortName)
+                    <br />
+                    - (@Model.Motions.Where(x => !x.Deleted & x.DateTime >= DTFrom.Date & x.DateTime <= DTTo).Sum(x => x.SumM) @Model.Currency.ShortName)
+                </th>
+                <th style="min-width: 125px">
+                    @R.R.Actions
+                </th>
+            </tr>
+
+            <tr class="success" accountid="@Model.Id" motionid="@Guid.Empty">
+                @Html.Partial("MotionEdit", new Motion { Id = Guid.Empty, Account = Model, DateTime = DateTime.Now })
+            </tr>
+            
+            <!-- OLD MOTION LIST -->
+            @{
+                var motions = (from item in Model.Motions orderby item.DateTime descending where !item.Deleted & item.DateTime >= DTFrom.Date & item.DateTime <= DTTo select item);
+
+                foreach (Motion motion in motions)
+                {
+                    <tr class="info" accountid="@Model.Id" motionid="@motion.Id">
+                        @Html.Partial("MotionEdit", motion)
+                    </tr>
+                }
+            }
+        <tbody></table>
+
+        <script>
+            $(function () {
+                $('#@("edAddMotionItem" + Model.Id)').focus();
+            });
+
+        </script>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+
+<h2>@S.Payment</h2>
+
+<div class="form-horizontal container" ng-init="refresh()">
+    <div class="col-sm-6">
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">@S.DateTime</label>
+            <div class="col-sm-8">
+                <input class="form-control required datetimepicker" ng-model="memberPayment.DateTime" mo-date-input="L LT" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">@S.Currency</label>
+            <div class="col-sm-8">
+                <input class="form-control" disabled="" ng-model="memberPayment.Currency.ShortName">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">@S.Amount</label>
+            <div class="col-sm-8">
+                <input class="form-control" ng-model="memberPayment.Amount" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">@S.Description</label>
+            <div class="col-sm-8">
+                <textarea cols="50" rows="5" ng-model="memberPayment.Description"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a class="btn btn-default" ng-href="#/finance/{{memberPayment.ProjectId}}"><span class="glyphicon glyphicon-euro"></a>
+                <button class="btn btn-primary" ng-click="save()">@S.Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("SharedDialog", new { Id = "dlgM", FullScreen = true, Header = S.Members, Body = "MemberList" })
+
+@Html.Partial("SharedDialog", new { Id = "dlgC", FullScreen = false, Header = S.Currencies, Body = "CurrencyList" })

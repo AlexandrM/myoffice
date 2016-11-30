@@ -1,0 +1,162 @@
+﻿@model List<Budget>
+
+@{
+    ViewBag.Title = @R.R.MyBank + " - " + R.R.Budgets;
+}
+
+<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+</style>
+
+<h2>@R.R.Budgets</h2>
+
+<div id="AccountList">
+    <p>
+    <a class="btn btn-success" onclick="BudgetEditDialog()">@R.R.Add</a>
+    </p>
+
+    @{
+        <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+        <tr>
+            <th>@R.R.Name</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.OrderBy(x => x.Name).ToList()) 
+        {
+            <tr accountid="@item.Id">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a href="#" class="btn btn-primary" onclick="BudgetEditDialog('@item.Id')">@R.R.Edit</a>
+                    <a href="#" class="btn btn-warning" onclick="BudgetUsersDialog('@item.Id')">@R.R.Users</a>
+                </td>
+            </tr>
+        }
+        </tbody></table>
+    }
+</div>
+
+<div class="modal" id="Dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script>
+    function BudgetEditDialog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/BudgetEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function BudgetDelete(id, name) {
+        bootbox.dialog({
+            message: "@R.R.ConfirmDelete" + name,
+            title: "@R.R.Confirm",
+            onEscape: function () { },
+            buttons: {
+                success: {
+                    label: "@R.R.Yes!",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.post('@Url.Content("~/References/BudgetDelete")', { id: id }, function (data) {
+                            window.location = '@Url.Action("Budgets", "References")';
+                        });
+                    }
+                },
+                danger: {
+                    label: "@R.R.Cancel!",
+                    className: "btn-warning"
+                }
+            }
+        });
+    }
+
+    function BudgetUsersDialog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/References/BudgetUsersEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').find(".modal-content").html(data.html);
+                $('#Dialog').modal();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function BudgetUsersAdd(elem, del) {
+        email = $(elem).closest("tr").find("input").val();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Content("~/References/BudgetUsersAdd")',
+            data: {
+                id: $(elem).closest("div").find("input").val(),
+                email: email
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                if (data.error == '')
+                    $('#Dialog').find(".modal-body").html(data.html);
+                else
+                    bootbox.alert(data.error);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function BudgetUsersDelete(id, email) {
+        bootbox.confirm('@R.R.Delete' + ' ' + email + '?', function (result) {
+            if (result) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Content("~/References/BudgetUsersDelete")',
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+                    },
+                    success: function (data) {
+                        $('#Dialog').find(".modal-body").html(data.html);
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        });
+    }
+</script>

@@ -1,0 +1,42 @@
+﻿@model MyBank.Models.Item
+
+<tr itemid="@Model.Id">
+    <td>
+        @(Model.Deleted ? R.R.Yes : "")
+    </td>
+    <td>
+        @Html.CheckBox("ItemMerge" + Model.Id, false, new { @class = "merge", itemid = Model.Id, onchange="AddRemoveMerge(this)"})
+    </td>
+    <td class="name" id="@("Name" + Model.Id)">
+        @Model.Name
+    </td>
+    <td>
+        @Html.Label("", (Model.Category == null) ? "" : Model.Category.Name)
+    </td>
+    <td>
+        @Html.Label("", Model.Description ?? string.Empty)
+    </td>
+    <td>
+        <div class="btn-group">
+            <a class="btn" onclick="ItemMotionList({ itemid: @Model.Id } )">@R.R.Motions</a>
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>                    
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="#" tabindex="-1" onclick="ItemEditDialog(@Model.Id, this)">@R.R.Edit</a>
+                </li>
+                @if (Model.Motions.Count == 0)
+                {
+                    <li>
+                        <a href="#" tabindex="-1" class="label-warning" onclick="ItemDelete(@Model.Id, true, this)">@R.R.Delete</a>
+                    </li>
+                }
+                @if (Model.Deleted)
+                {
+                    <li>
+                        <a href="#" tabindex="-1" onclick="ItemDelete(@Model.Id, false)">@R.R.UnDelete</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </td>
+</tr>

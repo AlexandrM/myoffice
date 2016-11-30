@@ -1,0 +1,34 @@
+﻿@model MyBank.Models.Currency
+
+<div id="CurrencyEdit">
+    @using (Html.BeginForm("CurrencyEdit", "References", FormMethod.Post, new { role = "form" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">@R.R.Edit</h4>
+        </div>
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="modal-body">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @for = "Name"})
+                @Html.TextBoxFor(model => model.Name, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ShortName, new { @for = "ShortName"})
+                @Html.TextBoxFor(model => model.ShortName, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ShortName)
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">@(Model == null ? R.R.Add : R.R.Save)</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
+        </div>
+    }
+</div>
+
+<script>
+</script>

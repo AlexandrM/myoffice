@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="form-horizontal container" ng-init="get()">
+    <h2>@S.Members @S.Project: {{project.Name}}</h2><hr>
+
+    <table class="table table-striped">
+        <tr>
+            <th>@S.View</th>
+            <th>@S.MemberType</th>
+            <th>
+            </th>
+        </tr>
+
+        <tr ng-repeat="member in project.Members">
+            <td>
+                <b>
+                    {{member.Member.FullName}}
+                </b>
+            </td>
+            <td>
+                @Html.DropDownList("MemberType", new ProjectMember().MemberType.ToSelectListIntId(),
+               new { @class = "form-control",
+                   ng_model = "member.MemberType",
+                   convert_to_number = "",
+                   ng_change = "memberTypeChange(member)",
+                   ng_disabled = "!project.IsMy"
+               })
+            </td>
+            <td>
+                <div ng-switch="project.IsMy">
+                    <a class="btn btn-danger" ng-switch-when="true" ng-click="deleteMember(member)">@S.Delete</a>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div ng-switch="project.IsMy">
+                    <a class="btn btn-primary" ng-switch-when="true" ng-click="addMember(project)">@S.Add</a>
+                </div>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+
+<div id="dialog" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-fs">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@S.NewMember</h4>
+            </div>
+            <div class="modal-body modal-body-fs">
+                @Html.Partial("MemberList")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@S.Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-default" ng-href="#/project">@S.Projects</a>
+</div>

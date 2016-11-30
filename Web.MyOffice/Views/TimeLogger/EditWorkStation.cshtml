@@ -1,0 +1,45 @@
+﻿@model TimeLoggerSettingWorkStation
+
+@{
+    ViewBag.Title = Model == null ? S.New : S.Edit;
+}
+
+<h2>@(Model == null ? S.New : S.Edit)</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>@S.TimeLoggerSettingDataBase</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WorkStationId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.WorkStationId, new { @class = "form-control", @readonly = "" })
+                @Html.ValidationMessageFor(model => model.WorkStationId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="@(Model == null ? S.Add : S.Save)" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink(S.BackToList, "Settings")
+</div>

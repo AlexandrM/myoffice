@@ -1,0 +1,30 @@
+﻿@model MyBank.Models.Budget
+
+@Html.HiddenFor(model => model.Id)
+
+<table class="table table-stripped">
+    <tr>
+        <th>@R.R.User</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.Users.OrderBy(x => x.User.Email).ToList())
+    {
+        <tr>
+            <td>
+                <input type="hidden" name="user" value="@item.UserId" />
+                <span>@item.User.Email</span>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" onclick="BudgetUsersDelete('@item.Id', '@item.User.Email'); return false;">@R.R.Delete</button>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td>
+            <input class="form-control" type="text" name="user" value="" placeholder="@R.R.Email" />
+        </td>
+        <td>
+            <button type="button" class="btn btn-primary" onclick="BudgetUsersAdd(this); return false;">@R.R.Add</button>
+        </td>
+    </tr>
+</table>

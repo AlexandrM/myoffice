@@ -1,0 +1,58 @@
+﻿@model List<TimeLoggerApplicationArgument>
+
+@{
+    DB db = new DB();
+    var categories = db.TimeLoggerApplicationCategories.Where(x => x.UserId == UserId).OrderBy(x => x.Name).ToList();
+}
+
+<table class="table table-striped">
+    <tr>
+        <th width=""></th>
+        <th width="15%">Категория</th>
+        <th width="30%">Приложение</th>
+        <th width="55%">Параметры</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><button class="btn btn-primary glyphicon glyphicon-edit" onclick="ChangeCategory('@item.Id')"></button></td>
+            <td>
+                <label>
+                    @(item.Category == null ? "--" : item.Category.Name)
+                </label>
+            </td>
+            <td title="@item.AppPath">@item.AppExe</td>
+            <td>@item.Argument</td>
+        </tr>
+    }
+</table>
+
+<div id="Dialog" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@S.SelectCategory</h4>
+            </div>
+
+            @Html.Hidden("aaItem", "", new { @class = "post1" })
+
+            <div class="modal-body" style="max-height: 400px;">
+                <div class="form-inline" role="form" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <input class="form-control post1" style="width: 400px !important;" id="categoryName" placeholder="@S.NewCategory">
+                        <button class="btn btn-success" style="width: 100px;" onclick="AddCategory()">@S.Add</button>
+                    </div>
+                </div>
+                @foreach (var item in categories)
+                {
+                    <button class="btn btn-default" style="width: 550px; margin-bottom: 5px;" onclick="SelectCategory('@item.Id')" data-dismiss="modal">@item.Name</button>
+                }
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@S.Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

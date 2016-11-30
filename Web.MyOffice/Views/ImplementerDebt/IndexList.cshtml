@@ -1,0 +1,36 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.MemberDebt>
+
+@using (Html.BeginFormInline(true))
+{
+    @Html.RowDivider(20)
+
+    @Html.TextBoxFilter("Filter", new { @class = "focus" })
+
+    using (Html.Table(Model))
+    {
+        <tr>
+            <th>@S.Member</th>
+            <th>@S.Summ</th>
+            <th>@S.Currency</th>
+            <th></th>
+        </tr>
+
+        DateTime prevDT = DateTime.MinValue;
+        decimal total = 0;
+        foreach (var item in Model)
+        {
+            var sumD = item.Debt * item.Currency.CurrencyByUser(db).CurrencyRate().Value;
+            total += sumD;
+            
+            <tr>
+                <td>@item.Member.FullName</td>
+                <td>@item.Debt.ToString("0.00")</td>
+                <td>@item.Currency.CurrencyByUser(db).ShortName</td>
+                <td>
+                    @Html.ActionLinkPrimary(@S.Details, "Details", "ImplementerDebt", new { memberId = item.Member.Id, currencyId = item.Currency.Id }, null)
+                    @Html.ActionLinkWarning(@S.Motions, "Index", "ImplementerMotions", new { memberId = item.Member.Id, currencyId = item.Currency.Id }, null)
+                </td>
+            </tr>
+        }
+    }
+}

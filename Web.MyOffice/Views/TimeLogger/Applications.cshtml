@@ -1,0 +1,40 @@
+﻿@model List<TimeLoggerApplicationArgument>
+
+@{
+    ViewBag.Title = S.Applications;
+}
+
+<h2>@S.Applications</h2>
+
+<div id="data" class="ase-html">
+    @Html.Partial("ApplicationsData", Model)
+</div>
+
+<div id="aseLoading">
+
+</div>
+
+<script>
+    function ChangeCategory(id) {
+        $('#aaItem')[0].value = id;
+        $('#Dialog').modal();
+    }
+
+    function SelectCategory(category) {
+        ASE.PostState("SelectCategory", "TimeLogger", { category: category, aaItem: $("#aaItem")[0].value })
+        $('#Dialog').modal("hide");
+    }
+
+    function AddCategory() {
+        $("#categoryName").parent().removeClass("has-error");
+
+        if ($("#categoryName")[0].value == "") {
+            $("#categoryName").parent().addClass("has-error");
+            return;
+        }
+
+        ASE.PostState("AddCategory", "TimeLogger", $(".post1"))
+        $('#Dialog').modal("hide");
+    }
+    
+</script>

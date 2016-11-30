@@ -1,0 +1,64 @@
+﻿@{
+    /// <see cref="debtsController api" />
+    /// <see cref="projectApp.js" />
+    /// <see cref="debtsCtrl.js" />
+    /// <see cref="debtsService.js" />
+    /// <see cref="pdfService.js" />
+    Layout = null;
+}
+
+<div ng-init="refresh()" class="exportable">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>
+                <a class="btn btn-default" ng-href="#/project">@S.Projects</a>
+
+                <b>
+                    <span ng-if="mode() == 1">@S.MemberDebt</span>
+                    <span ng-if="mode() == 2">@S.ImplementerDebt</span>
+                </b>
+                <a class="btn btn-primary" ng-click="toPDF()"><span class="glyphicon glyphicon-save"></span></a>
+            </h2>
+        </div>
+    </div>
+
+    <hr />
+
+    <table class="table table-striped">
+        <tr>
+            <th>@S.Project</th>
+            <th>@S.Summ</th>
+            <th>@S.Currency</th>
+            <th>@S.Total ({{myCurrency().ShortName}})</th>
+            <th class="notPrintable"></th>
+        </tr>
+        <tr ng-repeat="rest in list.Rests">
+            <td><a ng-href="#/project/{{rest.Project.Id}}">{{rest.Project.Name}}</a></td>
+            <td><b>{{rest.Amount | number:2}}</b></td>
+            <td>{{currencyById(rest.Project.RateCurrencyType).ShortName}}</td>
+            <td><b>{{rest.Amount * currencyById(rest.Project.RateCurrencyType).Value | number:2}}</b></td>
+            <td class="notPrintable">
+                <a class="btn btn-primary" ng-href="#/finance/{{rest.Project.Id}}"><span class="glyphicon glyphicon-euro"></span></a>
+                <a class="btn btn-warning" ng-if="myMemberType(rest.Project).MemberType == 0" ng-href="#/memberdayreport/0/{{rest.Project.Id}}/{{rest.Currency.CurrencyType}}">@S.DayReport</a>
+                <a class="btn btn-success" ng-if="myMemberType(rest.Project).MemberType == 0" ng-href="#/memberpayment/0/{{rest.Project.Id}}/{{rest.Currency.CurrencyType}}">@S.Payment</a>
+                <a class="btn btn-primary" ng-href="#/membermotions/{{rest.Project.Id}}/{{rest.Currency.Id}}">@S.Motions</a>
+            </td>
+        </tr>
+        <tbody ng-repeat="currency in list.Currencies">
+            <tr class="success" ng-show="getCurrencyTotal(currency) != 0">
+                <th></th>
+                <th>{{getCurrencyTotal(currency) | number:2}}</th>
+                <th>{{currency.ShortName}}</th>
+                <th>{{getCurrencyTotal(currency) * currencyById(currency.CurrencyType).Value | number:2}}</th>
+                <th class="notPrintable"></th>
+            </tr>
+        </tbody>
+        <tr class="info">
+            <th>@S.Total</th>
+            <th></th>
+            <th></th>
+            <th>{{getTotal() | number:2}}</th>
+            <th class="notPrintable"></th>
+        </tr>
+    </table>
+</div>

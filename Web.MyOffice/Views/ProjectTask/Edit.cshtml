@@ -1,0 +1,205 @@
+﻿@{
+    Layout = null;
+}
+
+<div ng-init="refresh()">
+    <a class="btn btn-primary glyphicon glyphicon-chevron-left" ng-href="#/tasks/{{projectTask.ProjectId}}">@S.Tasks</a>
+
+    <!-- TITLE -->
+    <div class="btn-group" ng-show="projectTask.NewComment != null">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            {{projectTask.StateS}}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a class="btn" ng-click="setState(projectTask, 0)">@S.ProjectStateNew</a>
+            </li>
+            <li>
+                <a class="btn" ng-click="setState(projectTask, 1)">@S.ProjectStateInProgress</a>
+            </li>
+            <li>
+                <a class="btn" ng-click="setState(projectTask, 2)">@S.ProjectStateComplete</a>
+            </li>
+            <li>
+                <a class="btn" ng-click="setState(projectTask, 3)">@S.ProjectStateApproved</a>
+            </li>
+        </ul>
+    </div>
+    <hr />
+
+    <!-- HEADER -->
+    <form name="forms.headerForm" class="form-horizontal container" ng-init="">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="Author">@S.Author</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input class="form-control" disabled="" ng-model="projectTask.AuthorName">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" disabled="">...</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="Author">@S.DateTime</label>
+                    <div class="col-md-8">
+                        <input class="form-control datepicker" disabled ng-model="projectTask.DateTime" mo-date-input="L LT">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="Author">@S.Task</label>
+                    <div class="col-md-8">
+                        <input class="form-control" 
+                               ng-disabled="((!projectTask.IsMy) || (projectTask.NewComment != null)) && (projectTask.allowEdit == null)"
+                               ng-model="projectTask.Name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="Author">@S.Limitation</label>
+                    <div class="col-md-8">
+                        <input class="form-control datepicker" 
+                               ng-disabled="((!projectTask.IsMy) || (projectTask.NewComment != null)) && (projectTask.allowEdit == null)"
+                               ng-model="projectTask.Limitation" mo-date-input="L LT">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="control-label col-md-2">@S.Description</label>
+                    <div class="col-md-9">
+                        <textarea 
+                                  class="form-control text-box multi-line" 
+                                  style="height: 150px;" 
+                                  ng-disabled="((!projectTask.IsMy) || (projectTask.NewComment != null)) && (projectTask.allowEdit == null)"
+                                  ng-model="projectTask.Description"
+                                  >
+                        </textarea>
+                    </div>
+                    <div class="col-md-1">
+                        <div ng-show="(projectTask.NewComment != null) && (projectTask.allowEdit == null) && (projectTask.IsMy)">
+                            <button class="btn btn-primary"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ng-click="projectTask.allowEdit = true"></span></button>
+                        </div>
+                        <div ng-show="((projectTask.IsMy) && (projectTask.allowEdit != null)) || (projectTask.NewComment == null)">
+                            <button class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" ng-click="save(projectTask)"></span></button>
+                        </div>
+                        <div ng-show="projectTask.History != null">
+                            <button class="btn btn-warning" ng-click="history(projectTask)"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div ng-if="projectTask.NewComment != null">
+        <h4>@S.Comments</h4>
+        <hr />
+
+        <div ng-repeat="comment in projectTask.Comments">
+            <form name="commentForm" class="form-horizontal container" ng-init="">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="control-label col-md-2">
+                                <div>
+                                    <b>{{comment.AuthorName}}</b>
+                                </div>
+                                <p></p>
+                                <div>
+                                    <span>{{comment.DateTime | amDateFormat:'L LT'}}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <textarea class="form-control text-box multi-line"
+                                            style="height: 150px;"
+                                            ng-disabled="((!projectTask.IsMy) || (projectTask.NewComment != null)) && (comment.allowEdit == null)"
+                                            ng-model="comment.Comment"></textarea>
+                            </div>
+                            <div class="col-md-1">
+                                <div ng-show="(comment.allowEdit == null) && (comment.IsMy)">
+                                    <button class="btn btn-primary"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ng-click="comment.allowEdit = true"></span></button>
+                                </div>
+                                <div ng-show="(comment.IsMy) && (comment.allowEdit != null)">
+                                    <button class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" ng-click="putComment(comment)"></span></button>
+                                </div>
+                                <div ng-show="comment.History != null">
+                                    <button class="btn btn-warning" ng-click="history(comment)"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div ng-if="projectTask.NewComment != null">
+        <h4>
+            <a class="" role="button" data-toggle="collapse" href="" data-target="#newComment" aria-expanded="false" aria-controls="newComment">
+                <b>@S.Add @S.Comment</b>
+            </a>
+        </h4>
+        <hr />
+
+        <div class="form-horizontal container collapse" id="newComment">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Author">@S.Author</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input class="form-control" disabled="" ng-model="projectTask.NewComment.AuthorName">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" disabled>...</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Author">@S.DateTime</label>
+                        <div class="col-md-8">
+                            <input class="form-control datepicker" disabled ng-model="projectTask.NewComment.DateTime" mo-date-input="L">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">@S.Comment</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control text-box multi-line" ng-model="projectTask.NewComment.Comment" style="height: 150px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button class="btn btn-primary" ng-click="postComment(projectTask.NewComment)">@S.Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

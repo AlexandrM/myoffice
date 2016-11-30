@@ -1,0 +1,76 @@
+﻿@model List<Web.MyOffice.Models.MemberDayReport>
+
+@{
+    ViewBag.Title = S.Debt;
+    Member member = (ViewBag.Member as Member);
+    Currency currency = (ViewBag.Currency as Currency);
+    Currency currencyI = (ViewBag.CurrencyI as Currency);
+}
+
+@if (ViewBag.RenderToPdf != null)
+{
+    <h2>@System.Configuration.ConfigurationManager.AppSettings["ASE.SiteName"]</h2>
+}
+else
+{
+    <h2>@ViewBag.Title</h2>
+}
+
+@using (Html.Row())
+{
+    <h2><b>@S.Member: </b>@member.FullName</h2>
+    <h3><b>@S.Debt: </b>@ViewBag.Debt.ToString("0.00") @currency.ShortName</h3>
+
+    @Html.ActionLinkPrimary(String.Format("{0} {1}", S.SendDebtInfo, db.IAm().Email), "Details", new { memberId = member.Id, currencyId = currencyI.Id, send = true })
+}
+
+@Html.RowDivider(20)
+
+@using (Html.BeginFormInline(true))
+{
+    using (Html.Table(Model))
+    {
+        <tr>
+            <th>
+                <div>@S.Date</div>
+                <div>@S.Time</div>
+            </th>
+            <th>@S.Description</th>
+            <th>@S.Amount</th>
+            <th>@S.Summ</th>
+            <th>
+                @S.Currency
+            </th>
+            <th>
+            </th>
+        </tr>
+
+        <tr class="info">
+            <td><b>@S.Total</b></td>
+            <td></td>
+            <td><b>@Model.Sum(x => x.Amount)</b></td>
+            <td><b>@Model.Sum(x => x.Amount * x.Value).ToString("0.00")</b></td>
+            <td><b>@((ViewBag.Currency as Currency).ShortName)</b></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div>@item.DateTime.ToStringD()</div>
+                    <div>@item.DateTime.ToStringT()</div>
+                </td>
+                <td>@item.Description</td>
+                <td>@item.Amount (@item.RateType.ToDisplayName())</td>
+                <td>@((item.Amount * item.Value).ToString("0.00"))</td>
+                <td>@item.Currency.CurrencyByUser(db).ShortName</td>
+                <td>
+                </td>
+            </tr>
+        }
+    }
+}
+
+@Html.BackToIndex()

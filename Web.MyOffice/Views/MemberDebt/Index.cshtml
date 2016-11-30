@@ -1,0 +1,52 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.MemberDebt>
+
+@{
+    ViewBag.Title = S.Debt;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.Row())
+{
+    using (Html.Col(9))
+    {
+    }
+}
+
+@Html.RowDivider(20)
+
+<div class="ListResult">
+    @Html.PartialBlock("data", "IndexList", Model)
+</div>
+
+<script>
+    function List_Refresh(elems) {
+        url = location.href;
+        if (url.indexOf('&'))
+            url = url + "?IsRefresh=true";
+        else
+            url = url + "&IsRefresh=true";
+        console.log(url);
+
+        data = [];
+        $(".P" + elems).each(function (elem) {
+            var item = []
+            item['P' + elems + $(this)[0].id] = $(this)[0].value;
+            data.push(item);
+        });
+        L(data);
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            data: data,
+            cache: false,
+            success: function (response) {
+                L(response);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+    }
+</script>

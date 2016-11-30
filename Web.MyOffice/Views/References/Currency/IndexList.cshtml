@@ -1,0 +1,88 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.Currency>
+
+@Html.TextBoxFilter("Filter", new { @class = "focus" })
+
+@using (Html.TableStripped(Model))
+{
+    <tr>
+        @if (this.IsSelect)
+        {
+            <th>
+                Выбрать
+            </th>
+        }
+        <th>
+            @S.MyCurrency
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].ShortName)
+        </th>
+        <th>
+            @Html.DisplayName(S.CurrencyRate) (@DateTime.Now.ToStringD())
+        </th>
+        <th>
+            @Html.DisplayName(S.CurrencyRates)
+        </th>
+        <th>
+        </th>
+    </tr>
+    
+    foreach (var item in Model.OrderBy(x => x.Name)) 
+    {
+        var rates = db.CurrencyRates.Where(x => x.CurrencyId == item.Id).OrderByDescending(z => z.DateTime).Take(2).ToList();
+        
+        <tr class="@(item.MyCurrency ? "success" : "")">
+            @if (this.IsSelect)
+            {
+                <td>
+                    @Html.ButtonPrimarySelect(this.SelectResultField, item.SelectResult())
+                </td>
+            }
+            <td>
+                @if (!item.MyCurrency)
+                {
+                    <a class="btn btn-primary" href="@Url.Action("SetMyCurrency", new { id = item.Id })">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </a>
+                }
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink(item.Name, "Edit", new { id = item.Id })
+                </b>
+            </td>
+            <td>
+                @Html.DisplayTextFor(x => item.ShortName)
+            </td>
+            <td>
+                @if ((rates != null) && (rates.Count > 0))
+                {
+                    <b title="@rates[0].DateTime">
+                        @item.Value
+                    </b>
+                }
+                @if ((rates != null) && (rates.Count > 1))
+                {
+                    <span title="@rates[1].DateTime">
+                        @String.Format(" ({0})", rates[1].Value)
+                    </span>
+                }
+            </td>
+            <td>
+                @if (!this.IsSelect)
+                {
+                    @Html.ActionLinkWarning(S.Edit, "Index", "CurrencyRate", new { currencyId = item.Id }, null)
+                }
+            </td>
+            <td>
+                @if (!this.IsSelect)
+                {
+                    @Html.ActionLinkDanger(S.Delete, "Delete", new { item.Id }, S.Delete + ": " + item.Name)
+                }
+            </td>
+        </tr>
+    }
+}

@@ -1,0 +1,19 @@
+﻿@model Account
+
+<div class="header">
+    <a class="accordion-toggle" data-toggle="collapse" href="#@("acce_" + Model.Id)">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        @{
+            decimal rest = Model.Motions.Where(x => !x.Deleted).Sum(x => x.SumP) - Model.Motions.Where(x => !x.Deleted).Sum(x => x.SumM);
+        }
+        <span>@R.R.Account: </span><span class="accountName">@Model.Name</span>
+        <span class="pull-right">
+            @R.R.Rest: 
+            <span class="accountRest" title="@(Model.CreditLimit == 0 ? "" : String.Format("{0} {1} {2} {3} - {4} {5}", R.R.OwnMoney, rest, R.R.CreditLimit, Model.CreditLimit, R.R.Avaible, Model.CreditLimit + rest)) ">
+                @rest.ToString() 
+                @(Model.CreditLimit == 0 ? "" : "/ " + (Model.CreditLimit + rest)) 
+                @Model.Currency.ShortName
+            </span>
+        </span>
+    </a>
+</div>

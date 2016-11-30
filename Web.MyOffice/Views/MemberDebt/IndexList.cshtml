@@ -1,0 +1,56 @@
+﻿@model SearchablePagedList<Web.MyOffice.Models.MemberDebt>
+
+@using (Html.BeginFormInline(true))
+{
+    @Html.RowDivider(20)
+
+    @Html.TextBoxFilter("Filter", new { @class = "focus" })
+
+    using (Html.Table(Model))
+    {
+        <tr>
+            <th>@S.Member</th>
+            <th>@S.Summ</th>
+            <th>@S.Currency</th>
+            <th>@S.Total @db.DefaultCurrency().ShortName</th>
+            <th></th>
+        </tr>
+
+        DateTime prevDT = DateTime.MinValue;
+        decimal total = 0;
+        foreach (var item in Model)
+        {
+            var sumD = item.Debt * item.Currency.CurrencyRate().Value;
+            total += sumD;
+            
+            <tr>
+                <td>@item.Member.FullName</td>
+                <td>@item.Debt.ToString("0.00")</td>
+                <td>@item.Currency.ShortName</td>
+                <td><b>@sumD.ToString("0.00")</b></td>
+                <td>
+                    @Html.ActionLinkPrimary(@S.Details, "Details", "MemberDebt", new { memberId = item.Member.Id, currencyId = item.Currency.Id }, null)
+                    @Html.ActionLinkInfo(S.DayReport, "Create", "MemberDayReport", new { memberId = item.Member.Id, currencyId = item.Currency.Id }, null)
+                    @Html.ActionLinkSuccess(@S.Payment, "Create", "MemberPayment", new { memberId = item.Member.Id, currencyId = item.Currency.Id }, null)
+                    @Html.ActionLinkWarning(@S.Motions, "Index", "memberMotions", new { memberId = item.Member.Id, currencyId = item.Currency.Id }, null)
+                </td>
+            </tr>
+        }
+        foreach (var item in Model.GroupBy(x => x.Currency))
+        {
+            var sum = Model.Where(x => x.Currency.Id == item.Key.Id).Sum(x => x.Debt);
+            <tr class="success">
+                <td></td>
+                <td>@sum.ToString("0.00")</td>
+                <td>@item.Key.ShortName</td>
+                <td>@((sum * item.Key.CurrencyRate().Value).ToString("0.00"))</td>
+                <td colspan="3"></td>
+            </tr>
+        }
+        <tr class="info">
+            <td colspan="3"></td>
+            <td><b>@total.ToString("0.00")</b></td>
+            <td></td>
+        </tr>
+    }
+}

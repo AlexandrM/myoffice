@@ -1,0 +1,124 @@
+﻿@model Motion
+@{
+    Model.Item = Model.Item ?? new Item {};
+}
+
+<td style="vertical-align: middle">
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button class="btn btn-primary glyphicon glyphicon-chevron-left" type="button" onclick="AddDay(this, -1)"></button>
+        </span>
+        @Html.TextBox("edAddMotionDT" + Model.AccountId, Model.DateTime.ToShortDateString(), new { 
+            @class = "form-control edMotionD datepicker", 
+            mode = (Model.Id != Guid.Empty ? "noborder" : ""),
+            onchange = "OnDTChange(this)",
+            usethis = true
+        })
+        <span class="input-group-btn">
+            <button class="btn btn-primary glyphicon glyphicon-chevron-right" type="button" onclick="AddDay(this, 1)"></button>
+        </span>
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button class="btn btn-primary glyphicon glyphicon-chevron-left" type="button" onclick="AddDay(this, -1)"></button>
+        </span>
+        @Html.TextBox("edAddMotionDTT" + Model.AccountId, Model.DateTime.ToString(), new { 
+            @class = "form-control edMotionDT datetimepicker",
+            mode = (Model.Id != Guid.Empty ? "noborder" : ""),
+            onchange = "OnDTChange(this)"
+        })
+        <span class="input-group-btn">
+            <button class="btn btn-primary glyphicon glyphicon-chevron-right" type="button" onclick="AddDay(this, 1)"></button>
+        </span>
+    </div>
+</td>
+<td>
+    @Html.TextBox("edAddMotionItem" + Model.AccountId, Model.Item.Name, new { 
+        selectaccount = 0, 
+        @class = "form-control edMotionItem",
+        placeholder = R.R.TypePlusToSelectAccount,
+        title=R.R.TypePlusToSelectAccountAdv,
+        onchange="ItemChangeControl(this)",
+        mode = (Model.Id != Guid.Empty ? "noborder" : "")
+    })
+    @Html.TextBox("edAddMotionNote" + Model.AccountId, Model.Note, new { 
+        @class = "form-control edMotionNote",
+        mode = (Model.Id != Guid.Empty ? "noborder" : "")
+    })
+</td>
+<td>
+    @Html.TextBox("edAddMotionSumP" + Model.AccountId, Model.SumP, new { 
+        @class = "form-control edMotionSumP numeric",
+        mode = (Model.Id != Guid.Empty ? "noborder" : "")
+    })
+    @Html.TextBox("edAddMotionSumM" + Model.AccountId, Model.SumM, new { 
+        @class = "form-control edMotionSumM numeric", 
+        color = "red",
+        mode = (Model.Id != Guid.Empty ? "noborder" : "")
+    })
+</td>
+<td>
+    @if (Model.Id == Guid.Empty)
+    {
+        <img 
+            class="btnActions"
+            src="~/Images/add32.png" 
+            tabindex="0"
+            onkeypress="AddSaveMotion(this)"
+            onclick="AddSaveMotion(this);"
+        />
+        <img 
+            class="btnImport"
+            src="~/Images/import32.png" 
+            tabindex="0"
+            onkeypress="ImportMotion(this)"
+            onclick="ImportMotion(this)"
+        />
+    }
+    else
+    {
+        <img 
+            class="@("btSaveMotion" + Model.Id)" 
+            src="~/Images/save32.png" 
+            tabindex="0"
+            onkeypress="AddSaveMotion(this)"
+            onclick="AddSaveMotion(this);"
+            id=@("btSaveMotion" + Model.Id) 
+        />
+
+        <img 
+            class="@("btSaveMotion" + Model.Id)" 
+            src="~/Images/delete32.png" 
+            tabindex="0"
+            onkeypress="DeleteMotion(this)"
+            onclick="DeleteMotion(this)"
+            id=@("btRemoveMotion" + Model.Id)  
+        />
+    }
+</td>
+
+<script>
+    function AddDay(elem, count)
+    {
+        elem = $(elem).parent().parent().find('input');
+        $(elem).attr("usethis", "true");
+        var format = "";
+        var dt = null;
+        for (var i = 0; i < globalDateFormats.length; i++) {
+            format = globalDateFormats[i];
+            dt = Date.parseExact(elem.val(), format);
+            if (dt != null)
+                break;
+        }
+
+        dt.setDate(dt.getDate() + count);
+
+        format = format.replace("MM", "!!");
+        format = format.replace("mm", "MM");
+        format = format.replace("!!", "mm");
+
+        elem.val(dt.format(format));
+        $(elem).datetimepicker('update');
+    }
+</script>

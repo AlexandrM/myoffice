@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = R.R.MyBank + " - " + R.R.Reports;
+}
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<table>
+    <tr>
+        <td style="width: 15%; vertical-align: top">
+            <ul class="nav nav-list">
+                <li class="nav-header"><h4>@R.R.ReportList</h4></li>
+                <li><a href="#" onclick="LoadReport('CurrentRest')"><h5>@R.R.CurrentRest</h5></a></li>
+                <li><a href="#" onclick="LoadReport('Outcome');return false;"><h5>@R.R.Outcome</h5></a></li>
+                <li><a href="#" onclick="LoadReport('Income');return false;"><h5>@R.R.Income</h5></a></li>
+                <li><a href="#" onclick="LoadReport('OutcomeByCategory');return false;"><h5>@R.R.OutcomeByCategory</h5></a></li>
+                <li><a href="#" onclick="LoadReport('IncomeByCategory');return false;"><h5>@R.R.IncomeByCategory</h5></a></li>
+            </ul>        
+        </td>
+        <td id="ReportBody">
+
+        </td>
+    </tr>
+</table>
+
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+<script>
+    google.load("visualization", "1", { packages: ["corechart", "treemap"] });
+    
+    function LoadReport(name, param) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/MyBankReports/LoadReport")',
+            data: {
+                name: name,
+                param: param
+            },
+            dataType: 'json',
+            success: function (data) {
+                $("#ReportBody").html(data.html);
+
+                /*$("#dtFrom, #dtTo").datepicker({
+                    showTimepicker: false,
+                    onSelect: function (dateText, inst) {
+                    }
+                });*/
+            }
+        });
+    }
+</script>

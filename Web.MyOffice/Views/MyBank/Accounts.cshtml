@@ -1,0 +1,386 @@
+﻿@model List<Account>
+
+<div id="notaccordion">
+    @{
+        List<CategoryAccount> cats = Model.Select(x => x.Category).Distinct().OrderBy(x => x.Name).ToList();
+        bool first = true;
+        if (cats.Count == 1)
+        {
+            <h2><b>@cats[0].Name</b></h2>
+        }
+        else
+        {
+            <ul class="nav nav-tabs" id="myTab">
+        
+            @foreach(CategoryAccount cat in cats)
+            {
+                <li class="@(first ? "active" : "")"><a href="@("#category" + cat.Id)" data-toggle="tab"><h4>@cat.Name</h4></a></li>
+                first = false;
+            }
+            </ul>
+        }
+
+        <div class="tab-content">
+
+        @{
+            first = true;
+            foreach (CategoryAccount cat in cats)
+            {
+                var accounts = cat.Accounts.ToList();
+
+                <div class="@(first ? "tab-pane active" : "tab-pane")" id="@("category" + cat.Id)">
+
+                    <div class="menu">
+                        @{ 
+                            first = false;
+                            foreach (Account account in accounts.OrderBy(x => x.Name).ToList())
+                            {
+                                ViewData["From"] = DateTime.Now.AddDays(-3).Date;
+                                ViewData["To"] = DateTime.Now.Date;
+
+                                <div class="@("accordion acc_" + account.Id)">
+                                    <div class="accordion-heading area">
+                                        <div class="@("AccountHeader acch_" + account.Id)" accountid="@account.Id">
+                                            @Html.Partial("AccountShortDetail", account)
+                                        </div>
+                                        <div class="@("AccountMotions accb_" + account.Id)" accountid="@account.Id">
+                                            @Html.Partial("AccountShortDetailMotions", account)
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+
+        </div>
+    }
+</div>
+
+<div id="ImportDialog" class="modal fade">
+    <div class="modal-dialog" style="width: 75%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@R.R.Import</h4>
+            </div>
+            <div class="modal-body" style="max-height: calc(100vh - 212px); overflow-y: auto;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ReloadAccount(accountId) {
+        if ($('#IncomeDT' + accountId).length == 0)
+            return;
+
+        //LoadingDialog();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Content("~/MyBank/GetAccountShortDetail")',
+            data: {
+                id: accountId,
+                from: $('#IncomeDT' + accountId)[0].value,
+                to: $('#OutcomeDT' + accountId)[0].value
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('.acch_' + accountId).html(data.header);
+                $('.accb_' + accountId).html(data.body);
+
+                InitAccount($('.acc_' + accountId));
+
+                $('.accb_' + accountId).find('.collapse').collapse('toggle');
+            },
+            error: function () {
+            },
+            complete: function (data) {
+                //LoadingDialog(true);
+            }
+        });
+    }
+
+    function AddSaveMotionDB(accountId, accountId2, motionId, dt, item, sumP, sumM, note) {
+        //LoadingDialog();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Content("~/MyBank/AddSaveMotion")',
+            data: {
+                accountId: accountId,
+                accountId2: accountId2,
+                motionId: motionId,
+                dt: dt,
+                item: item,
+                sumP: sumP,
+                sumM: sumM,
+                note: note,
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                ReloadAccount(data.accountId);
+                if (data.accountId2 != 0)
+                    ReloadAccount(data.accountId2);
+            },
+            complete: function (data) {
+                //LoadingDialog(true);
+            }
+        });
+    }
+
+    function AddSaveMotion(item) {
+        var tr = $(item).parent().parent();
+
+        dt = tr.find(".edMotionD")[0].value;
+        if (tr.find(".edMotionDT").attr("usethis") != undefined)
+            dt = tr.find(".edMotionDT")[0].value;
+
+        AddSaveMotionDB(
+            tr.attr("accountid"),
+            tr.find(".edMotionItem").attr("selectaccount"),
+            tr.attr("motionId"),
+            dt,
+            tr.find(".edMotionItem")[0].value,
+            tr.find(".edMotionSumP")[0].value,
+            tr.find(".edMotionSumM")[0].value,
+            tr.find(".edMotionNote")[0].value
+            );
+    }
+
+    var lastTypehead = null;
+    function ItemChangeControl(element) {
+        if (lastTypehead == null) {
+            $(element).attr('selectaccount', '0');
+        }
+        else {
+            if (lastTypehead.html() != $(element).html())
+                $(element).attr('selectaccount', '0');
+        }
+
+        lastTypehead = null;
+    }
+
+    function AddDifference(ui, rest) {
+
+        var diff = parseFloat(rest.replace(",", ".")) - parseFloat($('#edCurrentRest' + $(ui).attr('accountid'))[0].value.replace(",", "."));
+        diff = diff.toFixed(2);
+        if ((diff == 0) | (isNaN(diff)))
+            return;
+
+        table = $(ui).parent().parent().parent().parent().parent().find("table.motions");
+        table.find("@String.Format("#edAddMotionItem{0}", Guid.Empty)")[0].value = $('#edCurrentItem' + $(ui).attr('accountid'))[0].value;
+        table.find("@String.Format("#edAddMotionSumP{0}", Guid.Empty)")[0].value = 0;
+        table.find("@String.Format("#edAddMotionSumM{0}", Guid.Empty)")[0].value = 0;
+
+
+        if (diff > 0)
+            table.find("@String.Format("#edAddMotionSumM{0}", Guid.Empty)")[0].value = diff;
+        else
+            table.find("@String.Format("#edAddMotionSumP{0}", Guid.Empty)")[0].value = diff * -1;
+
+        table.find(".btnActions").click();
+    }
+
+    function DeleteMotion(item) {
+        var tr = $(item).parent().parent();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Content("~/MyBank/DeleteMotion")',
+            data: {
+                motionId: tr.attr("motionId"),
+                delete: true
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                ReloadAccount(data.accountId);
+            },
+            error: function () {
+                ReloadAccount(data.accountId);
+            }
+        });
+    }
+
+    function AccountSave(accountId, name) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Content("~/MyBank/AccountSave")',
+            data: {
+                accountId: accountId,
+                name: $('#' + name)[0].value,
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                ReloadAccount(data.accountId);
+            },
+            error: function () {
+                ReloadAccount(data.accountId);
+            }
+        });
+    }
+
+    function DeleteAccount(accountId) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Content("~/MyBank/DeleteAccount")',
+            data: {
+                accountId: accountId,
+                delete: true
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                document.location.reload(true);
+            },
+            error: function () {
+                document.location.reload(true);
+            }
+        });
+    }
+
+    function CurrencyEditDialog(id) {
+        $('#Dialog').html('');
+        $('#Dialog').dialog('close');
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/MyBank/CurrencyEdit")',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').html(data.html);
+                $('#Dialog').dialog({
+                    height: 'auto',
+                    width: 'auto',
+                    modal: true,
+                    title: "Новая валюта"
+                });
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function MotionInfo(motionId) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/MyBank/MotionInfo")',
+            data: {
+                id: motionId
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#Dialog').html(data.html);
+                $('#Dialog').dialog({
+                    height: 'auto',
+                    width: 'auto',
+                    modal: true,
+                    title: "Детали движения"
+                });
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function ImportMotion(item) {
+        var tr = $(item).parent().parent();
+        $('#Dialog').html('');
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/MyBank/ImportList")',
+            data: {
+                accountId: $(tr).attr('accountId')
+            },
+            dataType: 'json',
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                $('#ImportDialog').find(".modal-body").html(data.html);
+                $('#ImportDialog').modal({});
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function DoClick(arg) {
+        if (window.event && window.event.keyCode == 13) {
+            $(arg).click();
+        }
+    }
+
+    function MotionInfoVoice(id) {
+        var audio = $('#' + id)[0];
+        if (audio.paused) {
+            audio.currentTime = 0;
+            audio.play();
+        }
+        else {
+            audio.pause();
+        }
+    }
+
+    function MotionInfoVideo(file) {
+        console.log(file);
+        $('#VPlayer > video > source').attr('src', file);
+        $('#VPlayer > video')[0].load();
+        $('#VPlayer').dialog({
+            width: 'auto',
+            height: 'auto',
+            modal: true,
+            title: '@R.R.Video'
+        });
+        $('#VPlayer > video')[0].play();
+    }
+
+    function MotionInfoPhoto(file) {
+        console.log(file);
+        $('#ImageDialog > img').attr('src', file);
+        $('#ImageDialog').dialog({
+            width: screen.height * 0.75,
+            height: screen.height * 0.75,
+            modal: true,
+            title: '@R.R.Photo'
+        });
+    }
+
+
+    function OnDTChange(elem) {
+        $(elem).prev("input").each(function (idx, item) {
+            $(item).css("background-color", "");
+            $(item).attr("usethis", "");
+        });
+        $(elem).next("input").each(function (idx, item) {
+            $(item).css("background-color", "");
+            $(item).attr("usethis", "");
+        });
+        $(elem).css("background-color", "#FFFFCC");
+        $(elem).attr("usethis", "true");
+    }
+</script>

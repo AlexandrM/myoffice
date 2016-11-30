@@ -1,0 +1,77 @@
+﻿@{
+    this.Layout = null;
+}
+
+<div ng-init="refreshList()">
+    <div class="row">
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="padr10 " for="">@S.Period @S.DateFrom</label>
+                <input class="form-control datepicker" type="text" ng-model="edDateFrom">
+            </div>
+            <div class="form-group">
+                <label class="padr10 " for="">@S.DateTo</label>
+                <input class="form-control datepicker" type="text" id="DateTo" name="DateTo" ng-model="edDateTo" value="">
+            </div>
+            <button class="btn btn-primary" ng-click="refreshList()">@S.Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+
+            <input class="focus pull-right clearable" placeholder="@S.Filter" type="text" ng-model="edFilter">
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    <div>@S.Date</div>
+                    <div>@S.Time</div>
+                </th>
+                <th>@S.Project</th>
+                <th>@S.Description</th>
+                <th>@S.Amount</th>
+                <th>@S.Summ</th>
+                <th>@S.Currency</th>
+                <th class="notPrintable">@S.Total ({{myCurrency().ShortName}})</th>
+                <th class="notPrintable"></th>
+            </tr>
+            <tr ng-repeat="details in memberDayReports.Details">
+                <td>
+                    <div>{{details.DateTime | amDateFormat:'L'}}</div>
+                    <div>{{details.DateTime | amDateFormat:'LT'}}</div>
+                </td>
+                <td>
+                    {{details.Project.Name}}
+                </td>
+                <td>{{details.Description}}</td>
+                <td>
+                    {{details.Amount}}
+                    <div>({{details.RateTypeS}})</div>
+                </td>
+                <td>
+                    {{details.Amount * details.Value | number:2}}
+                </td>
+                <td>{{currencyById(details.Project.RateCurrencyType).ShortName}}</td>
+                <td class="notPrintable">
+                    <b>
+                        {{details.Amount * details.Value * currencyById(details.Project.RateCurrencyType).Value | number:2}}
+                    </b>
+                </td>
+                <td class="notPrintable w100">
+                    <a class="btn btn-warning" ng-if="details.Project.AuthorId == UserId" ng-href="#/memberdayreport/{{details.Id}}/0">@S.Edit</a>
+                    <button class="btn btn-danger" ng-if="details.Project.AuthorId == UserId" ng-click="delete(details)">@S.Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <th>@S.Total</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th class="notPrintable">{{getTotal() | number:2}}</th>
+                <th class="notPrintable"></th>
+            </tr>
+        </table>
+    </div>
+</div>
