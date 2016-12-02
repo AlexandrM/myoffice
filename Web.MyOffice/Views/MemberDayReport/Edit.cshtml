@@ -39,7 +39,7 @@
             <label class="col-sm-4 control-label">@S.Amount</label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <input class="form-control" type="number" ng-model="memberDayReport.AmountH * 60 + memberDayReport.AmountM" />
+                    <input class="form-control" type="number" ng-model="memberDayReport.Amount" ng-change="calcAmount(true)" />
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="button" ng-click="importStart()">...</button>
                     </span>
@@ -49,12 +49,13 @@
         <div class="form-group">
             <label class="col-sm-4 control-label"></label>
             <div class="col-sm-8">
-                <div class="form-inline">
-                    <div class="form-group">
-                        <input class="form-control" type="number" ng-model="memberDayReport.AmountH" on />
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <input class="form-control" type="number" ng-model="memberDayReport.AmountH" ng-change="calcAmount(false)" />
                     </div>
-                    <div class="form-group">
-                        <input class="form-control" type="number" ng-model="memberDayReport.AmountM" />
+                    <label for="inputKey" class="col-md-1 control-label">:</label>
+                    <div class="col-md-4">
+                        <input class="form-control" type="number" ng-model="memberDayReport.AmountM" ng-change="calcAmount(false)" />
                     </div>
                 </div>
             </div>
@@ -94,7 +95,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Import</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: calc(100vh - 212px)">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -106,6 +107,10 @@
                             <div class="form-group">
                                 <label class="">To</label>
                                 <input class="form-control datetimepicker" ng-model="importModel.To" mo-date-input="L" ng-change="importRefresh()">
+                            </div>
+                            <div class="form-group">
+                                <label class="">or Day</label>
+                                <input class="form-control datetimepicker" ng-model="importModel.Day" mo-date-input="L" ng-change="importRefresh(true)">
                             </div>
                         </div>
                     </div>
@@ -164,6 +169,12 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" ng-click="import()">Import</button>
+                <span class="pull-left">
+                    <input type="radio" name="round" ng-model="importModel.Round" ng-value="15" />
+                    <label>Round to 15 min</label>
+                    <input type="radio" name="round" ng-model="importModel.Round" ng-value="5" />
+                    <label>Round to 5 min</label>
+                </span>
             </div>
         </div>
     </div>

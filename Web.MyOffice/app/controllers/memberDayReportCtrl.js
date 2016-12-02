@@ -35,13 +35,20 @@
                     currencyType: $routeParams.currencyType
                 }, function (data) {
                     $scope.memberDayReport = data;
-
-                    var min = $scope.memberDayReport.Amount;
-                    var h = Math.floor(min / 60).toString();
-                    min = (min - (h * 60)).toString();
-                    $scope.memberDayReport.AmountH = h;
-                    $scope.memberDayReport.AmountM = min;
+                    $scope.calcAmount(true);
                 });
+        };
+
+        $scope.calcAmount = function (fromAmount) {
+            if (fromAmount) {
+                var amount = $scope.memberDayReport.Amount;
+                var h = Math.floor(amount);
+                var min = Math.round((amount - h) * 60);
+                $scope.memberDayReport.AmountH = h;
+                $scope.memberDayReport.AmountM = min;
+            } else {
+                $scope.memberDayReport.Amount = $scope.memberDayReport.AmountH + (Math.round($scope.memberDayReport.AmountM / 60 * 100) / 100);
+            }
         };
 
         $scope.addMember = function () {
@@ -67,7 +74,7 @@
         });
 
         $scope.save = function () {
-            if ($routeParams.id === 0) {
+            if ($routeParams.id.toString() === '0') {
                 $scope.project = MemberDayReportService.post($scope.memberDayReport, function () {
                     $location.path('/finance/' + $scope.memberDayReport.ProjectId);
                 });
@@ -133,11 +140,17 @@
 
         $scope.importData = [];
         $scope.importModel = {
+            Round: '15',
             From: new Date(),
             To: new Date(),
+            Day: new Date(),
         };
 
-        $scope.importRefresh = function () {
+        $scope.importRefresh = function (day) {
+            if (day) {
+                $scope.importModel.From = new Date($scope.importModel.Day);
+                $scope.importModel.To = new Date($scope.importModel.Day);
+            }
             $scope.importModel.From.setHours(0, 0, 0, 0);
             $scope.importModel.To.setHours(23, 59, 59, 999);
             $scope.importModel.UTC = $scope.memberDayReport.Project.UTC;
@@ -173,7 +186,21 @@
         };
 
         $scope.import = function () {
-            $scope.memberDayReport.Amount = $scope.total(false);
+            $('#import').modal('hide');
+
+            var amount = $scope.total(false);
+            var h = Math.floor(amount / 60);
+            var min = Math.round(amount - (h * 60));
+            $scope.memberDayReport.AmountH = h;
+
+            if ($scope.importModel.Round === '15') {
+                $scope.memberDayReport.AmountM = (Math.round((min + 7) / 15) * 15) % 60;
+            } else if ($scope.importModel.Round === '5') {
+                $scope.memberDayReport.AmountM = (Math.round((min + 2) / 5) * 5) % 60;
+            } else {
+                $scope.memberDayReport.AmountM = min;
+            }
+            $scope.calcAmount(false);
         };
     };
 })();
