@@ -61,6 +61,24 @@
 
     <div class="row">
         <div class="form-group">
+            <label class="control-label col-md-2">@S.BotId</label>
+            <div class="col-md-4">
+                <input class="form-control required text-box single-line" ng-model="project.BotId" ng-disabled="!project.IsMy">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2">@S.BotUTC</label>
+            <div class="col-md-4">
+                <input class="form-control required text-box single-line" type="number" ng-model="project.BotUTC" ng-disabled="!project.IsMy">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
             <label class="control-label col-md-2">@S.Description</label>
             <div class="col-md-4">
                 <textarea class="form-control text-box multi-line" style="height: 150px;" ng-model="project.Description" ng-disabled="!project.IsMy"></textarea>

@@ -385,3 +385,8 @@ img:hover
 .w100 {
     width: 100%;
 }
+
+.glyphicon-none:before {
+    content: "\2122";
+    color: transparent !important;
+}

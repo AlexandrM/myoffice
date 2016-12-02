@@ -38,7 +38,25 @@
         <div class="form-group">
             <label class="col-sm-4 control-label">@S.Amount</label>
             <div class="col-sm-8">
-                <input class="form-control" ng-model="memberDayReport.Amount" />
+                <div class="input-group">
+                    <input class="form-control" type="number" ng-model="memberDayReport.AmountH * 60 + memberDayReport.AmountM" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" ng-click="importStart()">...</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label"></label>
+            <div class="col-sm-8">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input class="form-control" type="number" ng-model="memberDayReport.AmountH" on />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="number" ng-model="memberDayReport.AmountM" />
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -58,7 +76,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <a class="btn btn-default" ng-href="#/finance/{{memberDayReport.ProjectId}}"><span class="glyphicon glyphicon-euro"></a>
+                <a class="btn btn-default" ng-href="#/finance/{{memberDayReport.ProjectId}}"><span class="glyphicon glyphicon-euro"></span></a>
                 <button class="btn btn-primary" ng-click="save()">@S.Save</button>
             </div>
         </div>
@@ -68,3 +86,85 @@
 @Html.Partial("SharedDialog", new { Id = "dlgM", FullScreen = true, Header = S.Members, Body = "MemberList" })
 
 @Html.Partial("SharedDialog", new { Id = "dlgC", FullScreen = false, Header = S.Currencies, Body = "CurrencyList" })
+
+<div class="modal fade" tabindex="-1" role="dialog" id="import">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label class="">From</label>
+                                <input class="form-control datetimepicker" ng-model="importModel.From" mo-date-input="L" ng-change="importRefresh()">
+                            </div>
+                            <div class="form-group">
+                                <label class="">To</label>
+                                <input class="form-control datetimepicker" ng-model="importModel.To" mo-date-input="L" ng-change="importRefresh()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mtop15">
+                    <div class="col-md-12">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">@S.BotId</label>
+                                <div class="col-md-4">
+                                    <input class="form-control required text-box single-line" ng-model="memberDayReport.Project.BotId" ng-change="importRefresh()">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">@S.BotUTC</label>
+                                <div class="col-md-4">
+                                    <input class="form-control required text-box single-line" type="number" ng-model="memberDayReport.Project.BotUTC" ng-change="importRefresh()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Start</th>
+                                <th>Stop</th>
+                                <th>Time</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="item in importData | orderBy: 'started'">
+                                <td>{{item.started | amDateFormat:'L LTS'}}</td>
+                                <td>{{item.stoped | amDateFormat:'L LTS'}}</td>
+                                <td>{{realUsed(item) | minutes2hm}}</td>
+                                <td>
+                                    <button ng-click="item.skip = !item.skip" class="btn btn-primary">
+                                        <span ng-show="!item.skip" class="glyphicon glyphicon-ok"></span>
+                                        <span ng-show="item.skip" class="glyphicon glyphicon-none"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>{{total(true) |minutes2hm }}</th>
+                                <th>{{total(false) |minutes2hm }}</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="import()">Import</button>
+            </div>
+        </div>
+    </div>
+</div>

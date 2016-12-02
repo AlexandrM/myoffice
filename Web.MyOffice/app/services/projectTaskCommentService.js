@@ -1,7 +1,11 @@
-﻿"use strict;"
+﻿(function () {
 
-services.factory('projectTaskCommentService', ['$resource',
-    function ($resource) {
+    'use strict';
+
+    angular.module('MyOffice.app')
+        .service('projectTaskCommentService', ['$resource', projectTaskCommentService]);
+
+    function projectTaskCommentService($resource) {
         return $resource('api/projectTaskComment/', {}, {
             query: { method: 'GET', params: {}, isArray: true },
             get: { method: 'GET', params: {}, isArray: false },
@@ -9,4 +13,5 @@ services.factory('projectTaskCommentService', ['$resource',
             put: { method: 'PUT', params: {}, isArray: false },
             delete: { method: 'DELETE', params: {}, isArray: false },
         });
-    }]);
+    };
+})();

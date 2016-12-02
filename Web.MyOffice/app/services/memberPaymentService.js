@@ -1,7 +1,11 @@
-﻿"use strinct;"
+﻿(function () {
 
-services.factory('MemberPaymentService', ['$resource',
-    function ($resource) {
+    'use strict';
+
+    angular.module('MyOffice.app')
+        .service('MemberPaymentService', ['$resource', MemberPaymentService]);
+
+    function MemberPaymentService($resource) {
         return $resource('api/memberPayment/', {}, {
             query: { method: 'GET', params: {}, isArray: false },
             get: { method: 'GET', params: {}, isArray: false },
@@ -9,4 +13,5 @@ services.factory('MemberPaymentService', ['$resource',
             put: { method: 'PUT', params: {}, isArray: false },
             delete: { method: 'DELETE', params: {}, isArray: false },
         });
-    }]);
+    };
+})();

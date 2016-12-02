@@ -2,6 +2,10 @@
     console.log(arguments);
 }
 
+function l() {
+    console.log(arguments);
+}
+
 var ASE = {
 
     LOnLOffEnabled: true,

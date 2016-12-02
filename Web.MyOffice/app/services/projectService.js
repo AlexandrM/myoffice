@@ -1,7 +1,11 @@
-﻿"use strict";
+﻿(function () {
 
-services.factory('ProjectService', ['$resource',
-    function ($resource) {
+    'use strict';
+
+    angular.module('MyOffice.app')
+        .service('ProjectService', ['$resource', ProjectService]);
+
+    function ProjectService($resource) {
         return $resource('api/project/', {}, {
             query: { method: 'GET', params: {}, isArray: true },
             get: { method: 'GET', params: {}, isArray: false },
@@ -9,4 +13,5 @@ services.factory('ProjectService', ['$resource',
             put: { method: 'PUT', params: {}, isArray: false },
             delete: { method: 'DELETE', params: {}, isArray: false },
         });
-    }]);
+    };
+})();
