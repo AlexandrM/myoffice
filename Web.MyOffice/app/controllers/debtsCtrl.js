@@ -1,13 +1,17 @@
-﻿"use strict;"
+﻿(function () {
 
-controllers.controller('debtsCtrl', ['$scope', '$rootScope', '$routeParams', 'DebtsService', 'MemberDayReportService', 'pdfService',
-    function ($scope, $rootScope, $routeParams, DebtsService, MemberDayReportService, pdfService) {
+    'use strict';
+
+    angular.module('MyOffice.app')
+        .controller('debtsCtrl', ['$scope', '$rootScope', '$routeParams', 'DebtsService', 'MemberDayReportService', 'pdfService', debtsCtrl]);
+
+    function debtsCtrl($scope, $rootScope, $routeParams, DebtsService, MemberDayReportService, pdfService) {
         $scope.refresh = function () {
             $scope.list = DebtsService.get({ mode: $routeParams.mode }, function () {
 
                 $scope.currencyById = function (id) {
                     return $.grep($scope.list.Currencies, function (e) {
-                        return e.CurrencyType == id;
+                        return e.CurrencyType === id;
                     })[0];
                 };
 
@@ -34,8 +38,9 @@ controllers.controller('debtsCtrl', ['$scope', '$rootScope', '$routeParams', 'De
                     var total = 0;
                     for (var i = 0; i < $scope.list.Rests.length; i++) {
                         var rest = $scope.list.Rests[i];
-                        if (currency.CurrencyType == rest.Project.RateCurrencyType)
-                        total += rest.Amount;
+                        if (currency.CurrencyType === rest.Project.RateCurrencyType) {
+                            total += rest.Amount;
+                        }
                     }
                     return total;
                 };
@@ -46,10 +51,12 @@ controllers.controller('debtsCtrl', ['$scope', '$rootScope', '$routeParams', 'De
 
                 $scope.myMemberType = function (project) {
                     return $.grep(project.Members, function (e) {
-                        if (e.Member != null)
-                            return e.Member.Id == ASE.UserId;
+                        if (e.Member != null) {
+                            return e.Member.Id === ASE.UserId;
+                        }
                     })[0];
                 };
             });
         };
-    }]);
+    };
+})();

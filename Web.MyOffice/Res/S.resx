@@ -780,4 +780,10 @@
   <data name="Diasssocicate" xml:space="preserve">
     <value>Отвязать</value>
   </data>
+  <data name="BotId" xml:space="preserve">
+    <value>Ключ бота</value>
+  </data>
+  <data name="BotUTC" xml:space="preserve">
+    <value>UTC бота</value>
+  </data>
 </root>

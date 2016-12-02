@@ -99,12 +99,18 @@ namespace Web.MyOffice.Controllers.API
         [HttpPut]
         public HttpResponseMessage Put(MemberDayReport model)
         {
-            var p = db.ProjectMembers.Where(x => x.ProjectId == model.ProjectId & x.Member.MainMemberId == UserId & x.MemberType == ProjectMemberType.Implementer).Select(x => x.Project).FirstOrDefault();
+            var p = db.ProjectMembers
+                .AsNoTracking()
+                .Where(x => x.ProjectId == model.ProjectId & x.Member.MainMemberId == UserId & x.MemberType == ProjectMemberType.Implementer).Select(x => x.Project)
+                .FirstOrDefault();
 
-            model.Member = null;
-            model.Project = null;
-            db.Entry(model).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
+            if (p != null)
+            {
+                model.Member = null;
+                model.Project = null;
+                db.Entry(model).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
 
             return ResponseObject2Json(null);
         }

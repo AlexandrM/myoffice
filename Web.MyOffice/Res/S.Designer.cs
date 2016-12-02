@@ -277,6 +277,24 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ключ бота.
+        /// </summary>
+        public static string BotId {
+            get {
+                return ResourceManager.GetString("BotId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTC бота.
+        /// </summary>
+        public static string BotUTC {
+            get {
+                return ResourceManager.GetString("BotUTC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to через запятую.
         /// </summary>
         public static string ByComma {

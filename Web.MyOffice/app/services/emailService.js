@@ -1,24 +1,28 @@
-﻿"use strinct;"
+﻿(function () {
 
-services.factory('emailService', ['$http', '$location',
-    function ($http, $location) {
+    'use strict';
+
+    angular.module('MyOffice.app')
+        .service('emailService', ['$http', emailService]);
+
+    function emailService($http) {
         return {
             send: function (action, projectId, memberId, attachments) {
                 $http({
                     method: 'POST',
-                    url: $("#linkRoot").attr("href") + 'api/email',
+                    url: $('#linkRoot').attr('href') + 'api/email',
                     data: {
                         action: action,
                         projectId: projectId,
                         memberId: memberId,
                         attachments: attachments
                     }
-                }).then(function successCallback(response) {
+                }).then(function successCallback() {
                 }, function errorCallback(response) {
-                    bootbox.alert("Response status: " + response.status, function () {
-                        
+                    bootbox.alert('Response status: ' + response.status, function () {
                     });
                 });
             }
+        };
     };
-}]);
+})();

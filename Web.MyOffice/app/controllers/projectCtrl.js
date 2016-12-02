@@ -1,7 +1,21 @@
-﻿"use strict";
+﻿(function () {
 
-controllers.controller('projectCtrl', ['$scope', '$routeParams', '$location', '$rootScope', 'ProjectService', 'ProjectMemberService', 'ProjectTaskService',
-    function ($scope, $routeParams, $location, $rootScope, ProjectService, ProjectMemberService, ProjectTaskService) {
+    'use strict';
+
+    angular.module('MyOffice.app')
+        .controller('projectCtrl',
+        [
+            '$scope',
+            '$routeParams',
+            '$location',
+            '$rootScope',
+            'ProjectService',
+            'ProjectMemberService',
+            'ProjectTaskService',
+            projectCtrl
+        ]);
+
+    function projectCtrl($scope, $routeParams, $location, $rootScope, ProjectService, ProjectMemberService, ProjectTaskService) {
         $scope.notAccepted = true;
 
         $scope.query = function () {
@@ -12,7 +26,7 @@ controllers.controller('projectCtrl', ['$scope', '$routeParams', '$location', '$
         $scope.delete = function (project) {
             bootbox.confirm(ASE.L.Delete + ': ' + project.Name, function (result) {
                 if (result) {
-                    ProjectService.delete({ id: project.Id, memberId: "", mode: "project" }, function () {
+                    ProjectService.delete({ id: project.Id, memberId: '', mode: 'project' }, function () {
                         $scope.query();
                     });
                 }
@@ -25,21 +39,23 @@ controllers.controller('projectCtrl', ['$scope', '$routeParams', '$location', '$
         };
 
         $scope.save = function () {
-            if ($routeParams.id == 0)
+            if ($routeParams.id === 0) {
                 $scope.project = ProjectService.post($scope.project, function () {
-                    $location.path("/project");
+                    $location.path('/project');
                 });
-            else
+            } else {
                 $scope.project = ProjectService.put($scope.project, function () {
-                    $location.path("/project");
+                    $location.path('/project');
                 });
+            }
         };
-        $scope.addMember = function (project) {
-            $rootScope.$broadcast("refreshMembersEvent", {});
+
+        $scope.addMember = function () {
+            $rootScope.$broadcast('refreshMembersEvent', {});
             $('#dialog').modal({
             });
         };
-        $scope.$on("selectMemberEvent", function (event, args) {
+        $scope.$on('selectMemberEvent', function (event, args) {
             $('#dialog').modal('hide');
             ProjectMemberService.post({ projectId: $scope.project.Id, memberId: args.member.Id }, function () {
                 $scope.get();
@@ -65,27 +81,48 @@ controllers.controller('projectCtrl', ['$scope', '$routeParams', '$location', '$
         $scope.notAccepted = true;
         $scope.refreshTasks = function () {
             $scope.project = ProjectService.get({ id: $routeParams.id }, function () {
-                $scope.projectTasks = ProjectTaskService.query({ projectId: $scope.project.Id, dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo, notAccepted: $scope.notAccepted }, function () {
-                });
+                $scope.projectTasks = ProjectTaskService.query(
+                    {
+                        projectId: $scope.project.Id,
+                        dateFrom: $scope.edDateFrom,
+                        dateTo: $scope.edDateTo,
+                        notAccepted: $scope.notAccepted
+                    }, function () {
+                    });
             });
-        }
+        };
+
         $scope.addDate = function (task, days) {
             var date = new Date(task.Limitation);
             date.setDate(date.getDate() + days);
             task.Limitation = date;
 
             ProjectTaskService.addDay(task, function () {
-                $scope.projectTasks = ProjectTaskService.query({ projectId: $scope.project.Id, dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo, notAccepted: $scope.notAccepted }, function () {
-                });
+                $scope.projectTasks = ProjectTaskService.query(
+                    {
+                        projectId: $scope.project.Id,
+                        dateFrom: $scope.edDateFrom,
+                        dateTo: $scope.edDateTo,
+                        notAccepted: $scope.notAccepted
+                    }, function () {
+                    });
             });
-        }
+        };
+
         $scope.setState = function (task, state) {
             task.State = state;
             ProjectTaskService.setState(task, function () {
-                $scope.projectTasks = ProjectTaskService.query({ projectId: $scope.project.Id, dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo, notAccepted: $scope.notAccepted }, function () {
-                });
+                $scope.projectTasks = ProjectTaskService.query(
+                    {
+                        projectId: $scope.project.Id,
+                        dateFrom: $scope.edDateFrom,
+                        dateTo: $scope.edDateTo,
+                        notAccepted: $scope.notAccepted
+                    }, function () {
+                    });
             });
-        }
+        };
+
         $scope.deleteTask = function (projectTask) {
             bootbox.confirm(ASE.L.Delete + ': ' + projectTask.Name, function (result) {
                 if (result) {
@@ -94,5 +131,6 @@ controllers.controller('projectCtrl', ['$scope', '$routeParams', '$location', '$
                     });
                 }
             });
-        }
-    }]);
+        };
+    };
+})();

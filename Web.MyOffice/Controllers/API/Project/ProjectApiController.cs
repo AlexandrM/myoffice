@@ -113,7 +113,9 @@ namespace Web.MyOffice.Controllers.API
                     x => x.State,
                     x => x.RateCurrencyType,
                     x => x.RateType,
-                    x => x.RateValue
+                    x => x.RateValue,
+                    x => x.BotId,
+                    x => x.BotUTC
                     );
 
                 db.SaveChanges();

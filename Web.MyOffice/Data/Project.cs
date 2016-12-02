@@ -65,5 +65,9 @@ namespace Web.MyOffice.Models
         public List<MemberDayReport> DayReports { get; set; }
 
         public List<MemberPayment> Payments { get; set; }
+
+        public string BotId { get; set; }
+
+        public int BotUTC { get; set; }
     }
 }
