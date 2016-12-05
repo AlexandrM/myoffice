@@ -201,6 +201,27 @@
                 $scope.memberDayReport.AmountM = min;
             }
             $scope.calcAmount(false);
+            var text = '';
+            for (var i = 0; i < $scope.importData.length; i++) {
+                if (!$scope.importData[i].skip) {
+                    for (var ic = 0; ic < $scope.importData[i].comments.length; ic++) {
+                        if ($scope.importData[i].comments[ic].text.substring(0, 1) !== '[') {
+                            text += $scope.importData[i].comments[ic].text + '\n';
+                        }
+                    }
+                }
+            }
+            $scope.memberDayReport.Description = text;
+        };
+
+        $scope.comments = function (item) {
+            var text = '';
+            for (var ic = 0; ic < item.comments.length; ic++) {
+                if (item.comments[ic].text.substring(0, 1) !== '[') {
+                    text += item.comments[ic].text + '\n';
+                }
+            }
+            return text;
         };
     };
 })();
