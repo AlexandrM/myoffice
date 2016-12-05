@@ -39,7 +39,7 @@
         };
 
         $scope.save = function () {
-            if ($routeParams.id === 0) {
+            if ($routeParams.id.toString() === '0') {
                 $scope.project = ProjectService.post($scope.project, function () {
                     $location.path('/project');
                 });
@@ -57,7 +57,7 @@
         };
         $scope.$on('selectMemberEvent', function (event, args) {
             $('#dialog').modal('hide');
-            ProjectMemberService.post({ projectId: $scope.project.Id, memberId: args.member.Id }, function () {
+            ProjectMemberService.post({ projectId: $scope.project.Id, memberId: args.Id }, function () {
                 $scope.get();
             });
         });
