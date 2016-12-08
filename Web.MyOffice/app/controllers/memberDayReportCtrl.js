@@ -195,8 +195,14 @@
 
             if ($scope.importModel.Round === '15') {
                 $scope.memberDayReport.AmountM = (Math.round((min + 7) / 15) * 15) % 60;
+                if ((min > 0) & ($scope.memberDayReport.AmountM === 0)) {
+                    $scope.memberDayReport.AmountH++;
+                }
             } else if ($scope.importModel.Round === '5') {
                 $scope.memberDayReport.AmountM = (Math.round((min + 2) / 5) * 5) % 60;
+                if ((min > 0) & ($scope.memberDayReport.AmountM === 0)) {
+                    $scope.memberDayReport.AmountH++;
+                }
             } else {
                 $scope.memberDayReport.AmountM = min;
             }
