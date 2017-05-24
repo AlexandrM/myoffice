@@ -9,5 +9,6 @@ namespace Web.MyOffice.Models
         USD = 2,
         EUR = 3,
         RUR = 4,
+        OTHER = 999999,
     }
 }
