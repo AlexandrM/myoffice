@@ -47,7 +47,7 @@
         });
 
         $scope.save = function () {
-            if ($routeParams.id === 0) {
+            if ($routeParams.id === '0') {
                 $scope.project = MemberPaymentService.post($scope.memberPayment, function () {
                     $location.path('/finance/' + $scope.memberPayment.ProjectId);
                 });
