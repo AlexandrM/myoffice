@@ -272,7 +272,9 @@ namespace Web.MyOffice.Controllers
                         db.Members.Add(member);
                         db.SaveChanges();
                     }
+                    SignInAsync(user, isPersistent: false);
                 }
+
                 return RedirectToLocal(returnUrl);
             }
         }

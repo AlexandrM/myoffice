@@ -466,7 +466,12 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="gulpfile.js" />
+    <None Include="gulpfile.js" />
+    <Content Include="Images\add32.png" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\delete32.png" />
+    <Content Include="Images\import32.png" />
+    <Content Include="Images\save32.png" />
     <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
@@ -504,11 +509,11 @@
     <Content Include="Scripts\clearableinput.js" />
     <Content Include="Scripts\date.js" />
     <Content Include="App_Browsers\qt.browser" />
-    <Content Include=".bowerrc" />
-    <Content Include=".eslintrc" />
-    <Content Include="package.json" />
-    <Content Include="bower.json" />
-    <None Include="Properties\PublishProfiles\myoffice-test - Web Deploy.pubxml" />
+    <None Include=".bowerrc" />
+    <None Include=".eslintrc" />
+    <None Include="package.json" />
+    <None Include="bower.json" />
+    <None Include="Properties\PublishProfiles\office.ase.com.ua.pubxml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -550,6 +555,7 @@
       <LastGenOutput>S.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Content Include="Scripts\angular-moment.min.js.map" />
+    <Content Include="Scripts\dis.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-er.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-et.js" />
@@ -1330,11 +1336,11 @@
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
     <Content Include="Scripts\jquery-2.2.2.min.map" />
-    <None Include="Web.appSettings.config" />
+    <Content Include="Web.appSettings.config" />
     <None Include="Web.appSettings.config.default" />
-    <None Include="Web.connectionStrings.config">
+    <Content Include="Web.connectionStrings.config">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <Content Include="Scripts\DateFormat.js" />
     <Content Include="Scripts\jqPlot\changes.txt" />
     <Content Include="Scripts\jqPlot\copyright.txt" />
@@ -1425,7 +1431,7 @@
     <Content Include="Scripts\tools.js" />
     <Content Include="Scripts\_references.js" />
     <None Include="web.connectionStrings.config.default" />
-    <None Include="Web.smtp.config" />
+    <Content Include="Web.smtp.config" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
