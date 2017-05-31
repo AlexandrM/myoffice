@@ -109,6 +109,13 @@ namespace Web.MyOffice.Controllers
                 {
                     SignInAsync(user, true);
 
+                    if (user.LockoutEnabled)
+                    {
+                        user.LockoutEnabled = false;
+                        UserManager.Update(user);
+                        return RedirectToAction("Index", "Currency");
+                    }
+
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -153,6 +160,7 @@ namespace Web.MyOffice.Controllers
                 //Exits in users
                 try
                 {
+                    user.LockoutEnabled = true;
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
@@ -273,6 +281,7 @@ namespace Web.MyOffice.Controllers
                         db.SaveChanges();
                     }
                     SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Currency");
                 }
 
                 return RedirectToLocal(returnUrl);
@@ -437,9 +446,10 @@ namespace Web.MyOffice.Controllers
         #endregion       
 
         [AllowAnonymous]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult RestorePassword(ResetPasswordViewModel model)
         {
-            if (model.Code == null)
+            if ((model.Code == null) || (Request.HttpMethod.ToLower()  != "post"))
             {
                 ModelState.Clear();
                 return View(model);
@@ -451,9 +461,13 @@ namespace Web.MyOffice.Controllers
             if (result.Succeeded)
             {
                 if (Request.IsAuthenticated)
+                {
                     return RedirectToAction("MyProfile", "Member");
+                }
                 else
+                {
                     return RedirectToAction("Login", new { email = model.Email });
+                }
             }
 
             foreach (var error in result.Errors)

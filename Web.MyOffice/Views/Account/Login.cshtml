@@ -37,7 +37,7 @@
                 <p>
                     @if (System.Configuration.ConfigurationManager.AppSettings["ASE.AllowRegistration"] == "true")
                     {
-                        <input type="submit" value="@S.Register" class="btn btn-default" name="register" />
+                        @Html.ActionLink(@S.Register, "Register", new { }, new { @class = "btn btn-default" })
                         <span></span>
                     }
                 </p>
