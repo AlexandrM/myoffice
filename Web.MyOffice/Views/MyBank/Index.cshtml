@@ -41,6 +41,7 @@
             items: 99,
             source: function (query, process) {
                 ASE.LOnLOffEnabled = false;
+                var element = this.$element;
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Content("~/MyBank/AutocompleteItem")',
@@ -57,6 +58,7 @@
                             newData.push(this.name);
                             aValues[this.name] = this.id;
                         });
+                        $(element).attr("selectaccount", "0");
 
                         process(newData);
                     },

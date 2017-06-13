@@ -149,9 +149,9 @@
                                                 .ToList()
                                                 .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
                                             {
-                                                if (item.OwnerId != UserId)
+                                                if ((item != null) && (item.OwnerId != UserId))
                                                 {
-                                                    <li title="@R.R.Imported (@item.Owner.Email)">
+                                                    <li title="@R.R.Imported @(item.Owner != null ? item.Owner.Email : "")">
                                                         <a href="@Url.Action("SelectBudget", "References", new { id = item.Id })"><b>@item.Name</b></a>
                                                     </li>
                                                 }

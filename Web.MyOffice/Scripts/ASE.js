@@ -227,8 +227,9 @@ var ASE = {
     },
 
     LOff: function () {
-        ASE.Loading.modal('hide');
-        //$('.modal-backdrop').remove();
+        if (ASE.Loading != undefined) {
+            ASE.Loading.modal('hide');
+        }
     },
 
     Select: function (elem) {

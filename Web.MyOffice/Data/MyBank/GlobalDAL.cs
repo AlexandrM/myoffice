@@ -707,11 +707,6 @@ namespace MyBank.Models
             return item;
         }
 
-        public Motion AddSaveMotion(Account account, Guid motionId, DateTime dt, string item, decimal sumP, decimal sumM, string note)
-        {
-            return AddSaveMotion(account.Id, motionId, dt, item, sumP, sumM, note);
-        }
-
         public Motion AddSaveMotion(Guid accountId, Guid motionId, DateTime dt, string item, decimal sumP, decimal sumM, string note)
         {
             Motion motion;
