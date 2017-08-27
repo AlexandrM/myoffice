@@ -19,7 +19,7 @@ using Web.MyOffice.Res;
 namespace Web.MyOffice.Controllers
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class FinanceController : ControllerAdv<DB>
     {
         public ActionResult List()

@@ -15,7 +15,7 @@ using Web.MyOffice.Data;
 namespace MyBank.Controllers
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     [ViewEngineAdv("MyBank/")]
     public class MyBankReportsController : ControllerAdv<DB>
     {

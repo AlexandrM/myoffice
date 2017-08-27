@@ -19,7 +19,7 @@ using Web.MyOffice.Res;
 namespace Web.MyOffice.Controllers
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     [ViewEngineAdv("References/")]
     public class MemberController : ControllerAdv<DB>
     {

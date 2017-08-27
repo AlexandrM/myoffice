@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace Web.MyOffice.Controllers
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class ProjectController : ControllerAdv<DB>
     {
         public ActionResult Index()

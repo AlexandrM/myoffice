@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace Web.MyOffice.Controllers
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class ProjectTaskController : ControllerAdv<DB>
     {
         public ActionResult List()

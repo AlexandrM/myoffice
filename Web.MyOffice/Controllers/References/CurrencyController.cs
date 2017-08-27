@@ -20,7 +20,7 @@ using System.Xml;
 namespace Web.MyOffice.Controllers.References
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     [ViewEngineAdv("References/")]
     public class CurrencyController : ControllerAdv<DB>
     {

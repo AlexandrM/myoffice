@@ -17,7 +17,7 @@ using Web.MyOffice.Models;
 namespace Web.MyOffice.Controllers.References
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     [ViewEngineAdv("References/")]
     public class CurrencyRateController : ControllerAdv<DB>
     {

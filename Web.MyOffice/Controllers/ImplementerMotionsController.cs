@@ -17,7 +17,7 @@ using Web.MyOffice.Models;
 namespace Web.MyOffice.Controllers.References
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class ImplementerMotionsController : ControllerAdv<DB>
     {
         public ActionResult Index(DateTime? DateFrom, DateTime? DateTo, int? page, string searchTB_Filter, Guid memberId, Guid currencyId)

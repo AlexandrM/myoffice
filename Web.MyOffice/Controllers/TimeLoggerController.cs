@@ -11,7 +11,7 @@ using System.Data.Entity.SqlServer;
 
 namespace Web.MyOffice.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     [Authorize]
     public class TimeLoggerController : ControllerAdv<DB>
     {

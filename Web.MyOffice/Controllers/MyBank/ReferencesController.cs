@@ -17,7 +17,7 @@ using MyBank.Models;
 
 namespace MyBank.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     [Authorize]
     [ViewEngineAdv("MyBank/")]
     public class ReferencesController : ControllerAdv<DB>

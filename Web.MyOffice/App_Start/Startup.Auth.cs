@@ -27,7 +27,7 @@ namespace Web.MyOffice
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                CookieName = System.Configuration.ConfigurationManager.AppSettings["Auth.AuthCookieName"],
+                CookieName = System.Configuration.ConfigurationManager.AppSettings["Auth.AuthCookieName"] + "11",
                 Provider = new CookieAuthenticationProvider
                 {
                     // Enables the application to validate the security stamp when the user logs in.

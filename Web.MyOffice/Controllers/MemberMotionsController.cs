@@ -19,7 +19,7 @@ using Web.MyOffice.Res;
 namespace Web.MyOffice.Controllers.References
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class MemberMotionsController : ControllerAdv<DB>
     {
         public ActionResult List()

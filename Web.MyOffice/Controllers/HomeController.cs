@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace Web.MyOffice.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     [Authorize]
     public class HomeController : Controller
     {

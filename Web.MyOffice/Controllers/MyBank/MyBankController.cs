@@ -18,7 +18,7 @@ using Web.MyOffice.Data;
 
 namespace MyBank.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     [Authorize]
     public class MyBankController : ControllerAdv<DB>
     {

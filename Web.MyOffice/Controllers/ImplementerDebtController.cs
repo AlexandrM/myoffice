@@ -21,7 +21,7 @@ namespace Web.MyOffice.Controllers.References
 {
 
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class ImplementerDebtController : ControllerAdv<DB>
     {
         /*public ActionResult Index(int? page, string searchTB_Filter)

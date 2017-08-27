@@ -54,6 +54,15 @@ namespace Web.MyOffice
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(cultureName);
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(cultureName);
+
+            if ((!Context.Request.IsSecureConnection) && (System.Configuration.ConfigurationManager.AppSettings["UseHTTPS"] == "true"))
+            {
+                Response.Redirect(Context.Request.Url.ToString().Replace("http:", "https:"));
+            }
+        }
+
+        protected void Application_EndRequest(object sender, EventArgs e)
+        {
         }
     }
 }

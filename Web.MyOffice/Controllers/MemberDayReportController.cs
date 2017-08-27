@@ -17,7 +17,7 @@ using Web.MyOffice.Models;
 namespace Web.MyOffice.Controllers.References
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class MemberDayReportController : ControllerAdv<DB>
     {
         public ActionResult Edit()

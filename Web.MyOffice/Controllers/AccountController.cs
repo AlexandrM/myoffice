@@ -22,7 +22,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace Web.MyOffice.Controllers
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class AccountController : ControllerAdv<DB>
     {
         private ApplicationSignInManager _signInManager;
@@ -216,6 +216,7 @@ namespace Web.MyOffice.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
+            var r = new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
@@ -439,6 +440,7 @@ namespace Web.MyOffice.Controllers
                 {
                     properties.Dictionary[XsrfKey] = UserId;
                 }
+                properties.Dictionary["redirect_uri"] = "QQQQQQQQQQQQ"; 
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }

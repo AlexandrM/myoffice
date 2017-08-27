@@ -12,7 +12,7 @@ using Web.MyOffice.Models;
 namespace Web.MyOffice.Controllers
 {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class QuickRecordsController : ControllerAdv<DB>
     {
         //
