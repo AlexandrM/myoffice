@@ -6,9 +6,7 @@
     angular.module('MyOffice.app', [
         'ngRoute',
         'ngResource',
-
         'angularMoment',
-
         'ase.com.ua',
         'MyOffice.app',
     ]);
@@ -40,10 +38,12 @@
                 templateUrl: 'projectTask/edit',
                 controller: 'projectTaskCtrl'
             }).
-            when('/finance/:id?', {
-                templateUrl: 'finance/list',
-                controller: 'financeCtrl'
-            }).
+            when('/finance/:id/:lang?', {
+               templateUrl: function (params) {
+                   return 'finance/list/' + params.id + '?lang=' + params.lang;
+               },
+               controller: 'financeCtrl'
+           }).
             when('/memberdayreport', {
                 templateUrl: 'memberdayreport/list',
                 controller: 'memberDayReportCtrl'

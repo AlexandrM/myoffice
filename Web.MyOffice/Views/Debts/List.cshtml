@@ -33,12 +33,12 @@
             <th class="notPrintable"></th>
         </tr>
         <tr ng-repeat="rest in list.Rests">
-            <td><a ng-href="#/project/{{rest.Project.Id}}">{{rest.Project.Name}}</a></td>
+            <td><a ng-href="#/finance/{{rest.Project.Id}}">{{rest.Project.Name}}</a></td>
             <td><b>{{rest.Amount | number:2}}</b></td>
             <td>{{currencyById(rest.Project.RateCurrencyType).ShortName}}</td>
             <td><b>{{rest.Amount * currencyById(rest.Project.RateCurrencyType).Value | number:2}}</b></td>
             <td class="notPrintable">
-                <a class="btn btn-primary" ng-href="#/finance/{{rest.Project.Id}}"><span class="glyphicon glyphicon-euro"></span></a>
+                <a class="btn btn-primary" ng-href="#/finance/{{rest.Project.Id}}?lang={{rest.Project.Language}}"><span class="glyphicon glyphicon-euro"></span></a>
                 <a class="btn btn-warning" ng-if="myMemberType(rest.Project).MemberType == 0" ng-href="#/memberdayreport/0/{{rest.Project.Id}}/{{rest.Currency.CurrencyType}}">@S.DayReport</a>
                 <a class="btn btn-success" ng-if="myMemberType(rest.Project).MemberType == 0" ng-href="#/memberpayment/0/{{rest.Project.Id}}/{{rest.Currency.CurrencyType}}">@S.Payment</a>
                 <a class="btn btn-primary" ng-href="#/membermotions/{{rest.Project.Id}}/{{rest.Currency.Id}}">@S.Motions</a>

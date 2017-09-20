@@ -9,7 +9,7 @@
         <div class="form-group">
             <label class="control-label col-md-2" for="State">@S.State</label>
             <div class="col-md-4">
-                @Html.DropDownList("StateType", new Project().State.ToSelectListIntId(), new { @class = "form-control", ng_model = "project.State", convert_to_number = "", ng_disabled = "!project.IsMy" })
+                @Html.DropDownList("StateType", new Project().State.ToSelectListIntId(), new { @class = "form-control", ng_model = "project.State", convert_to_number = "-", ng_disabled = "!project.IsMy" })
             </div>
         </div>
     </div>
@@ -22,6 +22,17 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="State">@S.Language</label>
+            <div class="col-md-4">
+                <!-- Doesn't work with convert_to_number = "-" or convert_to_number = "" -->
+                @Html.DropDownList("Language", new SelectList(CultureHelper.Cultures, "Key", "Value", CultureHelper.Cultures.First().Key), new { @class = "form-control", ng_model = "project.Language", ng_disabled = "!project.IsMy" })
+            </div>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="form-group">

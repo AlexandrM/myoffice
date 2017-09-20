@@ -786,4 +786,7 @@
   <data name="BotUTC" xml:space="preserve">
     <value>UTC бота</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
 </root>

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 using ASE;
 using ASE.MVC;
+using Web.MyOffice.Data;
 
 namespace Web.MyOffice.Models
 {
@@ -57,6 +58,7 @@ namespace Web.MyOffice.Models
         [LocalizedRequired]
         //[JsonConverter(typeof(StringEnumConverter))]
         public RateType RateType { get; set; }
+        public string Language { get; set; }
 
         public List<ProjectMember> Members { get; set; }
 

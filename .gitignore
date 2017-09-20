@@ -1,0 +1,17 @@
+#
+/packages
+/MyOffice.Web.v12.suo
+
+#
+/Web.MyOffice/bin
+/Web.MyOffice/App_Data
+/Web.MyOffice/obj
+/Web.MyOffice/node_modules
+
+#
+/Web.MyOffice/Web.appSettings.config
+/Web.MyOffice/Web.config
+/Web.MyOffice/Web.connectionStrings.config
+/Web.MyOffice/Scripts/dis.js
+
+/Web.MyOffice/Scripts/dis.min.js

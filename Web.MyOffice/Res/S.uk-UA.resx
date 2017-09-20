@@ -726,4 +726,7 @@
   <data name="Diasssocicate" xml:space="preserve">
     <value>Відв'язати</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Мова</value>
+  </data>
 </root>

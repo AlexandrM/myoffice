@@ -115,7 +115,8 @@ namespace Web.MyOffice.Controllers.API
                     x => x.RateType,
                     x => x.RateValue,
                     x => x.BotId,
-                    x => x.BotUTC
+                    x => x.BotUTC,
+                    x => x.Language
                     );
 
                 db.SaveChanges();
@@ -127,17 +128,25 @@ namespace Web.MyOffice.Controllers.API
         [HttpDelete]
         public HttpResponseMessage Delete(Guid id, [FromUri]Guid? memberId, [FromUri]string mode)
         {
-            Project model = db.Projects.FirstOrDefault(x => x.Id == id & (x.AuthorId == UserId | x.Members.Select(z => z.Member.MainMemberId).Contains(UserId)));
 
+
+            Project model = db.Projects.FirstOrDefault(x => x.Id == id & (x.AuthorId == UserId | x.Members.Select(z => z.Member.MainMemberId).Contains(UserId)));
+            //
             if (mode == "deleteMember")
             {
                 db.ProjectMembers.Remove(model.Members.FirstOrDefault(x => x.MemberId == memberId.Value));
             }
             else
             {
+
+                var projectDatReports = db.MemberDayReports.Where(report => report.ProjectId == id).First();
+                db.MemberDayReports.Remove(projectDatReports);
+                db.SaveChanges();
+
                 db.Projects.Remove(model);
             }
             db.SaveChanges();
+
 
             //var s = JsonConvert.SerializeObject(model);
             return new HttpResponseMessage() { Content = new StringContent("", Encoding.UTF8, "application/json") };
