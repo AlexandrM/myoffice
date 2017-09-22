@@ -15,3 +15,32 @@
 /Web.MyOffice/Scripts/dis.js
 
 /Web.MyOffice/Scripts/dis.min.js
+
+/_Old
+
+/Web.MyOffice/Web.connectionStrings.config
+/Web.MyOffice/Web.smtp.config
+/Web.MyOffice/Files
+/Web.MyOffice/Migration
+/Web.MyOffice/web.debug.config
+/Web.MyOffice/web.release.config
+/Web.MyOffice/Attachments
+
+*.map
+*.cd
+*.tmp
+/.vs
+
+Web.MyOffice/_bin_deployableAssemblies/
+Web.MyOffice/Properties/PublishProfiles/myoffice-test - Web Deploy.pubxml
+Web.MyOffice/Scripts/i18n/
+Web.MyOffice/Scripts/jqPlot/
+Web.MyOffice/Libs/
+Web.MyOffice/Scripts/dis.js
+Web.MyOffice/Properties/PublishProfiles/myoffice-test - Web Deploy.pubxml.user
+Web.MyOffice/Web.MyOffice.csproj.user
+Web.MyOffice/Rotativa/wkhtmltopdf.exe
+Web.MyOffice/Properties/PublishProfiles/office.ase.com.ua.pubxml
+Web.MyOffice/Properties/PublishProfiles/office.ase.com.ua.pubxml.user
+Web.MyOffice/Properties/PublishProfiles/localhost.pubxml
+Web.MyOffice/Properties/PublishProfiles/localhost.pubxml.user
