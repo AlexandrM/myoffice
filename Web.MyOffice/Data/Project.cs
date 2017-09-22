@@ -58,8 +58,6 @@ namespace Web.MyOffice.Models
         [LocalizedRequired]
         //[JsonConverter(typeof(StringEnumConverter))]
         public RateType RateType { get; set; }
-        public string Language { get; set; }
-
         public List<ProjectMember> Members { get; set; }
 
         public List<ProjectTask> Tasks { get; set; }
@@ -71,5 +69,9 @@ namespace Web.MyOffice.Models
         public string BotId { get; set; }
 
         public int BotUTC { get; set; }
+
+        public string Language { get; set; }
+
+        public bool IsArchive { set; get; }
     }
 }

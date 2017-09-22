@@ -116,7 +116,8 @@ namespace Web.MyOffice.Controllers.API
                     x => x.RateValue,
                     x => x.BotId,
                     x => x.BotUTC,
-                    x => x.Language
+                    x => x.Language,
+                    x => x.IsArchive
                     );
 
                 db.SaveChanges();
@@ -128,8 +129,6 @@ namespace Web.MyOffice.Controllers.API
         [HttpDelete]
         public HttpResponseMessage Delete(Guid id, [FromUri]Guid? memberId, [FromUri]string mode)
         {
-
-
             Project model = db.Projects.FirstOrDefault(x => x.Id == id & (x.AuthorId == UserId | x.Members.Select(z => z.Member.MainMemberId).Contains(UserId)));
             //
             if (mode == "deleteMember")
@@ -138,17 +137,22 @@ namespace Web.MyOffice.Controllers.API
             }
             else
             {
-
-                var projectDatReports = db.MemberDayReports.Where(report => report.ProjectId == id).First();
-                db.MemberDayReports.Remove(projectDatReports);
-                db.SaveChanges();
-
-                db.Projects.Remove(model);
+                var delProject = db.Projects.Where(project => project.Id == id).FirstOrDefault();
+                if (delProject != null && !delProject.IsArchive)
+                {
+                    delProject.IsArchive = true;
+                    db.AttachModel<Project>(delProject, project => project.IsArchive);
+                }
+                else
+                {
+                    if (delProject != null && delProject.IsArchive)
+                    {
+                        db.Projects.Remove(delProject);
+                    }
+                }
             }
             db.SaveChanges();
 
-
-            //var s = JsonConvert.SerializeObject(model);
             return new HttpResponseMessage() { Content = new StringContent("", Encoding.UTF8, "application/json") };
         }
     }

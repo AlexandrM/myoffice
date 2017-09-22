@@ -729,4 +729,10 @@
   <data name="Language" xml:space="preserve">
     <value>Мова</value>
   </data>
+  <data name="ProjectArchive" xml:space="preserve">
+    <value>Архiв проектiв</value>
+  </data>
+  <data name="ProjectRestrore" xml:space="preserve">
+    <value>Вiдновити</value>
+  </data>
 </root>

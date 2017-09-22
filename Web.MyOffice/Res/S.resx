@@ -789,4 +789,10 @@
   <data name="Language" xml:space="preserve">
     <value>Язык</value>
   </data>
+  <data name="ProjectArchive" xml:space="preserve">
+    <value>Архив проектов</value>
+  </data>
+  <data name="ProjectRestrore" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
 </root>

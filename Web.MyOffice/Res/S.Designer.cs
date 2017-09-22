@@ -1492,6 +1492,24 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Архив проектов.
+        /// </summary>
+        public static string ProjectArchive {
+            get {
+                return ResourceManager.GetString("ProjectArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановить.
+        /// </summary>
+        public static string ProjectRestrore {
+            get {
+                return ResourceManager.GetString("ProjectRestrore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Проекты.
         /// </summary>
         public static string Projects {
