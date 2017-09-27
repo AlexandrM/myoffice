@@ -56,7 +56,9 @@
 
                 ctrl.$parsers.unshift(function (viewValue) {
                     var date = moment(viewValue, dateFormat).toDate();
-                    return date;
+                    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+                    var localISOTime = (new Date(date - tzoffset)).toISOString().slice(0, -1);
+                    return localISOTime;
                 });
             }
         };
