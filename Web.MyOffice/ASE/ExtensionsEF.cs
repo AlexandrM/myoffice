@@ -8,6 +8,7 @@ using System.Data.Entity.Infrastructure;
 using System.Web;
 using System.Data.Entity.SqlServer;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASE.EF
 {
@@ -225,7 +226,7 @@ namespace ASE.EF
             PropertyInfo[] props = entity.GetType().GetProperties();
             foreach(var prop in props)
                 if (!request.Params.AllKeys.Contains(prop.Name))
-                    if (context.Entry(entity).Member(prop.Name) is DbPropertyEntry)
+                    if (context.Entry(entity).Member(prop.Name) is DbPropertyEntry && !(prop.GetCustomAttributes(typeof(NotMappedAttribute),false).Length > 0))
                         context.Entry(entity).Property(prop.Name).IsModified = false;
         }
 

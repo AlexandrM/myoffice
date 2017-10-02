@@ -715,7 +715,7 @@
     <value>Default</value>
   </data>
   <data name="MyCurrency" xml:space="preserve">
-    <value>My currency</value>
+    <value>Currency</value>
   </data>
   <data name="LoginProviderNoEmail" xml:space="preserve">
     <value>email address not available, register please</value>
