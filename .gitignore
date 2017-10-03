@@ -1,25 +1,12 @@
-#
 /packages
-/MyOffice.Web.v12.suo
-
-#
-/Web.MyOffice/bin
-/Web.MyOffice/App_Data
-/Web.MyOffice/obj
-/Web.MyOffice/node_modules
-
-#
-/Web.MyOffice/Web.appSettings.config
-/Web.MyOffice/Web.config
-/Web.MyOffice/Web.connectionStrings.config
-/Web.MyOffice/Scripts/dis.js
-
-/Web.MyOffice/Scripts/dis.min.js
-
 /_Old
 
 /Web.MyOffice/Web.connectionStrings.config
+/Web.MyOffice/Web.appSettings.config
 /Web.MyOffice/Web.smtp.config
+/Web.MyOffice/App_data
+/Web.MyOffice/bin
+/Web.MyOffice/obj
 /Web.MyOffice/Files
 /Web.MyOffice/Migration
 /Web.MyOffice/web.debug.config
@@ -35,6 +22,7 @@ Web.MyOffice/_bin_deployableAssemblies/
 Web.MyOffice/Properties/PublishProfiles/myoffice-test - Web Deploy.pubxml
 Web.MyOffice/Scripts/i18n/
 Web.MyOffice/Scripts/jqPlot/
+Web.MyOffice/node_modules/
 Web.MyOffice/Libs/
 Web.MyOffice/Scripts/dis.js
 Web.MyOffice/Properties/PublishProfiles/myoffice-test - Web Deploy.pubxml.user
