@@ -18,7 +18,7 @@
 <div ng-controller="projectCtrl" ng-init="query()">
     <div class="form-inline">
         <div class="form-group">
-            <input class="form-control" type="checkbox" ng-model="notAccepted" value="" ng-click="refresh()">
+            <input class="form-control" type="checkbox" ng-model="notAccepted" value="" ng-click="query()">
             <label class="padr10 " for="">@S.NotAccepted</label>
         </div>
         <input class="focus pull-right clearable" placeholder="@S.Filter" type="text" ng-model="edFilter">
