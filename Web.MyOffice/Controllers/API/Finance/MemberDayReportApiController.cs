@@ -37,11 +37,11 @@ namespace Web.MyOffice.Controllers.API
                 .Include(x => x.Project.Members.Select(z => z.Member))
                 .Where(x => x.DateTime >= dateFrom.Value & x.DateTime < dateTo)
                 .OrderBy(x => x.DateTime)
-                .ToList();
+                .ToArray();
 
             var r = new {
                 Details = model,
-                Currencies = db.Currencies.Where(x => x.UserId == UserId).ToList()
+                Currencies = db.Currencies.Where(x => x.UserId == UserId).ToArray()
             };
 
             return ResponseObject2Json(r);

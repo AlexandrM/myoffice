@@ -28,7 +28,7 @@ namespace Web.MyOffice.Controllers.API
         {
             var eMode = mode == 1 ? ProjectMemberType.Implementer : ProjectMemberType.Customer;
 
-            var currencies = db.Currencies.Where(x => x.UserId == UserId).ToList();
+            var currencies = db.Currencies.Where(x => x.UserId == UserId).ToArray();
 
             var qr = db.Projects
                 .AsNoTracking()
@@ -43,7 +43,7 @@ namespace Web.MyOffice.Controllers.API
                 })
                 .Where(x => x.Amount != 0)
                 .OrderBy(x => x.Project.Name)
-                .ToList(); 
+                .ToArray(); 
 
             dynamic model = new object().ToDynamic();
             model.Rests = qr;

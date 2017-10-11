@@ -19,7 +19,9 @@
         </div>
     </div>
     <hr />
-
+    <div class="row">
+        <input type="checkbox" checked="checked" ng-click="ToggleDayTotals()"> @S.DayTotalsShow</input>
+    </div>
     <div class="row">
         <table class="table table-striped">
             <tr>
@@ -33,9 +35,10 @@
                 <th>@S.Summ</th>
                 <th>@S.Currency</th>
                 <th class="notPrintable">@S.Total ({{myCurrency().ShortName}})</th>
-                <th class="notPrintable"></th>
+                <th class="notPrintable">{{setMyCurrencyRates(memberDayReports.Currencies)}}</th>
             </tr>
-            <tr ng-repeat="details in memberDayReports.Details">
+            <tbody ng-repeat="details in memberDayReports.Details">
+            <tr>
                 <td>
                     <div>{{details.DateTime | amDateFormat:'L'}}</div>
                     <div>{{details.DateTime | amDateFormat:'LT'}}</div>
@@ -62,6 +65,15 @@
                     <button class="btn btn-danger" ng-if="details.Project.AuthorId == UserId" ng-click="delete(details)">@S.Delete</button>
                 </td>
             </tr>
+            <tr ng-if="ShowDayTotals(details)">
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th colspan="2">@S.DayTotals:</th>
+                <th><b>{{getTotalDate(details.DateTime) | number:2}}</b></th>
+            </tr>
+            </tbody>
             <tr>
                 <th>@S.Total</th>
                 <th></th>
@@ -69,7 +81,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th class="notPrintable">{{getTotal() | number:2}}</th>
+                <th class="notPrintable">{{getTotal(memberDayReports.Details) | number:2}}</th>
                 <th class="notPrintable"></th>
             </tr>
         </table>

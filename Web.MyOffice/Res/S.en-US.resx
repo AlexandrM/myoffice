@@ -747,4 +747,10 @@
   <data name="ProjectRestrore" xml:space="preserve">
     <value>Restrore</value>
   </data>
+  <data name="DayTotals" xml:space="preserve">
+    <value>Day totals</value>
+  </data>
+  <data name="DayTotalsShow" xml:space="preserve">
+    <value>Day totals show</value>
+  </data>
 </root>

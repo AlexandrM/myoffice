@@ -735,4 +735,10 @@
   <data name="ProjectRestrore" xml:space="preserve">
     <value>Вiдновити</value>
   </data>
+  <data name="DayTotals" xml:space="preserve">
+    <value>За день</value>
+  </data>
+  <data name="DayTotalsShow" xml:space="preserve">
+    <value>Пiдсумки за день</value>
+  </data>
 </root>

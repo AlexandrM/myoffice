@@ -92,6 +92,12 @@
             localStorage.setItem('memberDayReportCtrl.edDateFrom', $scope.edDateFrom);
             localStorage.setItem('memberDayReportCtrl.edDateTo', $scope.edDateTo);
             $scope.memberDayReports = MemberDayReportService.query({ dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo }, function () {
+                $scope.setMyCurrencyRates = function (currencies) {
+                    var myCurrencyRate = $scope.myCurrency().Value;
+                    for (var i = 0; i < currencies.length; i++) {
+                        currencies[i].Value = currencies[i].Value / myCurrencyRate;
+                    };
+                };
                 $scope.getTotal = function () {
                     var total = 0;
                     for (var i = 0; i < $scope.memberDayReports.Details.length; i++) {

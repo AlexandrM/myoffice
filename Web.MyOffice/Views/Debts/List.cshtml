@@ -30,7 +30,7 @@
             <th>@S.Summ</th>
             <th>@S.Currency</th>
             <th>@S.Total ({{myCurrency().ShortName}})</th>
-            <th class="notPrintable"></th>
+            <th class="notPrintable">{{setMyCurrencyRates(list.Currencies)}}</th>
         </tr>
         <tr ng-repeat="rest in list.Rests">
             <td><a ng-href="#/finance/{{rest.Project.Id}}">{{rest.Project.Name}}</a></td>

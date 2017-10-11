@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Web.MyOffice.Data;
 using Web.MyOffice.Res;
@@ -62,6 +63,7 @@ namespace Web.MyOffice.Models
         [LocalizedDisplayAttribute("LastName")]
         public string LastName { get; set; }
 
+        [NotMapped]
         [LocalizedDisplayAttribute("MyCurrency")]
         public string MyCurrencyLabel { get; set; }
         public List<Currency> Currencies { get; set; }

@@ -21,6 +21,13 @@
                     })[0];
                 };
 
+                $scope.setMyCurrencyRates = function (currencies) {
+                    var myCurrencyRate = $scope.myCurrency().Value;
+                    for (var i = 0; i < currencies.length; i++) {
+                        currencies[i].Value = currencies[i].Value / myCurrencyRate;
+                    };
+                };
+
                 $scope.mode = function () {
                     return $routeParams.mode;
                 };
