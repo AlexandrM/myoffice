@@ -376,6 +376,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>R.uk-UA.resx</DependentUpon>
     </Compile>
+    <Compile Include="Res\S.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>S.resx</DependentUpon>
+    </Compile>
     <Compile Include="Res\S.uk-UA.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -385,11 +390,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>S.en-US.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Res\S.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>S.resx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>

@@ -91,13 +91,8 @@
         $scope.refreshList = function () {
             localStorage.setItem('memberDayReportCtrl.edDateFrom', $scope.edDateFrom);
             localStorage.setItem('memberDayReportCtrl.edDateTo', $scope.edDateTo);
-            $scope.memberDayReports = MemberDayReportService.query({ dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo }, function () {
-                $scope.setMyCurrencyRates = function (currencies) {
-                    var myCurrencyRate = $scope.myCurrency().Value;
-                    for (var i = 0; i < currencies.length; i++) {
-                        currencies[i].Value = currencies[i].Value / myCurrencyRate;
-                    };
-                };
+            MemberDayReportService.query({ dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo }, function (data) {
+                $scope.memberDayReports = data;
                 $scope.getTotal = function () {
                     var total = 0;
                     for (var i = 0; i < $scope.memberDayReports.Details.length; i++) {
@@ -109,8 +104,18 @@
             });
         };
 
+        $scope.setMyCurrencyRates = function (currencies) {
+            var currency = $scope.myCurrency();
+            if (currency !== undefined) {
+                var myCurrencyRate = $scope.myCurrency().Value;
+                for (var i = 0; i < currencies.length; i++) {
+                    currencies[i].Value = currencies[i].Value / myCurrencyRate;
+                };
+            }
+        };
+
         $scope.myCurrency = function () {
-            if ($scope.memberDayReports.Currencies === undefined) {
+            if (($scope.memberDayReports === undefined) || ($scope.memberDayReports.Currencies === undefined)) {
                 return;
             }
             return $.grep($scope.memberDayReports.Currencies, function (e) {
