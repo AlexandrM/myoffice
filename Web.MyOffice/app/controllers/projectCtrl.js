@@ -18,7 +18,7 @@
     projectModule.filter('IsNotArchive',
         function() {
             return function(projects) {
-                return projects.filter(function(project, index, projectArray) {
+                return projects.filter(function(project) {
                     return !project.IsArchive;
                 });
             };
@@ -27,7 +27,7 @@
     projectModule.filter('IsArchive',
         function() {
             return function(projects) {
-                return projects.filter(function (project, index, projectArray) {
+                return projects.filter(function (project) {
                     return project.IsArchive;
                 });
             };

@@ -43,7 +43,7 @@ namespace Web.MyOffice.Controllers.API
                 })
                 .Where(x => x.Amount != 0)
                 .OrderBy(x => x.Project.Name)
-                .ToArray(); 
+                .ToList(); 
 
             dynamic model = new object().ToDynamic();
             model.Rests = qr;
