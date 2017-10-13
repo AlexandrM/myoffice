@@ -35,10 +35,9 @@
                 <th>@S.Summ</th>
                 <th>@S.Currency</th>
                 <th class="notPrintable">@S.Total ({{myCurrency().ShortName}})</th>
-                <th class="notPrintable">{{setMyCurrencyRates(memberDayReports.Currencies)}}</th>
+                <th ng-if="ShowDayTotalsFlag">@S.DayTotals:{{setMyCurrencyRates(memberDayReports.Currencies)}}</th>
             </tr>
-            <tbody ng-repeat="details in memberDayReports.Details">
-            <tr>
+            <tr ng-repeat="details in memberDayReports.Details">
                 <td>
                     <div>{{details.DateTime | amDateFormat:'L'}}</div>
                     <div>{{details.DateTime | amDateFormat:'LT'}}</div>
@@ -60,20 +59,13 @@
                         {{details.Amount * details.Value * currencyById(details.Project.RateCurrencyType).Value | number:2}}
                     </b>
                 </td>
+                <td ng-if="ShowDayTotals(details)"><b>{{getTotalDate(details.DateTime) | number:2}}</b></td>
+                <td ng-if="!ShowDayTotals(details) && ShowDayTotalsFlag">-</td>
                 <td class="notPrintable w100">
                     <a class="btn btn-warning" ng-if="details.Project.AuthorId == UserId" ng-href="#/memberdayreport/{{details.Id}}/0">@S.Edit</a>
                     <button class="btn btn-danger" ng-if="details.Project.AuthorId == UserId" ng-click="delete(details)">@S.Delete</button>
                 </td>
             </tr>
-            <tr ng-if="ShowDayTotals(details)">
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th colspan="2">@S.DayTotals:</th>
-                <th><b>{{getTotalDate(details.DateTime) | number:2}}</b></th>
-            </tr>
-            </tbody>
             <tr>
                 <th>@S.Total</th>
                 <th></th>
@@ -81,6 +73,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th ng-if="ShowDayTotalsFlag"></th>
                 <th class="notPrintable">{{getTotal(memberDayReports.Details) | number:2}}</th>
                 <th class="notPrintable"></th>
             </tr>
