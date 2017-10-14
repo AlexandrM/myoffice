@@ -72,7 +72,10 @@
                 redirectTo: '/project'
             });
         }
-    ]).run(function ($UserSettingsService) {
+    ])
+    .config(function ($httpProvider) {
+    })
+    .run(function ($UserSettingsService) {
         jQuery.extend($UserSettingsService, JSON.parse(localStorage.getItem('SkypeBot.MyOffice.$UserSettingsService') || '{}'));
         $UserSettingsService.Language = $UserSettingsService.Language || moment.locale();
         $UserSettingsService.Prices = $UserSettingsService.Prices || [];
