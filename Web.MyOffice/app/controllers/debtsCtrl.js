@@ -55,7 +55,6 @@
                 $scope.toPDF = function () {
                     pdfService.createPDF();
                 };
-
                 $scope.myMemberType = function (project) {
                     return $.grep(project.Members, function (e) {
                         if (e.Member != null) {
@@ -63,6 +62,22 @@
                         }
                     })[0];
                 };
+
+                $scope.splitRests = function() {
+                    $scope.list.RestsNotNull = $scope.list.Rests.filter(function(rest) {
+                        return rest.Amount !== 0;
+                    });
+                    $scope.list.RestsNull = $scope.list.Rests.filter(function(rest) {
+                        return rest.Amount === 0 && !rest.Project.IsArchive;
+                    });
+                };
+                $scope.splitRests();
+                $scope.RestsNullShowFlag = true;
+                $scope.RestsNullShow = function($route) {
+                    $scope.RestsNullShowFlag = !$scope.RestsNullShowFlag;
+                    $route.reload();
+                };
+
             });
         };
     };

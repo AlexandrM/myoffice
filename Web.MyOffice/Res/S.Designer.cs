@@ -835,6 +835,15 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Есть долг.
+        /// </summary>
+        public static string HasDebt {
+            get {
+                return ResourceManager.GetString("HasDebt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to История.
         /// </summary>
         public static string History {

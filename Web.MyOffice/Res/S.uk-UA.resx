@@ -741,4 +741,7 @@
   <data name="DayTotalsShow" xml:space="preserve">
     <value>Пiдсумки за день</value>
   </data>
+  <data name="HasDebt" xml:space="preserve">
+    <value>Має борг</value>
+  </data>
 </root>

@@ -801,4 +801,7 @@
   <data name="DayTotalsShow" xml:space="preserve">
     <value>Итоги за день</value>
   </data>
+  <data name="HasDebt" xml:space="preserve">
+    <value>Есть долг</value>
+  </data>
 </root>

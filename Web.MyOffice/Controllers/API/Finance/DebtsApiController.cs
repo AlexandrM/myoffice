@@ -41,7 +41,6 @@ namespace Web.MyOffice.Controllers.API
                     Project = x,
                     Amount = db.MemberDayReports.Where(z => z.ProjectId == x.Id).Select(z => z.Amount * z.Value).DefaultIfEmpty(0).Sum() - db.MemberPayments.Where(z => z.ProjectId == x.Id).Select(z => z.Amount).DefaultIfEmpty(0).Sum(),
                 })
-                .Where(x => x.Amount != 0)
                 .OrderBy(x => x.Project.Name)
                 .ToList(); 
 

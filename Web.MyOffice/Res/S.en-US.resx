@@ -753,4 +753,7 @@
   <data name="DayTotalsShow" xml:space="preserve">
     <value>Day totals show</value>
   </data>
+  <data name="HasDebt" xml:space="preserve">
+    <value>Has debt</value>
+  </data>
 </root>
