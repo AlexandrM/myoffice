@@ -21,6 +21,13 @@
                     })[0];
                 };
 
+                $scope.setMyCurrencyRates = function (currencies) {
+                    var myCurrencyRate = $scope.myCurrency().Value;
+                    for (var i = 0; i < currencies.length; i++) {
+                        currencies[i].Value = currencies[i].Value / myCurrencyRate;
+                    };
+                };
+
                 $scope.mode = function () {
                     return $routeParams.mode;
                 };
@@ -48,7 +55,6 @@
                 $scope.toPDF = function () {
                     pdfService.createPDF();
                 };
-
                 $scope.myMemberType = function (project) {
                     return $.grep(project.Members, function (e) {
                         if (e.Member != null) {
@@ -56,6 +62,8 @@
                         }
                     })[0];
                 };
+
+                $scope.restsNullShowFlag = true;
             });
         };
     };

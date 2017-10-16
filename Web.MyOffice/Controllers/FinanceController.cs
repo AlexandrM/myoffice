@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
@@ -22,8 +24,13 @@ namespace Web.MyOffice.Controllers
     //[RequireHttps]
     public class FinanceController : ControllerAdv<DB>
     {
-        public ActionResult List()
+        public ActionResult List(string lang)
         {
+            if (CultureHelper.Cultures.ContainsKey(lang))
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(lang);
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(lang);
+            }
             return View();
         }
     }

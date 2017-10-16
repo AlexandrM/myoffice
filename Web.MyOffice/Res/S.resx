@@ -786,4 +786,22 @@
   <data name="BotUTC" xml:space="preserve">
     <value>UTC бота</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="ProjectArchive" xml:space="preserve">
+    <value>Архив проектов</value>
+  </data>
+  <data name="ProjectRestrore" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="DayTotals" xml:space="preserve">
+    <value>За день</value>
+  </data>
+  <data name="DayTotalsShow" xml:space="preserve">
+    <value>Итоги за день</value>
+  </data>
+  <data name="HasDebt" xml:space="preserve">
+    <value>Есть долг</value>
+  </data>
 </root>

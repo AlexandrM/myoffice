@@ -726,4 +726,22 @@
   <data name="Diasssocicate" xml:space="preserve">
     <value>Відв'язати</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="ProjectArchive" xml:space="preserve">
+    <value>Архiв проектiв</value>
+  </data>
+  <data name="ProjectRestrore" xml:space="preserve">
+    <value>Вiдновити</value>
+  </data>
+  <data name="DayTotals" xml:space="preserve">
+    <value>За день</value>
+  </data>
+  <data name="DayTotalsShow" xml:space="preserve">
+    <value>Пiдсумки за день</value>
+  </data>
+  <data name="HasDebt" xml:space="preserve">
+    <value>Має борг</value>
+  </data>
 </root>

@@ -92,15 +92,58 @@
             localStorage.setItem('memberDayReportCtrl.edDateFrom', $scope.edDateFrom);
             localStorage.setItem('memberDayReportCtrl.edDateTo', $scope.edDateTo);
             $scope.memberDayReports = MemberDayReportService.query({ dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo }, function () {
-                $scope.getTotal = function () {
+                $scope.setMyCurrencyRates = function (currencies) {
+                    var myCurrencyRate = $scope.myCurrency().Value;
+                    for (var i = 0; i < currencies.length; i++) {
+                        currencies[i].Value = currencies[i].Value / myCurrencyRate;
+                    };
+                };
+
+                $scope.getTotal = function (reports) {
                     var total = 0;
-                    for (var i = 0; i < $scope.memberDayReports.Details.length; i++) {
-                        var item = $scope.memberDayReports.Details[i];
-                        total += item.Amount * item.Value * $scope.currencyById(item.Project.RateCurrencyType).Value;
+                    if (reports != null) {
+                        for (var i = 0; i < reports.length; i++) {
+                            total += reports[i].Amount * reports[i].Value * $scope.currencyById(reports[i].Project.RateCurrencyType).Value;
+                        }
                     }
                     return total;
                 };
+
+                $scope.getTotalDate = function (dateString1) {
+                    var reports = $scope.memberDayReports.Details.filter(function(elem) {
+                        return $scope.dateCompare(elem.DateTime, dateString1);
+                    });
+                    return $scope.getTotal(reports);
+                };
             });
+        };
+
+        $scope.dateCompare = function (dateString1, dateString2) {
+            var date1 = new Date(dateString1);
+            var date2 = new Date(dateString2);
+            return date1.getDay()   === date2.getDay() &&
+                   date1.getMonth() === date2.getMonth() &&
+                   date1.getYear()  === date2.getYear();
+        };
+
+        $scope.ToggleDayTotals = function($route) {
+            $scope.ShowDayTotalsFlag = !$scope.ShowDayTotalsFlag;
+            $route.reload();
+        };
+        $scope.ShowDayTotalsFlag = true;
+        $scope.ShowDayTotals = function (currentDetails) {
+            var curIndex = $scope.memberDayReports.Details.indexOf(currentDetails);
+            if (curIndex + 1 >= $scope.memberDayReports.Details.length) {
+                return $scope.ShowDayTotalsFlag;
+            }else {
+                var nextDetails = $scope.memberDayReports.Details[curIndex + 1];
+                if (!$scope.dateCompare(currentDetails.DateTime, nextDetails.DateTime)) {
+                    return $scope.ShowDayTotalsFlag;
+                } else {
+                    return false;
+                };
+            };
+            return false;
         };
 
         $scope.myCurrency = function () {

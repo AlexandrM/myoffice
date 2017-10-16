@@ -122,17 +122,18 @@ namespace Web.MyOffice.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Member model)
         {
-            if (ModelState.IsValid)
+            CurrencyType currencyType = CurrencyType.OTHER;
+            if (ModelState.IsValid && CurrencyType.TryParse(Request.Form["MyCurrencyType"], out currencyType))
             {
                 AttachModel(model);
                 model.UserId = UserId;
+
                 db.Entry(model).Property("Email").IsModified = false;
                 db.SaveChanges();
 
-                return RedirectToAction("Index");
-            }
-
-            return View(model);
+                return RedirectToAction("Index"); ;
+             }
+             return View(model);
         }
 
         public ActionResult Delete(Guid id)
@@ -159,13 +160,18 @@ namespace Web.MyOffice.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult MyProfile(Member model)
         {
-            if (ModelState.IsValid)
+            CurrencyType formCurrencyType = CurrencyType.OTHER;
+            if (ModelState.IsValid && CurrencyType.TryParse(Request.Form["MyCurrencyType"], out formCurrencyType))
             {
+
+                model.Currencies  = db.Currencies.Where(curr => curr.UserId == model.UserId).ToList();
+                var selectedCurrency = model.Currencies.Where(cur => cur.CurrencyType == formCurrencyType).FirstOrDefault();
+                selectedCurrency.MyCurrency = true;
                 AttachModel(model);
                 db.Entry(model).Property("Email").IsModified = false;
                 db.SaveChanges();
 
-                return RedirectToAction("MyProfile");
+                return RedirectToRoute(new{Controller="Home", Action="Index"});
             }
 
             return View(model);

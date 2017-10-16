@@ -5,7 +5,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using Web.MyOffice.Data;
 using Web.MyOffice.Res;
+
 
 namespace Web.MyOffice.Models
 {
@@ -13,6 +17,13 @@ namespace Web.MyOffice.Models
     [Displayble(Displayble = "FullName")]
     public partial class Member : EFModel//, IMember
     {
+        private DB DataBase { set; get; }
+
+        public Member()
+        {
+            DataBase = new DB();
+        }
+
         /// <summary>
         /// Owner
         /// </summary>
@@ -52,8 +63,10 @@ namespace Web.MyOffice.Models
         [LocalizedDisplayAttribute("LastName")]
         public string LastName { get; set; }
 
+        [NotMapped]
+        [LocalizedDisplayAttribute("MyCurrency")]
+        public string MyCurrencyLabel { get; set; }
         public List<Currency> Currencies { get; set; }
-
         public Guid? APISessionId { get; set; }
 
         public DateTime? APISessionDT { get; set; }

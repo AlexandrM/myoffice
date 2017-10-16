@@ -7,12 +7,12 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-uglify": "^1.5.4",
-    "gulp-concat": "^2.6.0",
-    "gulp-watch": "^4.3.8",
-    "gulp-util": "^3.0.7",
     "gulp-batch": "^1.0.5",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^3.0.1",
     "gulp-jsvalidate": "^2.1.0",
-    "gulp-eslint": "^3.0.1"
+    "gulp-uglify": "^1.5.4",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.11"
   }
 }

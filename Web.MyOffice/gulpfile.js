@@ -2,9 +2,9 @@
 var uglify = require("gulp-uglify");
 var concat = require("gulp-concat");
 var watch = require('gulp-watch');
-var gutil = require('gulp-util');
-var batch = require('gulp-batch');
-var jsValidate = require('gulp-jsvalidate');
+//var gutil = require('gulp-util');
+//var batch = require('gulp-batch');
+//var jsValidate = require('gulp-jsvalidate');
 var eslint = require('gulp-eslint');
 
 gulp.task('eslint', function () {

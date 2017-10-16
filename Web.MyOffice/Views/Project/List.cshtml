@@ -18,7 +18,7 @@
 <div ng-controller="projectCtrl" ng-init="query()">
     <div class="form-inline">
         <div class="form-group">
-            <input class="form-control" type="checkbox" ng-model="notAccepted" value="" ng-click="refresh()">
+            <input class="form-control" type="checkbox" ng-model="notAccepted" value="" ng-click="query()">
             <label class="padr10 " for="">@S.NotAccepted</label>
         </div>
         <input class="focus pull-right clearable" placeholder="@S.Filter" type="text" ng-model="edFilter">
@@ -34,7 +34,7 @@
             <th></th>
             <th></th>
         </tr>
-        <tr ng-repeat="project in projects | filter:edFilter">
+        <tr ng-repeat="project in projects | filter:edFilter | IsNotArchive">
             <td>
                 <a class="btn btn-primary" ng-href="#/tasks/{{project.Id}}">@S.Tasks</a>
                 <a class="btn btn-primary" ng-href="#/finance/{{project.Id}}"><span class="glyphicon glyphicon-euro"></span></a>
@@ -57,6 +57,51 @@
             <th>
                 <a class="btn btn-success" ng-href="#/project/members/{{project.Id}}">@S.Members</a>
                 <a class="btn btn-danger" ng-if="project.IsMy" ng-click="delete(project)">@S.Delete</a>
+            </th>
+            <th></th>
+        </tr>
+    </table>
+    
+    <div class="row">
+        <h2>@S.ProjectArchive</h2>
+        <button ng-if="showArchive" ng-click="toggleTable()" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-down"></span></button>
+        <button ng-if="!showArchive" ng-click="toggleTable()" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right"></span></button>
+
+    </div>
+    <table class="table table-striped" ng-show="showArchive">
+        <tr>
+            <th></th>
+            <th>@S.State</th>
+            <th>@S.TaskCount</th>
+            <th>@S.Name</th>
+            <th>@S.DateTime</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="project in projects | filter:edFilter | IsArchive">
+            <td>
+                <a class="btn btn-primary" ng-href="#/tasks/{{project.Id}}">@S.Tasks</a>
+                <a class="btn btn-primary" ng-href="#/finance/{{project.Id}}"><span class="glyphicon glyphicon-euro"></span></a>
+            </td>
+            <td>
+                <b ng-class="{0:  'text-muted', '1': 'text-primary', 2: 'text-info', 3: 'text-success'}[project.State]">
+                    {{project.StateS}}
+                </b>
+            </td>
+            <td><b>{{project.TasksCount}}</b></td>
+            <td>
+                <div ng-switch="project.IsMy">
+                    <b>
+                        <a ng-switch-when="true" ng-href="#/project/{{project.Id}}">{{project.Name}}</a>
+                        <span ng-switch-when="false">{{project.Name}}</span>
+                    </b>
+                </div>
+            </td>
+            <th>{{project.DateTime | amDateFormat:'L'}}</th>
+            <th>
+                <a class="btn btn-success" ng-href="#/project/members/{{project.Id}}">@S.Members</a>
+                <a class="btn btn-danger" ng-if="project.IsMy" ng-click="delete(project)">@S.Delete</a>
+                <a class="btn btn-info" ng-if="project.IsMy" ng-click="restore(project)">@S.ProjectRestrore</a>
             </th>
             <th></th>
         </tr>

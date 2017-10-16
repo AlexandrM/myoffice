@@ -583,6 +583,24 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to За день.
+        /// </summary>
+        public static string DayTotals {
+            get {
+                return ResourceManager.GetString("DayTotals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Итоги за день.
+        /// </summary>
+        public static string DayTotalsShow {
+            get {
+                return ResourceManager.GetString("DayTotalsShow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Задолженность.
         /// </summary>
         public static string Debt {
@@ -817,6 +835,15 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Есть долг.
+        /// </summary>
+        public static string HasDebt {
+            get {
+                return ResourceManager.GetString("HasDebt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to История.
         /// </summary>
         public static string History {
@@ -984,6 +1011,15 @@ namespace Web.MyOffice.Res {
         public static string Journal {
             get {
                 return ResourceManager.GetString("Journal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Язык.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
             }
         }
         
@@ -1479,6 +1515,24 @@ namespace Web.MyOffice.Res {
         public static string Project {
             get {
                 return ResourceManager.GetString("Project", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив проектов.
+        /// </summary>
+        public static string ProjectArchive {
+            get {
+                return ResourceManager.GetString("ProjectArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Восстановить.
+        /// </summary>
+        public static string ProjectRestrore {
+            get {
+                return ResourceManager.GetString("ProjectRestrore", resourceCulture);
             }
         }
         

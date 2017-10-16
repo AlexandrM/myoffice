@@ -40,10 +40,12 @@
                 templateUrl: 'projectTask/edit',
                 controller: 'projectTaskCtrl'
             }).
-            when('/finance/:id?', {
-                templateUrl: 'finance/list',
-                controller: 'financeCtrl'
-            }).
+            when('/finance/:id/:lang?', {
+               templateUrl: function (params) {
+                   return 'finance/list/' + params.id + '?lang=' + params.lang;
+               },
+               controller: 'financeCtrl'
+           }).
             when('/memberdayreport', {
                 templateUrl: 'memberdayreport/list',
                 controller: 'memberDayReportCtrl'
@@ -72,7 +74,10 @@
                 redirectTo: '/project'
             });
         }
-    ]).run(function ($UserSettingsService) {
+    ])
+    .config(function () {
+    })
+    .run(function ($UserSettingsService) {
         jQuery.extend($UserSettingsService, JSON.parse(localStorage.getItem('SkypeBot.MyOffice.$UserSettingsService') || '{}'));
         $UserSettingsService.Language = $UserSettingsService.Language || moment.locale();
         $UserSettingsService.Prices = $UserSettingsService.Prices || [];

@@ -16,7 +16,7 @@
                 };
 
                 var width = element.width();
-                var doc = new jsPDF(pdfOptions);
+                var doc = new jsPDF(pdfOptions); /* eslint new-cap: "off" */
                 element.width((doc.internal.pageSize.width * 2.8346 * 1.33333) - 80).css('max-width', 'none');
                 $('.notPrintable').css('visibility', 'hidden');
 
