@@ -6,7 +6,9 @@
     angular.module('MyOffice.app', [
         'ngRoute',
         'ngResource',
+
         'angularMoment',
+
         'ase.com.ua',
         'MyOffice.app',
     ]);

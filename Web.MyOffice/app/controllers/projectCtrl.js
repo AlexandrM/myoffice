@@ -1,8 +1,8 @@
-﻿(function() {
+﻿(function () {
 
     'use strict';
 
-    var projectModule = angular.module('MyOffice.app')
+    angular.module('MyOffice.app')
         .controller('projectCtrl',
         [
             '$scope',
@@ -15,7 +15,7 @@
             projectCtrl
         ]);
 
-    projectModule.filter('IsNotArchive',
+    angular.module('MyOffice.app').filter('IsNotArchive',
         function() {
             return function(projects) {
                 return projects.filter(function(project) {
@@ -24,7 +24,7 @@
             };
         });
 
-    projectModule.filter('IsArchive',
+    angular.module('MyOffice.app').filter('IsArchive',
         function() {
             return function(projects) {
                 return projects.filter(function (project) {

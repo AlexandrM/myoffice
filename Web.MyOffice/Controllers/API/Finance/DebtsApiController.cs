@@ -28,7 +28,7 @@ namespace Web.MyOffice.Controllers.API
         {
             var eMode = mode == 1 ? ProjectMemberType.Implementer : ProjectMemberType.Customer;
 
-            var currencies = db.Currencies.Where(x => x.UserId == UserId).ToArray();
+            var currencies = db.Currencies.Where(x => x.UserId == UserId).ToList();
 
             var qr = db.Projects
                 .AsNoTracking()
@@ -36,6 +36,8 @@ namespace Web.MyOffice.Controllers.API
                 .Include(x => x.Members)
                 .Include(x => x.Members.Select(z => z.Member))
                 .Where(x => x.Members.FirstOrDefault(z => z.Member.MainMemberId == UserId & z.MemberType == eMode) != null)
+                .Where(x => !x.IsArchive)
+                .Where(x => x.State != ProjectState.Approved)
                 .ToList()
                 .Select(x => new {
                     Project = x,
