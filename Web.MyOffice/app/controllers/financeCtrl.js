@@ -26,7 +26,7 @@
                 };
                 $scope.myCurrency = function () {
                     return $.grep($scope.project.Currencies, function (e) {
-                        return e.MyCurrency;
+                        return e.Value === 1;
                     })[0];
                 };
                 $scope.myMemberType = function () {

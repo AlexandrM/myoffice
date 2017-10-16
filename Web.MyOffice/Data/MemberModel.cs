@@ -17,13 +17,6 @@ namespace Web.MyOffice.Models
     [Displayble(Displayble = "FullName")]
     public partial class Member : EFModel//, IMember
     {
-        private DB DataBase { set; get; }
-
-        public Member()
-        {
-            DataBase = new DB();
-        }
-
         /// <summary>
         /// Owner
         /// </summary>

@@ -65,7 +65,7 @@ namespace Web.MyOffice.Controllers.API
                 {
                     dynamic rest = item.ToDynamic();
                     rest.Details = new List<dynamic>();
-                    rest.Currency = db.Currencies.FirstOrDefault(x => x.UserId == UserId).LocalCurrency(db);
+                    rest.Currency = db.Currencies.FirstOrDefault(x => x.UserId == UserId && x.CurrencyType == p.RateCurrencyType).LocalCurrency(db);
                     rest.CurrencyId = rest.Currency.Id;
                     rests.Add(rest);
                     var dt = DateTime.Now;

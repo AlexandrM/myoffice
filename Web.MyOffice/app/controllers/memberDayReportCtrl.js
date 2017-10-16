@@ -151,7 +151,7 @@
                 return;
             }
             return $.grep($scope.memberDayReports.Currencies, function (e) {
-                return e.MyCurrency;
+                return e.Value === 1;
             })[0];
         };
 

@@ -163,7 +163,6 @@ namespace Web.MyOffice.Controllers.References
                 var lr = db.CurrencyRates.Where(x => x.CurrencyId == currency.Id).OrderByDescending(x => x.DateTime).Take(1).FirstOrDefault();
                 if (lr == null)
                 {
-                    currency.MyCurrency = true;
                     currency.Value = 1;
                 }
                 else

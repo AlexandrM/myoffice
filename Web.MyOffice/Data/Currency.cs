@@ -31,9 +31,6 @@ namespace Web.MyOffice.Models
         [LocalizedDisplayAttribute("CurrencyType")]
         public CurrencyType CurrencyType { get; set; }
 
-        [LocalizedDisplayAttribute("MyCurrency")]
-        public bool MyCurrency { get; set; }
-
         [DataType(DataType.Currency)]
         [LocalizedDisplayAttribute("CurrencyRate")]
         public decimal Value { get; set; }

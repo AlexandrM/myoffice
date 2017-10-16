@@ -209,17 +209,6 @@ namespace Web.MyOffice.Controllers.References
             return RedirectToAction("Index");
         }
 
-        public ActionResult SetMyCurrency(Guid id)
-        {
-            foreach(var item in db.Currencies.Where(x => x.UserId == UserId))
-            {
-                item.MyCurrency = item.Id == id;
-            }
-            db.SaveChanges();
-
-            return RedirectToAction("Index");
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

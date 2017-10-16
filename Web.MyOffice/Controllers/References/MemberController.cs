@@ -160,18 +160,14 @@ namespace Web.MyOffice.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult MyProfile(Member model)
         {
-            CurrencyType formCurrencyType = CurrencyType.OTHER;
-            if (ModelState.IsValid && CurrencyType.TryParse(Request.Form["MyCurrencyType"], out formCurrencyType))
+            if (ModelState.IsValid)
             {
-
                 model.Currencies  = db.Currencies.Where(curr => curr.UserId == model.UserId).ToList();
-                var selectedCurrency = model.Currencies.Where(cur => cur.CurrencyType == formCurrencyType).FirstOrDefault();
-                selectedCurrency.MyCurrency = true;
                 AttachModel(model);
                 db.Entry(model).Property("Email").IsModified = false;
                 db.SaveChanges();
 
-                return RedirectToRoute(new{Controller="Home", Action="Index"});
+                return RedirectToRoute(new { Controller="Home", Action="Index" });
             }
 
             return View(model);

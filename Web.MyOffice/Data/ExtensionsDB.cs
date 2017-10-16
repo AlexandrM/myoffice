@@ -64,8 +64,6 @@ namespace Web.MyOffice.Data
                     if (curr != null)
                         db.CurrencyRates.Add(new CurrencyRate { CurrencyId = c.Id, DateTime = DateTime.Now, Value = 1 });
 
-                    if (curr != null)
-                        curr.MyCurrency = true;
                     db.SaveChanges();
                 }
             }

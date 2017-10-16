@@ -47,7 +47,7 @@
         $scope.myCurrency = function () {
             if ($scope.project.Currencies !== undefined) {
                 return $.grep($scope.project.Currencies, function (e) {
-                    return e.MyCurrency;
+                    return e.Value === 1;
                 })[0];
             }
         };

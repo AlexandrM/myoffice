@@ -32,8 +32,6 @@
 
             @Html.RowLabelEditorAndValidation(x => x.FullName)
             
-            @Html.RowLabelDropBoxValidation(x => x.MyCurrencyLabel, x => x.MyCurrencyLabel, "MyCurrencyType", (CurrencyType.USD).ToSelectList())
-
             @Html.ButtonSave();
         }
     </div>
