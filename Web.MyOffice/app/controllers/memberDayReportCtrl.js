@@ -101,8 +101,10 @@
 
                 $scope.getTotal = function (reports) {
                     var total = 0;
-                    for (var i = 0; i < reports.length; i++) {
-                        total += reports[i].Amount * reports[i].Value * $scope.currencyById(reports[i].Project.RateCurrencyType).Value;
+                    if (reports != null) {
+                        for (var i = 0; i < reports.length; i++) {
+                            total += reports[i].Amount * reports[i].Value * $scope.currencyById(reports[i].Project.RateCurrencyType).Value;
+                        }
                     }
                     return total;
                 };

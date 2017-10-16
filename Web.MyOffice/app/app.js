@@ -73,7 +73,7 @@
             });
         }
     ])
-    .config(function ($httpProvider) {
+    .config(function () {
     })
     .run(function ($UserSettingsService) {
         jQuery.extend($UserSettingsService, JSON.parse(localStorage.getItem('SkypeBot.MyOffice.$UserSettingsService') || '{}'));
