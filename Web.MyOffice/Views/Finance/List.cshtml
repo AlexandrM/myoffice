@@ -92,7 +92,7 @@
                 <a class="btn btn-primary" ng-href="#/membermotions/{{project.Id}}">@S.Motions</a>
             </th>
         </tr>
-        <tbody ng-repeat="rest in project.Rests" ng-init="rest.expanded=false">
+        <tbody ng-repeat="rest in project.Rests" ng-init="rest.expanded=true">
             <tr class="info">
                 <td>
                     <button ng-if="rest.expanded" ng-click="rest.expanded=false" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-down"></span></button>
@@ -102,7 +102,7 @@
                     <span title="{{currencyById(rest.Project.RateCurrencyType).Value}}">{{currencyById(rest.Project.RateCurrencyType).ShortName}}</span>
                 </td>
                 <td>{{rest.Amount | number:2}}</td>
-                <td class="notPrintable"><b>{{rest.Amount * currencyById(rest.Project.RateCurrencyType).Value | number:2}}</b></td>
+                <td class="notPrintable"><b>{{rest.Amount * rest.Currency.Value | number:2}}</b></td>
                 <td class="notPrintable"></td>
             </tr>
             <tr ng-show="rest.expanded">
@@ -136,9 +136,9 @@
                             <td>{{currencyById(project.RateCurrencyType).ShortName}}</td>
                             <td class="notPrintable">
                                 <b>
-                                    {{details.Amount * details.Value * currencyById(rest.Project.RateCurrencyType).Value | number:2}}
+                                    {{details.Amount * details.Value * rest.Currency.Value | number:2}}
                                     <span ng-if="details.Rest != 0">
-                                        &nbsp;({{details.Rest * currencyById(rest.Project.RateCurrencyType).Value | number:2}})
+                                        &nbsp;({{details.Rest * rest.Currency.Value | number:2}})
                                     </span>
                                 </b>
                             </td>

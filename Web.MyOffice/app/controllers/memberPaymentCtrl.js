@@ -81,7 +81,7 @@
                 return;
             }
             return $.grep($scope.memberPayments.Currencies, function (e) {
-                return e.MyCurrency;
+                return e.Value === 1;
             })[0];
         };
 

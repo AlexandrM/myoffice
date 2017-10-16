@@ -34,21 +34,13 @@
     {
         var rates = db.CurrencyRates.Where(x => x.CurrencyId == item.Id).OrderByDescending(z => z.DateTime).Take(2).ToList();
         
-        <tr class="@(item.MyCurrency ? "success" : "")">
+        <tr class="@(rates == null || rates.Count == 0 || rates[0].Value == 1 ? "success" : "")">
             @if (this.IsSelect)
             {
                 <td>
                     @Html.ButtonPrimarySelect(this.SelectResultField, item.SelectResult())
                 </td>
             }
-            <td>
-                @if (!item.MyCurrency)
-                {
-                    <a class="btn btn-primary" href="@Url.Action("SetMyCurrency", new { id = item.Id })">
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </a>
-                }
-            </td>
             <td>
                 <b>
                     @Html.ActionLink(item.Name, "Edit", new { id = item.Id })
