@@ -25,18 +25,7 @@
             Amount: 0,
             AmountH: 0,
             AmountM: 0,
-        };
-
-        $scope.refresh = function () {
-            MemberDayReportService.get(
-                {
-                    id: $routeParams.id,
-                    projectId: $routeParams.projectId,
-                    currencyType: $routeParams.currencyType
-                }, function (data) {
-                    $scope.memberDayReport = data;
-                    $scope.calcAmount(true);
-                });
+            Currencies: undefined,
         };
 
         $scope.calcAmount = function (fromAmount) {
@@ -85,19 +74,32 @@
             }
         };
 
+        $scope.myCurrency = function () {
+            if ($scope.Currencies === undefined) {
+                return;
+            }
+            return $.grep($scope.Currencies, function (e) {
+                return e.Value === 1;
+            })[0];
+        };
+
+        $scope.currencyById = function (id) {
+            if ($scope.Currencies === undefined) {
+                return;
+            }
+            return $.grep($scope.Currencies, function (e) {
+                return e.CurrencyType === id;
+            })[0];
+        };
         $scope.edDateFrom = localStorage.getItem('memberDayReportCtrl.edDateFrom') || moment().format('L');
         $scope.edDateTo = localStorage.getItem('memberDayReportCtrl.edDateTo') || moment().format('L');
 
         $scope.refreshList = function () {
             localStorage.setItem('memberDayReportCtrl.edDateFrom', $scope.edDateFrom);
             localStorage.setItem('memberDayReportCtrl.edDateTo', $scope.edDateTo);
-            $scope.memberDayReports = MemberDayReportService.query({ dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo }, function () {
-                $scope.setMyCurrencyRates = function (currencies) {
-                    var myCurrencyRate = $scope.myCurrency().Value;
-                    for (var i = 0; i < currencies.length; i++) {
-                        currencies[i].Value = currencies[i].Value / myCurrencyRate;
-                    };
-                };
+            MemberDayReportService.query({ dateFrom: $scope.edDateFrom, dateTo: $scope.edDateTo }, function (data) {
+                $scope.memberDayReports = data.Details;
+                $scope.Currencies = data.Currencies;
 
                 $scope.getTotal = function (reports) {
                     var total = 0;
@@ -109,61 +111,39 @@
                     return total;
                 };
 
-                $scope.getTotalDate = function (dateString1) {
-                    var reports = $scope.memberDayReports.Details.filter(function(elem) {
-                        return $scope.dateCompare(elem.DateTime, dateString1);
-                    });
-                    return $scope.getTotal(reports);
-                };
+                var sum = 0;
+                for (var i = 0; i < $scope.memberDayReports.length; i++) {
+                    sum += $scope.memberDayReports[i].Amount
+                        * $scope.memberDayReports[i].Value
+                        * $scope.currencyById($scope.memberDayReports[i].Project.RateCurrencyType).Value;
+
+                    if (i !== $scope.memberDayReports.length - 1) {
+                        if (!$scope.dateCompare($scope.memberDayReports[i].DateTime, $scope.memberDayReports[i + 1].DateTime)) {
+                            $scope.memberDayReports[i].dayTotal = sum;
+                            sum = 0;
+                        }
+                    }
+                }
+                if ($scope.memberDayReports.length > 0) {
+                    $scope.memberDayReports[$scope.memberDayReports.length - 1].dayTotal = sum;
+                }
             });
         };
 
         $scope.dateCompare = function (dateString1, dateString2) {
             var date1 = new Date(dateString1);
             var date2 = new Date(dateString2);
-            return date1.getDay()   === date2.getDay() &&
+            return date1.getDate() === date2.getDate() &&
                    date1.getMonth() === date2.getMonth() &&
                    date1.getYear()  === date2.getYear();
         };
 
-        $scope.ToggleDayTotals = function($route) {
-            $scope.ShowDayTotalsFlag = !$scope.ShowDayTotalsFlag;
-            $route.reload();
-        };
-        $scope.ShowDayTotalsFlag = true;
-        $scope.ShowDayTotals = function (currentDetails) {
-            var curIndex = $scope.memberDayReports.Details.indexOf(currentDetails);
-            if (curIndex + 1 >= $scope.memberDayReports.Details.length) {
-                return $scope.ShowDayTotalsFlag;
-            }else {
-                var nextDetails = $scope.memberDayReports.Details[curIndex + 1];
-                if (!$scope.dateCompare(currentDetails.DateTime, nextDetails.DateTime)) {
-                    return $scope.ShowDayTotalsFlag;
-                } else {
-                    return false;
-                };
-            };
-            return false;
+        $scope.toggleDayTotals = function() {
+            $scope.showDayTotalsFlag = !$scope.showDayTotalsFlag;
+            $scope.refreshList();
         };
 
-        $scope.myCurrency = function () {
-            if ($scope.memberDayReports.Currencies === undefined) {
-                return;
-            }
-            return $.grep($scope.memberDayReports.Currencies, function (e) {
-                return e.Value === 1;
-            })[0];
-        };
-
-        $scope.currencyById = function (id) {
-            if ($scope.memberDayReports.Currencies === undefined) {
-                return;
-            }
-            return $.grep($scope.memberDayReports.Currencies, function (e) {
-                return e.CurrencyType === id;
-            })[0];
-        };
-
+        $scope.showDayTotalsFlag = true;
         $scope.UserId = ASE.UserId;
 
         $scope.delete = function (memberDayReport) {
