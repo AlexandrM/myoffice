@@ -25,7 +25,18 @@
             Amount: 0,
             AmountH: 0,
             AmountM: 0,
-            Currencies: undefined,
+        };
+
+        $scope.refresh = function () {
+            MemberDayReportService.get(
+                {
+                    id: $routeParams.id,
+                    projectId: $routeParams.projectId,
+                    currencyType: $routeParams.currencyType
+                }, function (data) {
+                    $scope.memberDayReport = data;
+                    $scope.calcAmount(true);
+                });
         };
 
         $scope.calcAmount = function (fromAmount) {
