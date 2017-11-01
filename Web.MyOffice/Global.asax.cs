@@ -17,7 +17,8 @@ namespace Web.MyOffice
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("ru-RU");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("ru-RU");
 
-            System.Data.Entity.Database.SetInitializer<Web.MyOffice.Data.DB>(new Web.MyOffice.Data.InitData());
+            //System.Data.Entity.Database.SetInitializer<Web.MyOffice.Data.DB>(new Web.MyOffice.Data.InitData());
+            System.Data.Entity.Database.SetInitializer<Web.MyOffice.Data.DB>(new ASE.EF.AutoMigrationInit<Web.MyOffice.Data.DB>());
             System.Data.Entity.Database.SetInitializer<ApplicationDbContext>(new ASE.EF.AutoMigrationInit<ApplicationDbContext>());
 
             GlobalConfiguration.Configure(WebApiConfig.Register);

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace ASE.MVC
 {
@@ -40,6 +41,19 @@ namespace ASE.MVC
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            if (System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] != null)
+            {
+                modelBuilder.Entity<ApplicationUser>().ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_AspNetUsers"); //AspNetUsers
+                modelBuilder.Entity<IdentityRole>().ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_AspNetRoles"); //AspNetRoles
+                modelBuilder.Entity<IdentityUserRole>().ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_AspNetUserRoles"); //AspNetUserRoles
+                modelBuilder.Entity<IdentityUserClaim>().ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_AspNetUserClaims"); //AspNetUserClaims
+                modelBuilder.Entity<IdentityUserLogin>().ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_AspNetUserLogins"); //AspNetUserLogins
+            }
         }
     }
 }

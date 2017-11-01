@@ -91,12 +91,8 @@ namespace Web.MyOffice.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-
-            modelBuilder.Entity<MemberDayReport>().ToTable("MemberDayReport");
-            modelBuilder.Entity<MemberPayment>().ToTable("MemberPayment");
-
-            //modelBuilder.Entity<Member>().Property(t => t.Email).IsRequired().HasMaxLength(60).HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IX_Member_Email", 1) { IsUnique = true }));
 
             modelBuilder.Entity<Member>().HasRequired(x => x.MainMember).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Member>().HasRequired(x => x.User).WithMany().WillCascadeOnDelete(false);
@@ -204,6 +200,12 @@ namespace Web.MyOffice.Data
             //modelBuilder.Ignore<Item>();
             //modelBuilder.Ignore<Motion>();
             //modelBuilder.Ignore<Record>();
+
+            if (System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] != null)
+            {
+                modelBuilder.Types()
+                    .Configure(entity => entity.ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_" + entity.ClrType.Name));
+            }
         }
 
         public override int SaveChanges()

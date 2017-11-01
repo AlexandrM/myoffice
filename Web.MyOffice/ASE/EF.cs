@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ASE.MVC;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -18,6 +19,10 @@ namespace ASE.EF
             var configuration = new DbMigrationsConfiguration<TContext>();
             configuration.AutomaticMigrationDataLossAllowed = true;
             configuration.AutomaticMigrationsEnabled = true;
+            if (System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] != null)
+            {
+                configuration.ContextKey = System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_" + configuration.ContextKey;
+            }
             var migrator = new DbMigrator(configuration);
             migrator.Update();
         }
