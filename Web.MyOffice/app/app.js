@@ -69,6 +69,10 @@
                 templateUrl: 'debts/list',
                 controller: 'debtsCtrl'
             }).
+			when('/Currencies', {
+                  templateUrl: 'Currencies/CurrencyList',
+                    controller: 'currencyCtrl'
+                }).
             otherwise({
                 redirectTo: '/project'
             });

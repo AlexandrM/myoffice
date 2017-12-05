@@ -1339,6 +1339,15 @@ namespace R {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Уже существует..
+        /// </summary>
+        public static string WarningExists {
+            get {
+                return ResourceManager.GetString("WarningExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Списать разницу.
         /// </summary>
         public static string WritDifference {

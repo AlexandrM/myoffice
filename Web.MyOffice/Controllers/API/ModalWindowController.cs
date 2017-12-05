@@ -9,7 +9,7 @@ using ASE.EF;
 using ASE.MVC;
 using ASE.Json;
 using MyBank.Models;
-//using MVC = Web.MyOffice.Controllers.MyBank;
+using MVC = Web.MyOffice.Controllers.MyBank;
 using Method = System.Web.Http;
 
 
@@ -32,7 +32,7 @@ namespace Web.MyOffice.Controllers.API
                     //htmlText = (new MVC.UserBudgetsController()).RenderPartialView(viewName);
                     break;
                 case "CurrenciesController":
-                    //htmlText = (new MVC.CurrenciesController()).RenderPartialView(viewName);
+                    htmlText = (new MVC.CurrenciesController()).RenderPartialView(viewName);
                     break;
             }
             return ResponseObject2Json(htmlText);

@@ -63,7 +63,6 @@ namespace Web.MyOffice.Controllers.API
             {
                 return ResponseObject2Json(db.Currencies.Where(x => x.User.APISessionId == UserIdAPI).ToList());
             }
-
             return ResponseObject2Json(db.Currencies.Where(x => x.UserId == UserId).ToList());
         }
 
