@@ -1,0 +1,23 @@
+﻿
+.valid {
+    border: 2px solid green;
+    border-radius: 5px;
+}
+.pristine {
+    border: 2px solid dimgray;
+    border-radius: 5px;
+}
+.invalid {
+    border: 2px solid red;
+    border-radius: 5px;
+}
+.required {
+    border: 1px solid  yellow;
+    border-radius: 5px;
+}
+p.warn {
+    color: skyblue;
+}
+p.error {
+    color: red;
+}

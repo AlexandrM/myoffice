@@ -6,11 +6,10 @@
     angular.module('MyOffice.app', [
         'ngRoute',
         'ngResource',
-
         'angularMoment',
-
         'ase.com.ua',
         'MyOffice.app',
+		'ui.bootstrap'
     ]);
 
     angular.module('MyOffice.app').config(['$routeProvider',

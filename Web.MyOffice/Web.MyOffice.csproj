@@ -269,6 +269,7 @@
     <Compile Include="ASE\ResourceHelper.cs" />
     <Compile Include="ASE\ToolsModels\IdValue.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\ModalWindowController.cs" />
     <Compile Include="Controllers\API\MotionController.cs" />
     <Compile Include="Controllers\API\BudgetController.cs" />
     <Compile Include="Controllers\API\AccountController.cs" />
@@ -413,6 +414,7 @@
     <Content Include="app\services\memberMotionsService.js" />
     <Content Include="app\services\memberPaymentService.js" />
     <Content Include="app\services\memberService.js" />
+    <Content Include="app\services\modalWindowService.js" />
     <Content Include="app\services\pdfService.js" />
     <Content Include="app\services\projectMemberService.js" />
     <Content Include="app\services\projectService.js" />
@@ -449,6 +451,7 @@
     <Content Include="Content\bootstrap\js\locales\ru.js" />
     <Content Include="Content\bootstrap\js\locales\uk.js" />
     <Content Include="Content\bootstrap\js\respond.js" />
+    <Content Include="Content\FormValidationStyles.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\tree\jquery.nestable.js" />
     <Content Include="Content\tree\tree.css" />
@@ -1392,10 +1395,12 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ASE\MVC\Angular\" />
+    <Folder Include="Controllers\MyBank\Finance\" />
     <Folder Include="Rotativa\" />
     <Folder Include="Scripts\jqPlot\plugins\" />
     <Folder Include="Views\GlobalSelect\" />
     <Folder Include="Views\Member\" />
+    <Folder Include="Views\MyBank\Finance\" />
     <Folder Include="Views\QuickRecord\" />
     <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
