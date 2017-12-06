@@ -1,0 +1,67 @@
+﻿<link rel="stylesheet" href="../../../Content/FormValidationStyles.css" />
+<div id="CategoryItemEdit">
+    
+    <form name="budgetUserForm">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="windowClose('BudgetUsers')">&times;</button>
+            <h4 class="modal-title">@R.R.Edit</h4>
+        </div>
+
+        <div class="modal-body">
+            <!-- Html.HiddenFor(model => model.Id) -->
+            <input type="hidden" ng-model="model.Id"/>
+            
+            <table class="table table-stripped">
+                <tr>
+                    <th>@R.R.User</th>
+                    <th>@R.R.Email</th>
+                    <th></th>
+                </tr>
+                    <tr ng-repeat="user in usersForBudget track by $index">
+                        <td>
+                            {{user.FullName}}
+                        </td>
+                        <td>
+                            {{user.Email}}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" ng-click="BudgetUsersDelete(user)">@R.R.Delete</button>
+                        </td>
+                    </tr>
+                <tr>
+                    <td>
+                        <select type="text" class="form-control" id="name" name="name" required
+                                ng-required="true"
+                                ng-model="newUser"
+                                ng-class="{'valid':AddAccountForm.name.$valid,
+                                 'invalid':budgetUserForm.name.$invalid,
+                                 'required':budgetUserForm.name.$error.required}">
+                            <option hidden="hidden" value="" >@R.R.User</option>
+                            <option ng-repeat="user in users" value="{{user}}">{{user.FullName}}</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <select type="email" class="form-control" id="Email" name="Email" required
+                                ng-required="true"
+                                ng-model="newUser"
+                                ng-class="{'valid':AddAccountForm.name.$valid,
+                                 'invalid':budgetUserForm.name.$invalid,
+                                 'required':budgetUserForm.name.$error.required}">
+                            <option hidden="hidden" value="">@R.R.Email</option>
+                            <option ng-repeat="user in users" value="{{user}}">{{user.Email}}</option>
+                        </select>
+
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" ng-click="BudgetUsersAdd(newUser)">@R.R.Add</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="updateBudgetList()">@R.R.Save</button>
+        </div>
+    </form>
+</div>

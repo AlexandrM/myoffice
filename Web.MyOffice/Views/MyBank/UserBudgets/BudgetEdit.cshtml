@@ -1,0 +1,40 @@
+﻿
+<link rel="stylesheet" href="../../../Content/FormValidationStyles.css" />
+<div id="BudgetEditPage" style="padding: 10px">
+    <form name="BudgetEditForm">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="windowClose('BudgetEdit')">&times;</button>
+            <h4 class="modal-title">@R.R.Edit</h4>
+        </div>
+
+        <div class="modal-body">
+            <input type="hidden" ng-model="newBudget.Id"/>
+
+            <div class="form-group">
+                <label for="name" class="control-label col-sm-3">@R.R.Name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="name" name="name" required
+                           value="{{newBudget.Name}}"
+                           ng-required ="true"
+                           ng-minlength="1"
+                           ng-maxlength="15"
+                           ng-pattern="/^[A-Z]+[a-z]*[0-9]*/"
+                           ng-model="newBudget.Name"
+                           ng-class="{'valid':BudgetEditForm.name.$valid,
+                                 'invalid':BudgetEditForm.name.$invalid,
+                                 'required':BudgetEditForm.name.$error.required}" />
+
+                    <div ng-if="BudgetEditForm.name.$invalid && BudgetEditForm.name.$dirty">
+                        <p ng-if="BudgetEditForm.name.$error.pattern" class="error">Name should start from uppercase letter.</p>
+                        <p ng-if="BudgetEditForm.name.$error.minlength" class="error">Name should has one character at least.</p>
+                        <p ng-if="BudgetEditForm.name.$error.maxlength" class="error">Name should has up to 15 characters long.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" ng-click="BudgetEdit($event)">@R.R.Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="windowClose('BudgetEdit')">@R.R.Close</button>
+        </div>
+    </form>
+</div>

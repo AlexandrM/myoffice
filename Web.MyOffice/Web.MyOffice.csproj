@@ -269,6 +269,7 @@
     <Compile Include="ASE\ResourceHelper.cs" />
     <Compile Include="ASE\ToolsModels\IdValue.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\Finance\UserBudgetsController.cs" />
     <Compile Include="Controllers\API\ModalWindowController.cs" />
     <Compile Include="Controllers\API\MotionController.cs" />
     <Compile Include="Controllers\API\BudgetController.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="Controllers\ImplementerMotionsController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\MemberDayReportController.cs" />
+    <Compile Include="Controllers\MyBank\Finance\BudgetsController.cs" />
     <Compile Include="Controllers\MyBank\MyBankController.cs" />
     <Compile Include="Controllers\MyBank\MyBankReportsController.cs" />
     <Compile Include="Controllers\MyBank\ReferencesController.cs" />
@@ -396,6 +398,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\controllers\budgetCtrl.js" />
     <Content Include="app\controllers\currencyCtrl.js" />
     <Content Include="app\controllers\debtsCtrl.js" />
     <Content Include="app\controllers\financeCtrl.js" />
@@ -406,6 +409,7 @@
     <Content Include="app\controllers\projectCtrl.js" />
     <Content Include="app\controllers\projectTaskCtrl.js" />
     <Content Include="app\services\botIterationService.js" />
+    <Content Include="app\services\budgetService.js" />
     <Content Include="app\services\currencyService.js" />
     <Content Include="app\services\debtsService.js" />
     <Content Include="app\services\emailService.js" />
@@ -1256,6 +1260,9 @@
     <Content Include="Scripts\angular-cookies.min.js.map" />
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
+    <Content Include="Views\MyBank\UserBudgets\BudgetEdit.cshtml" />
+    <Content Include="Views\MyBank\UserBudgets\BudgetList.cshtml" />
+    <Content Include="Views\MyBank\UserBudgets\BudgetUsers.cshtml" />
     <None Include="Web.appSettings.config" />
     <Content Include="Web.appSettings.config.default" />
     <None Include="Web.connectionStrings.config">
@@ -1395,7 +1402,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ASE\MVC\Angular\" />
-    <Folder Include="Controllers\MyBank\Finance\" />
     <Folder Include="Rotativa\" />
     <Folder Include="Scripts\jqPlot\plugins\" />
     <Folder Include="Views\GlobalSelect\" />

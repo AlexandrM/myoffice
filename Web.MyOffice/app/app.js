@@ -69,6 +69,10 @@
                 templateUrl: 'debts/list',
                 controller: 'debtsCtrl'
             }).
+			when('/Budgets', {
+                 templateUrl: 'UserBudgets/BudgetList',
+                 controller: 'budgetCtrl'
+             }).
             otherwise({
                 redirectTo: '/project'
             });
