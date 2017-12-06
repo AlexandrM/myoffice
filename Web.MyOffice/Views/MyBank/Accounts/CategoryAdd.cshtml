@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "CategoryEdit";
+}
+
+<link rel="stylesheet" href="~/Content/FormValidationStyles.css" />
+
+<div id="CategoryAddForm" style="padding: 10px">
+   <form name="CategoryAddForm" class="form-horizontal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="windowClose('CategoryAdd')">&times;</button>
+            <h4 class="modal-title">@R.R.Edit</h4>
+        </div>
+
+        <div class="modal-body">
+            <input type="hidden" ng-model="Id" value="{{newCategory.Id}}"/>
+            <input type="hidden" ng-model="BudgetId" value="{{newCategory.BudgetId}}" />
+            <div class="form-group">
+                <label for="name" class="control-label col-sm-2">@R.R.Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name" name="name" required
+                           ng-required ="true"
+                           ng-minlength="1"
+                           ng-maxlength="15"
+                           ng-pattern="/^[A-Z]+[a-z]*[0-9]*/"
+                           ng-model="newCategory.Name"
+                           ng-class="{'valid':CategoryAddForm.name.$valid,
+                                      'invalid':CategoryAddForm.name.$invalid,
+                                      'required':CategoryAddForm.name.$error.required}" />
+                    
+                    <div ng-if="CategoryAddForm.name.$invalid ">
+                        <p ng-if="CategoryAddForm.name.$error.pattern" class="error">Name should start from uppercase letter.</p>
+                        <p ng-if="CategoryAddForm.name.$error.minlength" class="error">Name should has one character at least.</p>
+                        <p ng-if="CategoryAddForm.name.$error.maxlength" class="error">Name should has up to 50 characters long.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="budgets" class="control-label col-sm-2">@R.R.Budget</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="budgets" name="budgets" required
+                            ng-model="newCategory.Budget"
+                            ng-options="budget.Name for budget in budgets" 
+                            ng-class="{'required':CategoryAddForm.budget.$error.required,
+                                       'valid':CategoryAddForm.budget.$valid,
+                                       'invalid':CategoryAddForm.budget.$invalid}"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="control-label col-sm-2">@R.R.Description</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="description" name="description"
+                           ng-maxlength="50"
+                           ng-model="newCategory.Description" 
+                           ng-class="{'valid':CategoryAddForm.description.$valid,
+                                      'invalid':CategoryAddForm.description.$invalid,
+                                      'required':CategoryAddForm.description.$error.required}"/>
+                   
+                    <div ng-if="CategoryAddForm.description.$invalid && CategoryAddForm.description.$dirty">
+                        <p ng-if="CategoryAddForm.description.$error.maxlength" class="error">Description should had up to 50 characters long.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+     
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-default" ng-click="CategoryAdd(newCategory)">@R.R.Add</button>
+        </div>
+    </form>
+</div>

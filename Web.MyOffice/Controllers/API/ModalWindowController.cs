@@ -9,7 +9,7 @@ using ASE.EF;
 using ASE.MVC;
 using ASE.Json;
 using MyBank.Models;
-//using MVC = Web.MyOffice.Controllers.MyBank;
+using MVC = Web.MyOffice.Controllers.MyBank;
 using Method = System.Web.Http;
 
 
@@ -26,7 +26,7 @@ namespace Web.MyOffice.Controllers.API
             switch (controllerName)
             {
                 case "AccountsController":
-                    //htmlText = (new MVC.AccountsController()).RenderPartialView(viewName);
+                    htmlText = (new MVC.AccountsController()).RenderPartialView(viewName);
                     break;
                 case "UserBudgetsController":
                     //htmlText = (new MVC.UserBudgetsController()).RenderPartialView(viewName);

@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/Content/FormValidationStyles.css" />
+<body>
+
+<h2>@R.R.Add</h2>
+
+<div id="AccountList" ng-init="refresh()">
+    <p>
+        <button class="btn btn-success" ng-click="AccountFormAddInvoke()">@R.R.Account</button>
+        <button class="btn btn-success" ng-click="categoryListFormInvoke()">@R.R.Category</button>
+    </p>
+    <ul class="nav nav-tabs" id="myTab">
+        <li ng-repeat="category in categories">
+            <a ng-click="showCategory(category)">{{category.Name}}</a>
+        </li>
+    </ul>
+</div>
+<div class="tab-content">
+    <table class="table table-bordered table-striped" style="width: 100%">
+        <tr>
+            <th>@R.R.Name</th>
+            <th>@R.R.Description</th>
+            <th>@R.R.CreditLimit</th>
+            <th>@R.R.Actions</th>
+        </tr>
+
+        <tr ng-repeat="account in selectedCategory.Accounts">
+            <td>{{account.Name}}</td>
+            <td>{{account.Description}}</td>
+            <td>{{account.CreditLimit}}</td>
+            <td>
+                <button type="button" class="btn btn-primary" ng-click="accountFormEditInvoke(account)">@R.R.Edit</button>
+                <button chref="#" class="btn btn-danger" ng-if="account.Motions.length===0" ng-click="accountDelete(account)">@R.R.Delete</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
