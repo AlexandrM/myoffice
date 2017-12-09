@@ -552,4 +552,7 @@
   <data name="SelectBudget" xml:space="preserve">
     <value>Select budget</value>
   </data>
+  <data name="WarningExists" xml:space="preserve">
+    <value>Already exists</value>
+  </data>
 </root>

@@ -1,0 +1,72 @@
+﻿@{ 
+    Layout = null;
+}
+<style>
+    td {
+        vertical-align: middle !important;
+    }
+</style>
+
+<h2>@R.R.Currencies</h2>
+
+<div id="CurrencyList" ng-init="refresh()">
+    <div class="row">
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-success" ng-click="currencyAddFormInvoke({})">@R.R.Add</button>
+        </div>
+        <div class="col-sm-4 col-sm-offset-4">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                    @S.ImportRates
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesPrivatbank1')">@S.ImportRatesPrivatbank1</button></li>
+                    <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesNBU')">@S.ImportRatesNBU</button></li>
+                    <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesCBR')">@S.ImportRatesCBR</button></li>
+                </ul>
+            </div>
+            <input class="form-control" type="text" ng-blur="filter($event)" ng-keydown=""/>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped" style="width: 100%">
+        <tbody>
+            <tr>
+                <th>
+                    @S.MyCurrency
+                </th>
+                <th>
+                    @R.R.Name
+                </th>
+                <th>
+                    @R.R.ShortName
+                </th>
+                <th>
+                    @R.R.Rate
+                </th>
+                <th>
+                    @R.R.Actions
+                </th>
+            </tr>
+            <tr ng-repeat="currency in currencies">
+                <td>
+                    <input type="hidden" class="form-control" ng-model="currency.Id" />
+                    <input type="checkbox" class="form-control" ng-model="currency.MyCurrency" ng-click="setMyCurrency(currency)" value="{{currency.MyCurrency}}" />
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="currency.Name" value="{{currency.Name}}" />
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="currency.ShortName" value="{{currency.ShortName}}" />
+                </td>
+                <td>
+                    {{currency.Value}}
+                </td>
+                <td>
+                    <buton type="button" class="btn btn-primary" ng-click="currencyAddFormInvoke(currency)">@R.R.Edit</buton>
+                    <button type="button" class="btn btn-danger" ng-click="deleteCurrency(currency.Id)">@R.R.Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
