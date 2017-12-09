@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "AddCategory";
+}
+<link rel="stylesheet" href="~/Content/FormValidationStyles.css" />
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click='windowClose("CategoryList")'>&times;</button>
+    <h4 class="modal-title">@R.R.CategoryAccounts </h4>
+</div>
+
+<div id="CategoryAccountList" style="padding: 10px">
+    <p>
+        <a class="btn btn-success" ng-click="categoryAddFormInvoke()">@R.R.Add</a>
+    </p>
+
+    <table class="table table-bordered table-striped">
+        <tbody>
+        <tr>
+            <th>@R.R.Name</th>
+            <th>@R.R.Description</th>
+            <th>@R.R.Actions</th>
+        </tr>
+
+        <tr ng-repeat="category in categories">
+            <td>{{category.Name}}</td>
+            <td>{{category.Description}}</td>
+            <td>
+                <button type="button"
+                        class="btn btn-primary"
+                        id="{{category.Id}}"
+                        ng-click="categoryFormEdit(category)">
+                    @R.R.Edit
+                </button>
+                <button type="button"
+                        class="btn btn-danger"
+                        ng-if="category.Accounts.length == 0"
+                        ng-click="categoryDelete(category)">
+                    @R.R.Delete
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="modal-footer">
+    <tr><td>
+            <button type="button" ng-click="updateCategoryList()" class="btn btn-default">@R.R.Save</button>
+    </td></tr>
+    </div>
+</div>

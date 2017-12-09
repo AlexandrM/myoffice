@@ -59,24 +59,29 @@
             $scope.openForm('CurrencyAdd','modal-sm');
         };
 
-        $scope.addCurrency = function (newCurrency) {
-            var newCurrencyNotExists = $scope.currencies.find(function(currency){
-                return currency.CurrencyType === +newCurrency.CurrencyType;
-            }) === undefined;
-            if (newCurrencyNotExists) {
-                CurrencyService.postCurrency({
+        $scope.postCurrency = function(newCurrency) {
+            CurrencyService.postCurrency({
                     Id: newCurrency.Id,
                     Name: newCurrency.Name,
                     ShortName: newCurrency.ShortName,
                     CurrencyType: newCurrency.CurrencyType,
                     MyCurrency: newCurrency.MyCurrency,
                     Value: newCurrency.Value
-                }, function () {
+                },
+                function() {
                     if (windows['CurrencyAdd'] !== undefined) {
                         $scope.refresh();
                     }
                     $scope.closeWindow('CurrencyAdd');
                 });
+        };
+
+        $scope.addCurrency = function (newCurrency) {
+            var newCurrencyExists = $scope.currencies.find(function(currency){
+                return currency.CurrencyType === Number(newCurrency.CurrencyType);
+            }) !== undefined;
+            if (!newCurrencyExists) {
+                $scope.postCurrency(newCurrency);
             } else {
                 bootbox.alert($scope.warnings[0]);
             }
@@ -93,16 +98,16 @@
 
             $scope.setMyCurrency = function (checked) {
                 var unchecked = $scope.allCurrencies.find(function (currency) {
-                    return currency.MyCurrency === true && currency.Id !== checked.Id;
+                    return currency.MyCurrency && currency.Id !== checked.Id;
                 });
                 if (unchecked !== undefined) {
                     unchecked.MyCurrency = false;
-                    $scope.addCurrency(unchecked);
+                    $scope.postCurrency(unchecked);
                 }
-                $scope.addCurrency(checked);
+                $scope.postCurrency(checked);
             };
 
-            $scope.ratesUpdate = function(sourceName){
+        $scope.ratesUpdate = function(sourceName){
                 CurrencyService.updateRates({ sourceName: sourceName }, function () {
                     $scope.refresh();
                 });

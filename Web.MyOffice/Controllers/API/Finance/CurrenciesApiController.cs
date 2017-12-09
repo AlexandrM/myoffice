@@ -34,7 +34,7 @@ namespace Web.MyOffice.Controllers.API
         public HttpResponseMessage CurrencyListGet()
         {
             var model = (new object()).ToDynamic();
-            model.currencies = db.Currencies.ToList();
+            model.currencies = db.Currencies.Where(currency=>currency.UserId == UserId).ToList();
             model.types = Enum.GetNames(typeof(CurrencyType));
             model.warnings = new List<string>() {R.R.WarningExists };
             return ResponseObject2Json(model);

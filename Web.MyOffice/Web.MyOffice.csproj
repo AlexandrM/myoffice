@@ -277,6 +277,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\Finance\CurrenciesApiController.cs" />
     <Compile Include="Controllers\API\Finance\UserBudgetsController.cs" />
+    <Compile Include="Controllers\API\Finance\BudgetAccountsApiController.cs" />
     <Compile Include="Controllers\API\ModalWindowController.cs" />
     <Compile Include="Controllers\API\MotionController.cs" />
     <Compile Include="Controllers\API\BudgetController.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Controllers\MemberDayReportController.cs" />
     <Compile Include="Controllers\MyBank\Finance\BudgetsController.cs" />
     <Compile Include="Controllers\MyBank\Finance\CurrenciesController.cs" />
+    <Compile Include="Controllers\MyBank\Finance\AccountsController.cs" />
     <Compile Include="Controllers\MyBank\MyBankController.cs" />
     <Compile Include="Controllers\MyBank\MyBankReportsController.cs" />
     <Compile Include="Controllers\MyBank\ReferencesController.cs" />
@@ -407,6 +409,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\controllers\budgetCtrl.js" />
+    <Content Include="app\services\budgetAccountsService.js" />
     <Content Include="app\controllers\currencyCtrl.js" />
     <Content Include="app\controllers\debtsCtrl.js" />
     <Content Include="app\controllers\financeCtrl.js" />
@@ -418,6 +421,7 @@
     <Content Include="app\controllers\projectTaskCtrl.js" />
     <Content Include="app\services\botIterationService.js" />
     <Content Include="app\services\budgetService.js" />
+    <Content Include="app\controllers\budgetAccountCtrl.js" />
     <Content Include="app\services\currencyService.js" />
     <Content Include="app\services\debtsService.js" />
     <Content Include="app\services\emailService.js" />
@@ -1273,6 +1277,12 @@
     <Content Include="Views\MyBank\UserBudgets\BudgetUsers.cshtml" />
     <Content Include="Views\MyBank\Currencies\CurrencyAdd.cshtml" />
     <Content Include="Views\MyBank\Currencies\CurrencyList.cshtml" />
+    <Content Include="Views\MyBank\Accounts\AccountAdd.cshtml" />
+    <Content Include="Views\MyBank\Accounts\AccountEdit.cshtml" />
+    <Content Include="Views\MyBank\Accounts\AccountList.cshtml" />
+    <Content Include="Views\MyBank\Accounts\CategoryAdd.cshtml" />
+    <Content Include="Views\MyBank\Accounts\CategoryEdit.cshtml" />
+    <Content Include="Views\MyBank\Accounts\CategoryList.cshtml" />
     <None Include="Web.appSettings.config" />
     <Content Include="Web.appSettings.config.default" />
     <None Include="Web.connectionStrings.config">
