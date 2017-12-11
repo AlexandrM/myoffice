@@ -17,7 +17,7 @@
 
                 $scope.myCurrency = function () {
                     return $.grep($scope.list.Currencies, function (e) {
-                        return e.Value === 1;
+                        return e.MyCurrency;
                     })[0];
                 };
 

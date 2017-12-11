@@ -26,7 +26,7 @@ namespace ASE.MVC
         {
             if (controller.ControllerContext == null)
             {
-                controller.ControllerContext = new ControllerContext();
+                controller.ControllerContext = new ControllerContext(new HttpContextWrapper(HttpContext.Current),new RouteData(), controller);
                 controller.RouteData.Values.Add("controller", "ChatController");
             }
 
@@ -53,7 +53,7 @@ namespace ASE.MVC
         {
             if (controller.ControllerContext == null)
             {
-                controller.ControllerContext = new ControllerContext();
+                controller.ControllerContext = new ControllerContext(new HttpContextWrapper(HttpContext.Current), new RouteData(), controller);
                 controller.RouteData.Values.Add("controller", "ChatController");
             }
 
@@ -63,7 +63,9 @@ namespace ASE.MVC
             controller.ViewData.Model = model;
             using (var sw = new StringWriter())
             {
-                ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, viewName);
+                var viewEngineAdv = ViewEngines.Engines.ToList().Find(x=> x.GetType() == typeof(ViewEngineAdv));
+                var viewResult = viewEngineAdv.FindPartialView(controller.ControllerContext, viewName, true);
+                
                 var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, sw);
                 viewResult.View.Render(viewContext, sw);
 
