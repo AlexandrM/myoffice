@@ -1,0 +1,61 @@
+﻿
+<div class="dialogbody" style="overflow: visible;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="windowClose('ItemList')">&times;</button>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <tbody>
+        <tr>
+            <td colspan="5"><h4><b>@R.R.Item</b></h4></td>
+        </tr>
+        <tr>
+            <th>@R.R.Name</th>
+            <th>@R.R.Category</th>
+            <th>@R.R.Description</th>
+            <th>@R.R.Deleted</th>
+        </tr>
+        <tr>
+            <td>{{selectedItem.Name}}</td>
+            <td>{{getItemCategory(selectedItem).Name}}</td>
+            <td>{{selectedItem.Description}}</td>
+            <td> <input class="form-control" type="checkbox" ng-model="mergeItem.Deleted" disabled/></td>
+        </tr>
+        <tr>
+            <td colspan="5"><h4><b>@R.R.MergeWith</b></h4></td>
+        </tr>
+        <tr>
+            <th>@R.R.Name</th>
+            <th>@R.R.Category</th>
+            <th>@R.R.Description</th>
+            <th>@R.R.Deleted</th>
+        </tr>
+        <tr>
+            <td>{{mainItem.Name}}</td>
+            <td>{{getItemCategory(mainItem).Name}}</td>
+            <td>{{mainItem.Description}}</td>
+            <td><input class="form-control" type="checkbox" ng-model="mainItem.Deleted" disabled/></td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <h4><b>@R.R.Items</b></h4></td>
+        </tr>
+        <tr>
+            <th>@R.R.Name</th>
+            <th>@R.R.Category</th>
+            <th>@R.R.Description</th>
+            <th>@R.R.Deleted</th>
+        </tr>
+        <tr ng-repeat="item in displayItems" ng-click="selectMainItem(item)">
+            <td>{{item.Name}}</td>
+            <td>{{getItemCategory(item).Name}}</td>
+            <td>{{item.Description}}</td>
+            <td><input class="form-control" type="checkbox" ng-model="item.Deleted" disabled/></td>
+        </tr>
+        </tbody></table>
+    <div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="itemMerge()">@R.R.Merge</button>
+        </div>
+    </div>
+</div>

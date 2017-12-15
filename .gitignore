@@ -31,4 +31,6 @@ Web.MyOffice/Rotativa/wkhtmltopdf.exe
 Web.MyOffice/Properties/PublishProfiles/office.ase.com.ua.pubxml
 Web.MyOffice/Properties/PublishProfiles/office.ase.com.ua.pubxml.user
 Web.MyOffice/Properties/PublishProfiles/localhost.pubxml
-Web.MyOffice/Properties/PublishProfiles/localhost.pubxml.user
+Web.MyOffice/Properties/PublishProfiles/localhost.pubxml.userMyOffice.Test
+/MyOffice.Web.sln
+MyOffice.Test

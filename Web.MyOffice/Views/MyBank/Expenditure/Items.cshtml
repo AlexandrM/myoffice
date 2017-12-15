@@ -1,0 +1,69 @@
+﻿@{Layout = null;}
+
+<style>
+    td {
+        vertical-align: middle !important;
+    }
+
+    #myTab {
+        line-height: 2em;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 0;
+        overflow: scroll;
+        overflow-x: hidden;
+    }
+
+    #myTab, #tab-content {
+        overflow: scroll;
+        overflow-x: hidden;
+    }
+
+    li.categorySelector:hover {
+        background-color:dodgerblue;
+    }
+    li.categorySelector:active{
+        background-color:orangered;
+    }
+</style>
+
+<h2>@R.R.Items</h2>
+
+<div ng-init="refresh()" >
+    <div class="row">
+        <button class="btn btn-success" ng-click="addItemDialog()">@R.R.Add</button>
+        <button class="btn btn-success" ng-click="CategoryItemsDialog()">@R.R.Add @R.R.Category</button>
+    </div>
+
+    <div class="row" style="margin-top:20px" >
+        <div class="col-lg-3" id="myTab">
+            <ul class="nav nav-pills nav-stacked">
+                <li ng-click="selectCategory(null)"><a>@R.R.All</a></li>
+                <li  ng-repeat="category in Categories">
+                    <a ng-click="selectCategory(category)">{{category.Name}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-9">
+            <table class="table table-bordered table-striped" style="width: 100%; margin:0px">
+                <tbody>
+                    <tr>
+                        <th>@R.R.Name</th>
+                        <th style="min-width: 330px">@R.R.Actions</th>
+                    </tr>
+                    <tr ng-repeat="item in displayItems">
+                        <td>
+                            <span title="{{item.Description}}">{{item.Name}}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" ng-click="itemEditDialog(item)">@R.R.Edit</button>
+                            <button class="btn btn-danger"  ng-click="itemDelete(item)">@R.R.Delete</button>
+                            <button class="btn btn-success" ng-click="itemMotionList(item)">@R.R.Motions</button>
+                            <button class="btn btn-warning" ng-click="MotionMergeDialog(item)">@R.R.Merge</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

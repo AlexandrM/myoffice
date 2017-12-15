@@ -1,0 +1,35 @@
+﻿<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="windowClose('CategoryItems')">&times;</button>
+</div>
+<h2>@R.R.CategoryItems</h2>
+
+<div id="CategoryAccountList" style="padding:15px"> 
+    <p>
+        <button class="btn btn-success" ng-click="CategoryItemEditDialog()">@R.R.Add</button>
+    </p>
+    <table class="table table-bordered table-striped" style="width: 100%"><tbody>
+        <tr>
+            <th>@R.R.Name</th>
+            <th>@R.R.Description</th>
+            <th>@R.R.Actions</th>
+        </tr>
+
+        <tr ng-repeat="category in Categories">
+            <td>{{category.Name}}</td>
+            <td>{{category.Description}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="CategoryItemEditDialog(category)">@R.R.Edit</button>
+                <div ng-if="category.Items.length === 0">
+                    <button class="btn btn-danger" ng-click="CategoryDelete(category)">@R.R.Delete</button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

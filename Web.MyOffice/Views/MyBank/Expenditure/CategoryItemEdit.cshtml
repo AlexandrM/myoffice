@@ -1,0 +1,46 @@
+﻿<div id="CategoryItemEdit">
+    <form name="ItemCategoryForm">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="windowClose('CategoryItemEdit')">&times;</button>
+            <h4 class="modal-title">@R.R.Category</h4>
+        </div>
+        
+        <div class="modal-body">
+            <input type="hidden" ng-model="model.Id" />
+            <div class="form-group">
+                <div class="col-sm-4">
+                    <label for="categoryName">@R.R.Name</label>
+                </div>
+                <div class="col-sm-8">
+                    <input id="categoryName"  type="text" class="form-control" ng-model="newCategory.Name" ng-required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-4">
+                    <label for="categoryDescription">@R.R.Description</label>
+                </div>
+                <div class="col-sm-8">
+                    <input id="categoryDescription" type="text" class="form-control" ng-model="newCategory.Description" ng-required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4">
+                    <label for="categoryBudget">@R.R.Budget</label>
+                </div>
+                <div class="col-sm-8">
+                    <select id="categoryBudget" class="form-control" ng-model="newCategory.BudgetId" ng-required>
+                        <option value="" hidden>...</option>
+                        <option value="{{budget.Id}}" ng-repeat="budget in Budgets">
+                            {{budget.Name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" ng-click="newCategorySave(newCategory)"> @R.R.Save</button>
+            <button type="button" class="btn btn-default" ng-click="windowClose('CategoryItemEdit')">@R.R.Close</button>
+        </div>
+    </form>
+</div>

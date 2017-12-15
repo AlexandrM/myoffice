@@ -269,6 +269,8 @@
     <Compile Include="ASE\ResourceHelper.cs" />
     <Compile Include="ASE\ToolsModels\IdValue.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\Finance\MotionApiContoller .cs" />
+    <Compile Include="Controllers\API\Finance\ExpenditureApiContoller.cs" />
     <Compile Include="Controllers\API\ModalWindowController.cs" />
     <Compile Include="Controllers\API\MotionController.cs" />
     <Compile Include="Controllers\API\BudgetController.cs" />
@@ -298,6 +300,7 @@
     <Compile Include="Controllers\ImplementerMotionsController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\MemberDayReportController.cs" />
+    <Compile Include="Controllers\MyBank\Finance\ExpenditureController.cs" />
     <Compile Include="Controllers\MyBank\MyBankController.cs" />
     <Compile Include="Controllers\MyBank\MyBankReportsController.cs" />
     <Compile Include="Controllers\MyBank\ReferencesController.cs" />
@@ -399,10 +402,12 @@
     <Content Include="app\controllers\currencyCtrl.js" />
     <Content Include="app\controllers\debtsCtrl.js" />
     <Content Include="app\controllers\financeCtrl.js" />
+    <Content Include="app\controllers\itemCtrl.js" />
     <Content Include="app\controllers\memberCtrl.js" />
     <Content Include="app\controllers\memberDayReportCtrl.js" />
     <Content Include="app\controllers\memberMotionsCtrl.js" />
     <Content Include="app\controllers\memberPaymentCtrl.js" />
+    <Content Include="app\services\motionService.js" />
     <Content Include="app\controllers\projectCtrl.js" />
     <Content Include="app\controllers\projectTaskCtrl.js" />
     <Content Include="app\services\botIterationService.js" />
@@ -410,6 +415,7 @@
     <Content Include="app\services\debtsService.js" />
     <Content Include="app\services\emailService.js" />
     <Content Include="app\services\financeService.js" />
+    <Content Include="app\services\itemService.js" />
     <Content Include="app\services\memberDayReportService.js" />
     <Content Include="app\services\memberMotionsService.js" />
     <Content Include="app\services\memberPaymentService.js" />
@@ -1256,6 +1262,12 @@
     <Content Include="Scripts\angular-cookies.min.js.map" />
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
+    <Content Include="Views\MyBank\Expenditure\ItemList.cshtml" />
+    <Content Include="Views\MyBank\Expenditure\Items.cshtml" />
+    <Content Include="Views\MyBank\Expenditure\ItemAdd.cshtml" />
+    <Content Include="Views\MyBank\Expenditure\MotionsList.cshtml" />
+    <Content Include="Views\MyBank\References\CategoryItems.cshtml" />
+    <Content Include="Views\MyBank\Expenditure\CategoryItemEdit.cshtml" />
     <None Include="Web.appSettings.config" />
     <Content Include="Web.appSettings.config.default" />
     <None Include="Web.connectionStrings.config">
@@ -1346,7 +1358,7 @@
     <Content Include="Views\MyBank\References\CategoryAccounts.cshtml" />
     <Content Include="Views\MyBank\References\CategoryItemEdit.cshtml" />
     <Content Include="Views\MyBank\References\CategoryItemList.cshtml" />
-    <Content Include="Views\MyBank\References\CategoryItems.cshtml" />
+    <Content Include="Views\MyBank\Expenditure\CategoryItems.cshtml" />
     <Content Include="Views\MyBank\References\CategoryItemsList.cshtml" />
     <Content Include="Views\MyBank\References\Currencies.cshtml" />
     <Content Include="Views\MyBank\References\CurrencyEdit.cshtml" />
@@ -1356,7 +1368,6 @@
     <Content Include="Views\MyBank\References\Index.cshtml" />
     <Content Include="Views\MyBank\References\ItemEdit.cshtml" />
     <Content Include="Views\MyBank\References\ItemList.cshtml" />
-    <Content Include="Views\MyBank\References\ItemListItem.cshtml" />
     <Content Include="Views\MyBank\References\Items.cshtml" />
     <Content Include="Views\MyBank\References\MotionsList.cshtml" />
     <Content Include="Views\MyBank\Accounts.cshtml" />
@@ -1395,7 +1406,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ASE\MVC\Angular\" />
-    <Folder Include="Controllers\MyBank\Finance\" />
     <Folder Include="Rotativa\" />
     <Folder Include="Scripts\jqPlot\plugins\" />
     <Folder Include="Views\GlobalSelect\" />
