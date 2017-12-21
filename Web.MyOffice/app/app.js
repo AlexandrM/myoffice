@@ -69,6 +69,18 @@
                 templateUrl: 'debts/list',
                 controller: 'debtsCtrl'
             }).
+			when('/Budgets', {
+                 templateUrl: 'UserBudgets/BudgetList',
+                 controller: 'budgetCtrl'
+             }).
+			when('/Currencies', {
+                  templateUrl: 'Currencies/CurrencyList',
+                    controller: 'currencyCtrl'
+                }).
+			when('/BankAccounts', {
+                templateUrl: 'Accounts/AccountList',
+                controller: 'budgetAccountCtrl'
+				}).
 			when('/items', {
                 templateUrl: 'expenditure/Items',
                 controller: 'itemCtrl'

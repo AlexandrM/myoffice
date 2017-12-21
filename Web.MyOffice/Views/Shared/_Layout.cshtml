@@ -146,11 +146,11 @@
                                         }
                                         <ul class="dropdown-menu">
                                             @foreach (var item in db.BudgetUsers
-                                                .Include(x => x.Budget.Owner)
-                                                .Where(x => x.UserId == UserId)
-                                                .Select(x => x.Budget)
-                                                .ToList()
-                                                .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
+                    .Include(x => x.Budget.Owner)
+                    .Where(x => x.UserId == UserId)
+                    .Select(x => x.Budget)
+                    .ToList()
+                    .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
                                             {
                                                 if ((item != null) && (item.OwnerId != UserId))
                                                 {
@@ -176,14 +176,13 @@
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.References</a>
                                     <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink(@R.R.Budgets, "Budgets", "References")</li>
+                                        <li><a href="~/Project#/Budgets">@R.R.SelectBudget</a></li>
                                         @if ((budget != null) && (budget.OwnerId == UserId))
                                         {
                                             <li class="divider"></li>
-                                            <li>@Html.ActionLink(@S.Currencies, "Index", "Currency")</li>
+                                            <li><a href="~/Project#/Currencies">@R.R.Currencies</a></li>
                                             <li class="divider"></li>
-                                            <li>@Html.ActionLink(@R.R.CategoryAccounts, "CategoryAccounts", "References")</li>
-                                            <li>@Html.ActionLink(@R.R.Accounts, "Accounts", "References")</li>
+                                            <li><a href="~/Project#/BankAccounts">@R.R.Account</a></li>
                                             <li class="divider"></li>
                                             <li><a href="~/Project#/items">@R.R.Items</a></li>
                                         }

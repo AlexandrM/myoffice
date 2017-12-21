@@ -8,8 +8,8 @@
             categoryList: { method: 'GET', params: {}, isArray: false },
             itemAdd: { method: 'PUT', params:{}, isArray: false },
             itemDelete: { method: 'DELETE', params: {}, isArray: false },
-            CategoryPost: { method: 'POST', params:{}, isArray: false },
-            CategoryDelete: { method: 'GET', params: {}, isArray: false }
+            categoryPost: { method: 'POST', params:{}, isArray: false },
+            categoryDelete: { method: 'GET', params: {}, isArray: false }
         });
     }
 })();

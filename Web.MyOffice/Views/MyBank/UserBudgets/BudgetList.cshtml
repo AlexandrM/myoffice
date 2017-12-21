@@ -1,0 +1,33 @@
+﻿@{Layout = null;}
+<style>
+    td
+    {
+        vertical-align: middle !important;
+    }
+</style>
+
+<h2>@R.R.Budgets</h2>
+
+<div id="AccountList" ng-init="refresh()"  style="padding: 10px">
+    <p>
+        <button type="button" class="btn btn-success" ng-click="budgetAddFormInvoke()">@R.R.Add</button>
+    </p>
+
+    <table class="table table-bordered table-striped" style="width: 100%">
+        <tbody>
+        <tr>
+            <th>@R.R.Name</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="budget in budgets track by $index">
+            <td>
+               {{budget.Name}}
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary" ng-click="budgetEditFormInvoke(budget)">@R.R.Edit</button>
+                <button type="button"  class="btn btn-warning" ng-click ="budgetUsersFormInvoke(budget)">@R.R.Users</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

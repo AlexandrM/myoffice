@@ -245,6 +245,12 @@
     <Compile Include="ASE\MVC\ControllerAipAdv.cs" />
     <Compile Include="ASE\MVC\ControllerAdv.cs" />
     <Compile Include="ASE\MVC\CultureHelper.cs" />
+    <Compile Include="ASE\MVC\CurrencyRatesLoader\CBRRatesSource.cs" />
+    <Compile Include="ASE\MVC\CurrencyRatesLoader\CurrencyRateLoader.cs" />
+    <Compile Include="ASE\MVC\CurrencyRatesLoader\ICurrencyRateLoader.cs" />
+    <Compile Include="ASE\MVC\CurrencyRatesLoader\ICurrencyRateSource.cs" />
+    <Compile Include="ASE\MVC\CurrencyRatesLoader\NBURatesSource.cs" />
+    <Compile Include="ASE\MVC\CurrencyRatesLoader\PrivatBankRatesSource.cs" />
     <Compile Include="ASE\MVC\ExpressionHelpers.cs" />
     <Compile Include="ASE\MVC\HistoryActionFilterAttribute.cs" />
     <Compile Include="ASE\MVC\Identinity.cs" />
@@ -269,6 +275,9 @@
     <Compile Include="ASE\ResourceHelper.cs" />
     <Compile Include="ASE\ToolsModels\IdValue.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\Finance\CurrenciesApiController.cs" />
+    <Compile Include="Controllers\API\Finance\UserBudgetsController.cs" />
+    <Compile Include="Controllers\API\Finance\BudgetAccountsApiController.cs" />
     <Compile Include="Controllers\API\Finance\MotionApiContoller .cs" />
     <Compile Include="Controllers\API\Finance\ExpenditureApiContoller.cs" />
     <Compile Include="Controllers\API\ModalWindowController.cs" />
@@ -301,6 +310,9 @@
     <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\MemberDayReportController.cs" />
     <Compile Include="Controllers\MyBank\Finance\ExpenditureController.cs" />
+    <Compile Include="Controllers\MyBank\Finance\BudgetsController.cs" />
+    <Compile Include="Controllers\MyBank\Finance\CurrenciesController.cs" />
+    <Compile Include="Controllers\MyBank\Finance\AccountsController.cs" />
     <Compile Include="Controllers\MyBank\MyBankController.cs" />
     <Compile Include="Controllers\MyBank\MyBankReportsController.cs" />
     <Compile Include="Controllers\MyBank\ReferencesController.cs" />
@@ -399,6 +411,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\controllers\budgetCtrl.js" />
+    <Content Include="app\services\budgetAccountsService.js" />
     <Content Include="app\controllers\currencyCtrl.js" />
     <Content Include="app\controllers\debtsCtrl.js" />
     <Content Include="app\controllers\financeCtrl.js" />
@@ -411,6 +425,8 @@
     <Content Include="app\controllers\projectCtrl.js" />
     <Content Include="app\controllers\projectTaskCtrl.js" />
     <Content Include="app\services\botIterationService.js" />
+    <Content Include="app\services\budgetService.js" />
+    <Content Include="app\controllers\budgetAccountCtrl.js" />
     <Content Include="app\services\currencyService.js" />
     <Content Include="app\services\debtsService.js" />
     <Content Include="app\services\emailService.js" />
@@ -1268,6 +1284,17 @@
     <Content Include="Views\MyBank\Expenditure\MotionsList.cshtml" />
     <Content Include="Views\MyBank\References\CategoryItems.cshtml" />
     <Content Include="Views\MyBank\Expenditure\CategoryItemEdit.cshtml" />
+    <Content Include="Views\MyBank\UserBudgets\BudgetEdit.cshtml" />
+    <Content Include="Views\MyBank\UserBudgets\BudgetList.cshtml" />
+    <Content Include="Views\MyBank\UserBudgets\BudgetUsers.cshtml" />
+    <Content Include="Views\MyBank\Currencies\CurrencyAdd.cshtml" />
+    <Content Include="Views\MyBank\Currencies\CurrencyList.cshtml" />
+    <Content Include="Views\MyBank\Accounts\AccountAdd.cshtml" />
+    <Content Include="Views\MyBank\Accounts\AccountEdit.cshtml" />
+    <Content Include="Views\MyBank\Accounts\AccountList.cshtml" />
+    <Content Include="Views\MyBank\Accounts\CategoryAdd.cshtml" />
+    <Content Include="Views\MyBank\Accounts\CategoryEdit.cshtml" />
+    <Content Include="Views\MyBank\Accounts\CategoryList.cshtml" />
     <None Include="Web.appSettings.config" />
     <Content Include="Web.appSettings.config.default" />
     <None Include="Web.connectionStrings.config">
@@ -1359,6 +1386,7 @@
     <Content Include="Views\MyBank\References\CategoryItemEdit.cshtml" />
     <Content Include="Views\MyBank\References\CategoryItemList.cshtml" />
     <Content Include="Views\MyBank\Expenditure\CategoryItems.cshtml" />
+    <Content Include="Views\MyBank\References\CategoryItems.cshtml" />
     <Content Include="Views\MyBank\References\CategoryItemsList.cshtml" />
     <Content Include="Views\MyBank\References\Currencies.cshtml" />
     <Content Include="Views\MyBank\References\CurrencyEdit.cshtml" />
@@ -1368,6 +1396,7 @@
     <Content Include="Views\MyBank\References\Index.cshtml" />
     <Content Include="Views\MyBank\References\ItemEdit.cshtml" />
     <Content Include="Views\MyBank\References\ItemList.cshtml" />
+    <Content Include="Views\MyBank\References\ItemListItem.cshtml" />
     <Content Include="Views\MyBank\References\Items.cshtml" />
     <Content Include="Views\MyBank\References\MotionsList.cshtml" />
     <Content Include="Views\MyBank\Accounts.cshtml" />
@@ -1406,6 +1435,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ASE\MVC\Angular\" />
+    <Folder Include="Controllers\MyBank\Finance\" />
     <Folder Include="Rotativa\" />
     <Folder Include="Scripts\jqPlot\plugins\" />
     <Folder Include="Views\GlobalSelect\" />

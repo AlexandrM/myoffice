@@ -79,7 +79,6 @@
                 $scope.displayItems = $scope.sortByProp($scope.getItems(category), 'Name');
             }
         };
-
         $scope.getItemCategory = function (item) {
                 return $scope.Categories.find(function(category) {
                     return category.Id === item.CategoryId;
@@ -192,20 +191,20 @@
             }
             $scope.windowOpen('CategoryItemEdit');
         };
-        $scope.CategoryItemsDialog = function (category) {
+        $scope.categoryItemsDialog = function () {
             $scope.windowOpen('CategoryItems');
         };
         $scope.newCategorySave = function (category) {
             if (category.BudgetId === undefined) {
                 category.BudgetId  = $category.Id;
             }
-            itemService.CategoryPost(category, function() {
+            itemService.categoryPost(category, function() {
                 $scope.refresh();
                 $scope.windowClose('CategoryItemEdit');
             });
         };
         $scope.CategoryDelete = function(category) {
-            itemService.CategoryDelete({ deleteId: category.Id }, function () {
+            itemService.categoryDelete({ deleteId: category.Id }, function () {
                 $scope.refresh();
                 $scope.windowClose('CategoryItemEdit');
             });

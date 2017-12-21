@@ -24,13 +24,13 @@ namespace Web.MyOffice.Controllers.API
             switch (controllerName)
             {
                 case "AccountsController":
-                    //htmlText = (new MVC.AccountsController()).RenderPartialView(viewName);
+                    htmlText = (new MVC.AccountsController()).RenderPartialView(viewName);
                     break;
                 case "UserBudgetsController":
-                    //htmlText = (new MVC.UserBudgetsController()).RenderPartialView(viewName);
+                    htmlText = (new MVC.UserBudgetsController()).RenderPartialView(viewName);
                     break;
                 case "CurrenciesController":
-                    //htmlText = (new MVC.CurrenciesController()).RenderPartialView(viewName);
+                    htmlText = (new MVC.CurrenciesController()).RenderPartialView(viewName);
                     break;
                 case "ExpenditureController":
                     htmlText = (new MVC.ExpenditureController()).RenderPartialView(viewName);
