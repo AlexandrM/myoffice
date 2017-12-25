@@ -46,7 +46,7 @@
             <th>@R.R.Description</th>
             <th>@R.R.Deleted</th>
         </tr>
-        <tr ng-repeat="item in displayItems" ng-click="selectMainItem(item)">
+        <tr ng-repeat="item in Items" ng-click="selectMainItem(item)">
             <td>{{item.Name}}</td>
             <td>{{getItemCategory(item).Name}}</td>
             <td>{{item.Description}}</td>

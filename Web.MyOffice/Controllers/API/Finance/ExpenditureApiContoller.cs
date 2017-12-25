@@ -30,16 +30,14 @@ namespace Web.MyOffice.Controllers.API
         {
             using (db)
             {
-                var categories = db.CategoryItems.
-                    Include(category => category.Items
-                    .Select(item => item.Motions
-                    .Select(motion=>motion.Account))
-                    ).ToList();
-                var budgets = db.Budgets.ToList();
-                var model = (new object()).ToDynamic();
-                model.Categories = categories;
-                model.Budgets = budgets;
-                return ResponseObject2Json(model);
+                var budgets = db.BudgetUsers
+                    .Where(userBudget => userBudget.UserId == UserId)
+                    .Include(x => x.Budget)
+                    .Include(x => x.Budget.CategoryItems)
+                    .Include(x => x.Budget.CategoryItems
+                    .Select( y => y.Items)).ToList();
+
+                return ResponseObject2Json(budgets);
             }
         }
 

@@ -21,13 +21,36 @@
             ModalWindowService.close(name);
         };
 
+        $scope.getBudgets = function (users) {
+            var budgets = [];
+            for (var i = 0; i < users.length; i++) {
+                if (budgets.find(function (_budget) {
+                    return _budget.Id === users[i].Budget.Id;
+                }) === undefined) {
+                    budgets.push(users[i].Budget);
+                };
+            };
+            return $scope.sortByProp(budgets, 'Name');
+        };
+
+        $scope.getCategories = function (budgets) {
+            var categories = [];
+            for (var i = 0; i < budgets.length; i++) {
+                budgets[i].CategoryItems = budgets[i].CategoryItems !== undefined ? budgets[i].CategoryItems : [];
+                for (var j = 0; j < budgets[i].CategoryItems.length; j++) {
+                    categories.push(budgets[i].CategoryItems[j]);
+                }
+            }
+            return categories;
+        };
         $scope.getItems = function (categories) {
             var items = [];
             if (categories instanceof Array) {
                 for (var i = 0; i < categories.length; i++) {
-                    for (var j = 0; j < categories[i].Items.length; j++) {
-                        items.push(categories[i].Items[j]);
-                    }
+                    categories[i].Items = categories[i].Items !== undefined?categories[i].Items:[];
+                        for (var j = 0; j < categories[i].Items.length; j++) {
+                            items.push(categories[i].Items[j]);
+                        }
                 }
             } else {
                 for (var z = 0; z < categories.Items.length; z++) {
@@ -35,21 +58,6 @@
                 }
             }
             return items;
-        };
-        $scope.getMotions = function (items) {
-            var motions = [];
-            if (items instanceof Array) {
-                for (var i = 0; i < items.length; i++) {
-                    for (var j = 0; j < items[i].Motions.length; j++) {
-                        motions.push(items[i].Motions[j]);
-                    }
-                }
-            } else {
-                for (var z = 0; z < items.Motions.length; z++) {
-                    motions.push(items.Motions[z]);
-                }
-            }
-            return motions;
         };
         $scope.sortByProp = function (array, prop) {
             var sorter = function (prev, next) {
@@ -63,7 +71,6 @@
             };
             return array.sort(sorter);
         };
-
         $scope.selectCategory = function (category) {
             if (category === null) {
                 $scope.displayItems = $scope.sortByProp($scope.getItems($scope.Categories), 'Name');
@@ -87,11 +94,11 @@
 
         //"_____________________*** Data update section ***_____________________"
         $scope.refresh = function () {
-            $scope.model = itemService.categoryList({}, function () {
-                $scope.Categories = $scope.model.Categories;
-                $scope.Budgets = $scope.model.Budgets;
-                $scope.displayItems = $scope.sortByProp($scope.getItems($scope.Categories), 'Name');
-                $scope.Categories = $scope.sortByProp($scope.Categories, 'Name');
+            $scope.userBudgets = itemService.categoryList({}, function () {
+                $scope.Budgets = $scope.getBudgets($scope.userBudgets);
+                $scope.Categories = $scope.sortByProp($scope.getCategories($scope.Budgets), 'Name');
+                $scope.Items = $scope.sortByProp($scope.getItems($scope.Categories), 'Name');
+                $scope.displayItems = JSON.parse(JSON.stringify($scope.Items));
             });
         };
 
@@ -132,8 +139,12 @@
 
         //"_____________________*** Motions section ***_____________________"
         $scope.itemMotionList = function (item) {
-            $scope.Motions = $scope.getMotions(item);
-            $scope.windowOpen('MotionsList');
+            $scope.Motions = $scope.sortByProp(
+                motionService.motionList({ itemId:item.Id }, function () {
+                    $scope.Motions = $scope.sortByProp($scope.Motions, 'name');
+                    $scope.windowOpen('MotionsList');
+                }),
+                'Name');
         };
 
         $scope.motionUpdateList = [];
@@ -151,8 +162,8 @@
             motion.Deleted = !motion.Deleted;
         };
 
-        $scope.MotionUpdate = function (motion) {
-            motionService.MotionUpdate($scope.motionUpdateList, function () {
+        $scope.MotionUpdate = function () {
+            motionService.motionUpdate($scope.motionUpdateList, function () {
                 $scope.windowClose('MotionsList');
                 $scope.motionUpdateList = [];
                 $scope.refresh();
@@ -162,22 +173,26 @@
             $scope.Motions = $scope.Motions.filter(function (_motion) {
                 return _motion.Id !== motion.Id;
             });
-            motionService.MotionDelete({ motionId: motion.Id }, function () {
+            motionService.motionDelete({ motionId: motion.Id }, function () {
                 $scope.refresh();
             });
         };
         $scope.MotionMergeDialog = function (item) {
             $scope.selectedItem = item;
-            $scope.mainItem = { Name: '', Category: { Name: '' }, Description: '', Deleted: false };
+            $scope.mainItem = { Id:null, Name: '', Category: { Name: '' }, Description: '', Deleted: false };
+            $scope.Items = $scope.displayItems.filter(function (_item) {
+                return _item.Id !== $scope.selectedItem.Id;
+            });
             $scope.windowOpen('ItemList');
         };
         $scope.selectMainItem = function(item) {
             $scope.mainItem = item;
         };
         $scope.itemMerge = function () {
-            motionService.MotionMerge({ mainItem: $scope.mainItem, selectedItem: $scope.selectedItem },
+            motionService.motionMerge({ mainItem: $scope.mainItem, selectedItem: $scope.selectedItem },
                 function() {
                     $scope.refresh();
+                    $scope.windowClose('ItemList');
                 });
         };
 

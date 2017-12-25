@@ -25,6 +25,15 @@ namespace Web.MyOffice.Controllers.API
 {
     public class MotionsController : ControllerApiAdv<DB>
     {
+        [Method.HttpGet]
+        public HttpResponseMessage MotionsUpdate(Guid itemId)
+        {
+            using (db)
+            {
+                var motions = db.Motions.Where(motion => motion.ItemId == itemId).ToList();
+                return ResponseObject2Json(motions);
+            }
+        }
         [Method.HttpPut]
         public HttpResponseMessage MotionsUpdate(List<Motion> motions)
         {
@@ -47,7 +56,8 @@ namespace Web.MyOffice.Controllers.API
         {
             using (db)
             {
-                db.Entry(db.Motions.Find(motionId)).State = EntityState.Deleted;
+                var deletedMotion = db.Motions.Find(motionId);
+                db.Entry(deletedMotion).State = EntityState.Deleted;
                 db.SaveChanges();
             }
             return ResponseObject2Json(HttpStatusCode.Accepted);
@@ -65,20 +75,25 @@ namespace Web.MyOffice.Controllers.API
             var mainItem = motionMerge.mainItem;
             var selectedItem = motionMerge.selectedItem;
 
+            mainItem.Motions = mainItem.Motions != null? mainItem.Motions: new List<Motion>();
+            selectedItem.Motions = mainItem.Motions != null ? mainItem.Motions : new List<Motion>();
+
             using (db)
-            {
-                Motion curMotion = null;
-                foreach (var motion in selectedItem.Motions)
                 {
-                    curMotion = db.Motions.Find(motion.Id);
-                    curMotion.ItemId = motion.ItemId;
-                    db.Entry(curMotion).State = EntityState.Modified;
+                    Motion curMotion = null;
+                    foreach (var motion in selectedItem.Motions)
+                    {
+                        curMotion = db.Motions.Find(motion.Id);
+                        curMotion.ItemId = motion.ItemId;
+                        db.Entry(curMotion).State = EntityState.Modified;
+                    }
+                    db.SaveChanges();
+                    db.Entry(db.Items.Find(selectedItem.Id)).State = EntityState.Deleted;
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
-                db.Entry(db.Items.Find(selectedItem.Id)).State = EntityState.Deleted;
-                db.SaveChanges();
-            }
-            return ResponseObject2Json(HttpStatusCode.Moved);
+                return ResponseObject2Json(HttpStatusCode.Moved);
+
+            return ResponseObject2Json(HttpStatusCode.NotModified);
         }
     }
 }

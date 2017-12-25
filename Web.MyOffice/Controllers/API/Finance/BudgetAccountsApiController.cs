@@ -39,9 +39,9 @@ namespace Web.MyOffice.Controllers.API
                     .Include(x => x.Budget)
                     .Include(x => x.Budget.CategoryAccounts)
                     .Include(x => x.Budget.CategoryAccounts.Select(z => z.Accounts))
-                    .Where(userBudget=>userBudget.UserId == UserId)
+                    .Where(x => x.UserId == UserId || x.Budget.OwnerId == UserId)
                     .ToList();
-                model.Currencies = db.Currencies.ToList();
+                model.Currencies = db.Currencies.Where(x => x.UserId == UserId).ToList();
             return ResponseObject2Json(model);
         }
 
