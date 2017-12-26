@@ -27,11 +27,27 @@ namespace Web.MyOffice.Controllers.API
 {
     public class UserBudgetsController : ControllerApiAdv<DB>
     {
+        private class UserBudgetComparer : IEqualityComparer<BudgetUser>
+        {
+            public virtual int GetHashCode(BudgetUser user1)
+            {
+                return user1.GetHashCode();
+            }
+            public virtual bool Equals(BudgetUser user1, BudgetUser user2)
+            {
+                return user1.BudgetId == user2.BudgetId && user1.BudgetId == user2.BudgetId;
+            }
+        }
+
         [Method.HttpGet]
         public HttpResponseMessage List()
         {
             var model = (new object()).ToDynamic();
-            model.budgetUsers = db.BudgetUsers.Include(x => x.Budget);
+            var userBudgets = db.BudgetUsers.Where(userBudget => userBudget.UserId == UserId).ToList();
+
+            model.budgetUsers = db.BudgetUsers.Include(userBudget => userBudget.Budget).ToList()
+                .Where(x => userBudgets.Contains(x, new UserBudgetComparer()) != null);
+
             model.users = db.Members.ToList();
             return ResponseObject2Json(model);
         }

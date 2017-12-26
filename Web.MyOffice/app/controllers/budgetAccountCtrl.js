@@ -21,7 +21,11 @@
         $scope.getBudgets = function (users) {
             var budgets = [];
             for (var i = 0; i < users.length; i++) {
-                budgets.push(users[i].Budget);
+                if (budgets.find(function (_budget) {
+                    return _budget.Id === users[i].Budget.Id;
+                }) === undefined) {
+                    budgets.push(users[i].Budget);
+                };
             };
             return budgets.sort($scope.comparer);;
         };
