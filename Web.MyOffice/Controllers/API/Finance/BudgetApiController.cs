@@ -21,22 +21,19 @@ using System.Data.SqlClient;
 
 namespace Web.MyOffice.Controllers.API
 {
-    public class BxxudgetController : ControllerApiAdv<DB>
+    /*public class BxxudgetController : ControllerApiAdv<DB>
     {
         [HttpGet]
         public HttpResponseMessage List()
         {
-            Guid uid = Guid.Empty;
-            Guid.TryParse(this.Request.Headers.FirstOrDefault(x => x.Key == "UID").Value.FirstOrDefault(), out uid);
-
             var model = db.BudgetUsers
                 .Include(x => x.Budget)
                 .Include(x => x.Budget.CategoryAccounts)
                 .Include(x => x.Budget.CategoryAccounts.Select(z => z.Accounts))
-                //.Where(x => x.User.APISessionId == uid)
+                .Where(x => x.Budget.OwnerId == UserId || x.UserId == UserId)
                 .ToList();
 
             return ResponseObject2Json(model);
         }
-    }
+    }*/
 }

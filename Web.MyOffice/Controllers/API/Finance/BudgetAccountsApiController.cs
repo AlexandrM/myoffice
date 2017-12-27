@@ -3,54 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Text;
 using System.Data.Entity;
-using System.Dynamic;
+using System.Web.Http;
 
 using ASE;
-using ASE.EF;
 using ASE.MVC;
-using ASE.Json;
 
 using Web.MyOffice.Data;
-using Web.MyOffice.Models;
-using System.Data.SqlClient;
-using System.IO;
-using System.Threading;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using MyBank.Models;
-using MVC = Web.MyOffice.Controllers.MyBank;
-using Method = System.Web.Http;
-
 
 namespace Web.MyOffice.Controllers.API
 {
     public class BudgetAccountsController : ControllerApiAdv<DB>
     {
-        [Method.HttpGet]
+        [HttpGet]
         public HttpResponseMessage GetCategoryAccountsList()
-        { 
-            dynamic model = (new object()).ToDynamic();
-                model.BudgetUsers = db.BudgetUsers
+        {
+            dynamic model = new
+            {
+                BudgetUsers = db.BudgetUsers
                     .Include(x => x.Budget)
                     .Include(x => x.Budget.CategoryAccounts)
                     .Include(x => x.Budget.CategoryAccounts.Select(z => z.Accounts))
                     .Where(x => x.UserId == UserId || x.Budget.OwnerId == UserId)
-                    .ToList();
-                model.Currencies = db.Currencies.Where(x => x.UserId == UserId).ToList();
+                    .ToList(),
+
+                Currencies = db.Currencies.Where(x => x.UserId == UserId).ToList()
+            };
+
             return ResponseObject2Json(model);
         }
 
-        [Method.HttpPut]
+        [HttpPut]
         public HttpResponseMessage NewAccountPut(Account newAccount)
         {
             using (db)
             {
-                if (db.Accounts.Where(acc=>acc.Id == newAccount.Id).Count()>0)
+                if (db.Accounts.Where(acc => acc.Id == newAccount.Id).Count() > 0) //Any?? Find??
                 {
                     db.Entry(newAccount).State = EntityState.Modified;
                 }
@@ -60,6 +49,7 @@ namespace Web.MyOffice.Controllers.API
                 }
                 db.SaveChanges();
             }
+
             return ResponseObject2Json(HttpStatusCode.Accepted);
         }
 
@@ -68,7 +58,8 @@ namespace Web.MyOffice.Controllers.API
             public List<CategoryAccount> EditCategories { set; get; }
             public List<CategoryAccount> DelCategories { set; get; }
         }
-        [Method.HttpPost]
+
+        [HttpPost]
         public HttpResponseMessage CategoryListPost(EditCategoryList categoryList)
         {
             using (db)
@@ -91,7 +82,7 @@ namespace Web.MyOffice.Controllers.API
                         }
                         db.SaveChanges();
                     }
-                    if (categoryList.NewCategories != null && categoryList.NewCategories.Count>0)
+                    if (categoryList.NewCategories != null && categoryList.NewCategories.Count > 0)
                     {
                         foreach (var newCategories in categoryList.NewCategories)
                         {
@@ -100,26 +91,35 @@ namespace Web.MyOffice.Controllers.API
                         db.SaveChanges();
                     }
                     return ResponseObject2Json(HttpStatusCode.Accepted);
-                } else return ResponseObject2Json(HttpStatusCode.NotModified);
+                }
+                else
+                {
+                    return ResponseObject2Json(HttpStatusCode.NotModified);
+                }
             } 
         }
 
-        [Method.HttpDelete]
+        [HttpDelete]
         public HttpResponseMessage AccountDelete(Guid accountId)
         {
-            var delAcc = db.Accounts.Find(accountId);
+            //Not allow to delete account with motions
+            //Allow delete to owner only
+            /*var delAcc = db.Accounts.FirstOrDefault(x => x.Id == accountId && x.Budget.OwnerId == UserId);
             if (delAcc != null)
             {
                 db.Entry(delAcc).State = EntityState.Deleted;
                 db.SaveChanges();
-            }
+            }*/
+
             return ResponseObject2Json(HttpStatusCode.Moved);
         }
 
-        [Method.HttpGet]
+        [HttpGet]
         public HttpResponseMessage AccountMotionsGet(Guid accountId)
         {
-            return ResponseObject2Json(db.Motions.Where(motion => motion.AccountId == accountId).ToList());
+            //return ResponseObject2Json(db.Motions.Where(motion => motion.AccountId == accountId).ToList());
+            //Why? All motions can have a size more 1..10..100 mb
+            return ResponseObject2Json(HttpStatusCode.OK);
         }
     }
 }
