@@ -25,16 +25,17 @@
             <th>@R.R.CreditLimit</th>
             <th>@R.R.Actions</th>
         </tr>
-
-        <tr ng-repeat="account in selectedCategory.Accounts">
-            <td>{{account.Name}}</td>
-            <td>{{account.Description}}</td>
-            <td>{{account.CreditLimit}}</td>
-            <td>
-                <button type="button" class="btn btn-primary" ng-click="accountFormEditInvoke(account)">@R.R.Edit</button>
-                <button chref="#" class="btn btn-danger" ng-if="account.Motions.length===0" ng-click="accountDelete(account)">@R.R.Delete</button>
-            </td>
-        </tr>
+        <tbody>
+            <tr ng-repeat="account in selectedCategory.Accounts">
+                <td>{{account.Name}}</td>
+                <td>{{account.Description}}</td>
+                <td>{{account.CreditLimit}}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" ng-click="accountFormEditInvoke(account)">@R.R.Edit</button>
+                    <button  class="btn btn-danger" ng-if="account.Motions.length===0" ng-click="accountDelete(account)">@R.R.Delete</button>
+                </td>
+            </tr>
+        </tbody>
     </table>
 </div>
 

@@ -39,9 +39,9 @@ namespace Web.MyOffice.Controllers.API
                     .Include(x => x.Budget)
                     .Include(x => x.Budget.CategoryAccounts)
                     .Include(x => x.Budget.CategoryAccounts.Select(z => z.Accounts))
-                    .Where(userBudget=>userBudget.UserId == UserId)
+                    .Where(x => x.UserId == UserId || x.Budget.OwnerId == UserId)
                     .ToList();
-                model.Currencies = db.Currencies.ToList();
+                model.Currencies = db.Currencies.Where(x => x.UserId == UserId).ToList();
             return ResponseObject2Json(model);
         }
 
@@ -68,7 +68,6 @@ namespace Web.MyOffice.Controllers.API
             public List<CategoryAccount> EditCategories { set; get; }
             public List<CategoryAccount> DelCategories { set; get; }
         }
-
         [Method.HttpPost]
         public HttpResponseMessage CategoryListPost(EditCategoryList categoryList)
         {
@@ -106,15 +105,21 @@ namespace Web.MyOffice.Controllers.API
         }
 
         [Method.HttpDelete]
-        public HttpResponseMessage CategoryListPost(Guid accountId)
+        public HttpResponseMessage AccountDelete(Guid accountId)
         {
-            var delAccs = db.Accounts.Where(account => account.Id == accountId);
-            if (delAccs!= null && delAccs.Count() ==1)
+            var delAcc = db.Accounts.Find(accountId);
+            if (delAcc != null)
             {
-                db.Entry(delAccs.First()).State = EntityState.Deleted;
+                db.Entry(delAcc).State = EntityState.Deleted;
                 db.SaveChanges();
             }
             return ResponseObject2Json(HttpStatusCode.Moved);
+        }
+
+        [Method.HttpGet]
+        public HttpResponseMessage AccountMotionsGet(Guid accountId)
+        {
+            return ResponseObject2Json(db.Motions.Where(motion => motion.AccountId == accountId).ToList());
         }
     }
 }

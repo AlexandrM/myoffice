@@ -5,44 +5,58 @@
     budgetApp.controller('budgetCtrl', ['$scope', '$http', 'ModalWindowService', 'BudgetsService', budgetCtrl]);
 
     function budgetCtrl($scope, $http, ModalWindowService, BudgetsService) {
-
     /*______________Infrastructure section__________*/
         $scope.windowClose = function (name) {
             ModalWindowService.close(name);
         };
 
-        $scope.nameComparer = function (prev, next) {
-            if (prev.Name < next.Name) {
-                return -1;
-            } else if (prev.Name > next.Name) {
-                return 1;
-            } else {
-                return 0;
-            }
+        $scope.propertyNameSorter = function (array, sortProperty) {
+            var comparer = function (prev, next) {
+                if (prev[sortProperty] < next[sortProperty]) {
+                    return -1;
+                } else if (prev[sortProperty] > next[sortProperty]) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            };
+            return array.sort(comparer);
         };
 
+        $scope.propertyObjectNameSorter = function (array, property, sortProperty) {
+            var comparer = function (prev, next) {
+                if (prev[property][sortProperty] < next[property][sortProperty]) {
+                    return -1;
+                } else if (prev[property][sortProperty] > next[property][sortProperty]) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            };
+            return array.sort(comparer);
+        };
         $scope.getBudgets = function (users) {
             var budgets = [];
             for (var i = 0; i < users.length; i++) {
-                if (budgets.find(function(_bdgt) {
-                        return _bdgt.Id === users[i].Budget.Id;
-                    }) ===  undefined) {
+                if (budgets.find(function (_budget) {
+                    return _budget.Id === users[i].Budget.Id;
+                }) === undefined) {
                     budgets.push(users[i].Budget);
                 };
             };
-            return budgets.sort($scope.nameComparer);
+            return budgets.sort($scope.comparer);;
         };
-
         $scope.openForm = function (viewName, size) {
             ModalWindowService.open('UserBudgetsController', viewName, $scope, size);
         };
         /******************************Get Data********************************/
         $scope.refresh = function () {
             $scope.model = BudgetsService.getUsersBudgets({}, function () {
-                $scope.budgetUsers = $scope.model.budgetUsers;
+                $scope.budgetUsers = $scope.propertyObjectNameSorter($scope.model.budgetUsers, 'Budget', 'Name');
+                $scope.users = $scope.propertyNameSorter($scope.model.users, 'Name');
                 $scope.budgets = $scope.getBudgets($scope.budgetUsers);
-                $scope.users = $scope.model.users;
             });
+
         };
         /*________________________Budget section______________________*/
         $scope.budgetAddFormInvoke = function () {

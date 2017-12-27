@@ -36,7 +36,7 @@ namespace Web.MyOffice.Controllers.API
             var model = (new object()).ToDynamic();
             model.currencies = db.Currencies.Where(currency=>currency.UserId == UserId).ToList();
             model.types = Enum.GetNames(typeof(CurrencyType));
-            model.warnings = new List<string>() {R.R.WarningExists };
+            model.warnings = new List<string>() { R.R.WarningExists, R.R.CurrencyWarning };
             return ResponseObject2Json(model);
         }
 
@@ -69,29 +69,55 @@ namespace Web.MyOffice.Controllers.API
                 {
                     db.Entry(newCurrency).State = EntityState.Added;
                 }
-
-                    db.SaveChanges();
-                    return ResponseObject2Json(HttpStatusCode.Accepted);
+                db.SaveChanges();
+                return ResponseObject2Json(HttpStatusCode.Accepted);
             }
         }
 
-        [Method.HttpDelete]
-        public HttpResponseMessage CurrencyDelete(Guid delCurrencyId)
+        [Method.HttpGet]
+        public HttpResponseMessage CurrencyArchive(Guid currencyId, bool deleted)
         {
-            using (db) {
-                var deletedCurrency = db.Currencies.Where(currency => currency.Id == delCurrencyId).FirstOrDefault();
+            CurrencyModify(currencyId, EntityState.Modified, deleted);
+            return ResponseObject2Json(HttpStatusCode.Accepted);
+        }
 
-                db.Entry(deletedCurrency).State = EntityState.Deleted;
-                try
-                {
-                    db.SaveChanges();
-                    return ResponseObject2Json(HttpStatusCode.Accepted);
-                }
-                catch
-                {
-                    return ResponseObject2Json(HttpStatusCode.NotModified);
-                }
+        [Method.HttpDelete]
+        public HttpResponseMessage CurrencyDelete(Guid currencyId)
+        {
+            CurrencyModify(currencyId, EntityState.Deleted, true);
+            return ResponseObject2Json(HttpStatusCode.Accepted);
+        }
+
+        public void CurrencyModify(Guid currencyId, EntityState state, bool deleted)
+        {
+            var delAccounts = db.Accounts.Where(acc => acc.CurrencyId == currencyId).Include(acc => acc.Currency).ToList();
+            var delMotions = new List<Motion>();
+            List<Motion> delMotionsAcc = null;
+            foreach (var acc in delAccounts)
+            {
+                delMotionsAcc = db.Motions.Where(motion => acc.Id == motion.AccountId).ToList();
+                delMotions.AddRange(delMotionsAcc);
             }
+
+            foreach (var motion in delMotions)
+            {
+                motion.Deleted = deleted;
+                db.Entry(motion).State = state;
+            }
+            db.SaveChanges();
+
+            foreach (var acc in delAccounts)
+            {
+                acc.Deleted = deleted;
+                db.Entry(acc).State = state;
+            }
+            db.SaveChanges();
+
+            var delcurrency = db.Currencies.Find(currencyId);
+            delcurrency.IsArchive = deleted;
+            db.Entry(delcurrency).State = state;
+
+            db.SaveChanges();
         }
     }
 }

@@ -3,9 +3,9 @@
     'use strict';
 
     var accountApp = angular.module('MyOffice.app');
-    accountApp.controller('budgetAccountCtrl', ['$scope', '$http', 'ModalWindowService', 'budgetAccountsService', budgetAccountCtrl]);
+    accountApp.controller('budgetAccountCtrl', ['$scope', '$http','$q', 'ModalWindowService', 'budgetAccountsService', budgetAccountCtrl]);
 
-    function budgetAccountCtrl($scope, $http, ModalWindowService, budgetAccountsService) {
+    function budgetAccountCtrl($scope, $http, $q,ModalWindowService, budgetAccountsService) {
         /*________________________Infrastructure section________________________*/
         $scope.getCategories = function (budgetUsers) {
             var categories = [];
@@ -13,7 +13,11 @@
             for (var i = 0; i < budgetUsers.length; i++) {
                 currentBudgetCategories = budgetUsers[i].Budget.CategoryAccounts;
                 for (var j = 0; j < currentBudgetCategories.length; j++) {
-                    categories.push(currentBudgetCategories[j]);
+                    if (categories.find(function (_category) {
+                        return _category.Id === currentBudgetCategories[j].Id;
+                    }) === undefined) {
+                        categories.push(currentBudgetCategories[j]);
+                    };
                 };
             };
             return categories.sort($scope.comparer);
@@ -21,9 +25,13 @@
         $scope.getBudgets = function (users) {
             var budgets = [];
             for (var i = 0; i < users.length; i++) {
-                budgets.push(users[i].Budget);
+                if (budgets.find(function (_budget) {
+                    return _budget.Id === users[i].Budget.Id;
+                }) === undefined) {
+                    budgets.push(users[i].Budget);
+                };
             };
-            return budgets.sort($scope.comparer);;
+            return budgets.sort($scope.comparer);
         };
         $scope.getAccounts = function (categories) {
             var accounts = [];
@@ -47,12 +55,18 @@
                 return 0;
             }
         };
+
         $scope.sortData = function (data, comparer) {
             data = data.sort(comparer);
             return data;
         };
 
         $scope.showCategory = function (category) {
+            var currentAccount = null;
+            for (var i = 0; i < category.Accounts.length; i++) {
+                currentAccount = category.Accounts[i];
+                currentAccount.Motions = budgetAccountsService.getAccountMotions({ accountId: currentAccount.Id });
+            }
             $scope.selectedCategory = category;
         };
 
@@ -73,10 +87,8 @@
                     for (var i = 0; i < $scope.categories.length; i++) {
                         $scope.sortData($scope.categories[i].Accounts, $scope.nameComparer);
                     };
-                    $scope.selectedCategory = $scope.selectedCategory === undefined ? $scope.categories[0] : $scope.selectedCategory;
-
+                    $scope.showCategory($scope.categories[0]);
                 });
-            return $scope.model;
         };
 
         /*________________________Account section________________________*/

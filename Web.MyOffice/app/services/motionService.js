@@ -5,9 +5,10 @@
 
     function motionService($resource) {
         return $resource('api/motions/', {}, {
-            MotionDelete: { method: 'DELETE', params: {}, isArray: false },
-            MotionUpdate: { method: 'PUT', parmas: {}, isArray: false },
-            MotionMerge: { method: 'POST', parmas: {}, isArray: false }
+            motionList: { method: 'GET', params: {}, isArray: true },
+            motionDelete: { method: 'DELETE', params: {}, isArray: false },
+            motionUpdate: { method: 'PUT', parmas: {}, isArray: false },
+            motionMerge: { method: 'POST', parmas: {}, isArray: false }
         });
     }
 })();

@@ -349,6 +349,15 @@ namespace R {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Выберите другую главную валюту.
+        /// </summary>
+        public static string CurrencyWarning {
+            get {
+                return ResourceManager.GetString("CurrencyWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Текущий остаток.
         /// </summary>
         public static string CurrentRest {
@@ -1218,6 +1227,15 @@ namespace R {
         public static string To {
             get {
                 return ResourceManager.GetString("To", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В архив.
+        /// </summary>
+        public static string ToArchive {
+            get {
+                return ResourceManager.GetString("ToArchive", resourceCulture);
             }
         }
         
