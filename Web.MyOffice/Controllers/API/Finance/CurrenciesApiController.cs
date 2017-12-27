@@ -3,47 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Text;
 using System.Data.Entity;
-using System.Dynamic;
 
 using ASE;
-using ASE.EF;
 using ASE.MVC;
-using ASE.Json;
 
 using Web.MyOffice.Data;
 using Web.MyOffice.Models;
-using System.Data.SqlClient;
-using System.IO;
-using System.Threading;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using MyBank.Models;
-using MVC = Web.MyOffice.Controllers.MyBank;
-using Method = System.Web.Http;
+using System.Web.Http;
 
 namespace Web.MyOffice.Controllers.API
 {
     public class CurrenciesController: ControllerApiAdv<DB>
     {
-        [Method.HttpGet]
+        [HttpGet]
         public HttpResponseMessage CurrencyListGet()
         {
-            var model = (new object()).ToDynamic();
-            model.currencies = db.Currencies.Where(currency=>currency.UserId == UserId).ToList();
-            model.types = Enum.GetNames(typeof(CurrencyType));
-            model.warnings = new List<string>() { R.R.WarningExists, R.R.CurrencyWarning };
+            var model = new {
+                currencies = db.Currencies
+                    .Where(currency => currency.UserId == UserId)
+                    .OrderBy(x => x.Name)
+                    .ToList(),
+
+                types = Enum.GetValues(typeof(CurrencyType))
+                    .Cast<CurrencyType>()
+                    .Select(x => new { Id = x, Name = Enum.GetName(typeof(CurrencyType), x) }),
+
+                warnings = new List<string>() {
+                    R.R.WarningExists,
+                    R.R.CurrencyWarning
+                },
+            };
+
             return ResponseObject2Json(model);
         }
 
-        [Method.HttpGet]
+        [HttpGet]
         public HttpResponseMessage CurrenciesUpdate(string sourceName)
         {
-            var rateLoader = new CurrencyRateLoader(db);
+            /*var rateLoader = new CurrencyRateLoader(db);
             if (rateLoader.UpdateRates(sourceName))
             {
                 return ResponseObject2Json(HttpStatusCode.OK);
@@ -51,18 +50,25 @@ namespace Web.MyOffice.Controllers.API
             else
             {
                 return ResponseObject2Json(HttpStatusCode.NotModified);
-            }
+            }*/
+            return ResponseObject2Json(HttpStatusCode.OK);
         }
 
-        [Method.HttpPost]
+        [HttpPost]
         public HttpResponseMessage CurrencyPost(Currency newCurrency)
         {
             using (db)
             {
                 newCurrency.UserId = UserId;
-                var currencies = db.Currencies.Where(currency => currency.Id == newCurrency.Id);
-                if (currencies.Count() == 1)
+                if (db.Currencies.Where(currency => currency.Id == newCurrency.Id && currency.UserId == UserId).Any())
                 {
+                    if (newCurrency.MyCurrency)
+                    {
+                        foreach (var currency in db.Currencies.Where(x => x.Id != newCurrency.Id && x.UserId == UserId && x.MyCurrency))
+                        {
+                            currency.MyCurrency = false;
+                        }
+                    }
                     db.Entry(newCurrency).State = EntityState.Modified;
                 }
                 else
@@ -70,54 +76,44 @@ namespace Web.MyOffice.Controllers.API
                     db.Entry(newCurrency).State = EntityState.Added;
                 }
                 db.SaveChanges();
+
                 return ResponseObject2Json(HttpStatusCode.Accepted);
             }
         }
 
-        [Method.HttpGet]
+        [HttpGet]
         public HttpResponseMessage CurrencyArchive(Guid currencyId, bool deleted)
         {
-            CurrencyModify(currencyId, EntityState.Modified, deleted);
+            var delcurrency = db.Currencies.FirstOrDefault(x => x.Id == currencyId && x.UserId == UserId);
+            delcurrency.IsArchive = deleted;
+            db.SaveChanges();
+
             return ResponseObject2Json(HttpStatusCode.Accepted);
         }
 
-        [Method.HttpDelete]
+        [HttpDelete]
         public HttpResponseMessage CurrencyDelete(Guid currencyId)
         {
-            CurrencyModify(currencyId, EntityState.Deleted, true);
-            return ResponseObject2Json(HttpStatusCode.Accepted);
-        }
+            var delAccounts = db.Accounts
+                .Include(acc => acc.Currency)
+                .Where(acc => acc.CurrencyId == currencyId & acc.Budget.OwnerId == UserId)
+                .ToList();
 
-        public void CurrencyModify(Guid currencyId, EntityState state, bool deleted)
-        {
-            var delAccounts = db.Accounts.Where(acc => acc.CurrencyId == currencyId).Include(acc => acc.Currency).ToList();
-            var delMotions = new List<Motion>();
-            List<Motion> delMotionsAcc = null;
-            foreach (var acc in delAccounts)
+            if (delAccounts.Any())
             {
-                delMotionsAcc = db.Motions.Where(motion => acc.Id == motion.AccountId).ToList();
-                delMotions.AddRange(delMotionsAcc);
+                return ResponseObject2Json(new {
+                    result = false,
+                    message = R.R.CantDeleteCurrency1
+                });
             }
 
-            foreach (var motion in delMotions)
-            {
-                motion.Deleted = deleted;
-                db.Entry(motion).State = state;
-            }
+            var m = db.Currencies.FirstOrDefault(x => x.Id == currencyId && x.UserId == UserId);
+            db.Currencies.Remove(m);
             db.SaveChanges();
 
-            foreach (var acc in delAccounts)
-            {
-                acc.Deleted = deleted;
-                db.Entry(acc).State = state;
-            }
-            db.SaveChanges();
-
-            var delcurrency = db.Currencies.Find(currencyId);
-            delcurrency.IsArchive = deleted;
-            db.Entry(delcurrency).State = state;
-
-            db.SaveChanges();
+            return ResponseObject2Json(new {
+                result = true
+            });
         }
     }
 }

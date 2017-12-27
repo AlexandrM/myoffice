@@ -29,13 +29,13 @@
                     <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesCBR')">@S.ImportRatesCBR</button></li>
                 </ul>
             </div>
-            <input class="form-control" type="text" ng-blur="filter($event)" ng-keydown=""/>
+            <input class="form-control" type="text" ng-blur="filter($event)" ng-keydown="" ng-model="nameFilter"/>
         </div>
     </div>
     <table class="table table-bordered table-striped" style="width: 100%">
         <thead>
             <tr>
-                <th>
+                <th width="50px;">
                     @S.MyCurrency
                 </th>
                 <th>
@@ -45,15 +45,18 @@
                     @R.R.ShortName
                 </th>
                 <th>
-                    @R.R.Rate
+                    @S.Type
                 </th>
                 <th>
+                    @R.R.Rate
+                </th>
+                <th width="410px;">
                     @R.R.Actions
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="currency in activeCurrencies">
+            <tr ng-repeat="currency in currencies | filter: { IsArchive: false, Name: nameFilter}">
                 <td>
                     <input type="hidden" class="form-control" ng-model="currency.Id" />
                     <input type="checkbox" class="form-control" 
@@ -62,28 +65,32 @@
                            value="{{currency.MyCurrency}}" />
                 </td>
                 <td>
-                    <input type="text" class="form-control" ng-model="currency.Name" value="{{currency.Name}}" />
+                    {{currency.Name}}
                 </td>
                 <td>
-                    <input type="text" class="form-control" ng-model="currency.ShortName" value="{{currency.ShortName}}" />
+                    {{currency.ShortName}}
+                </td>
+                <td>
+                    {{ (currencyTypes | filter: { Id: currency.CurrencyType })[0].Name }}
                 </td>
                 <td>
                     {{currency.Value}}
                 </td>
                 <td>
                     <buton type="button" class="btn btn-primary" ng-click="currencyEditDialog(currency)">@R.R.Edit</buton>
-                    <button type="button" class="btn btn-warning" ng-click="CurrencyArchive(currency)">@R.R.ToArchive</button>
+                    <button type="button" class="btn btn-warning" ng-click="currencyArchive(currency)">@R.R.ToArchive</button>
                 </td>
             </tr>
         </tbody>
         <tr class="active">
-            <td colspan="5" style="background-color:lightgray">
-                <button class="btn btn-primary" ng-class="{'glyphicon':true, 'glyphicon-chevron-right': showArchive, 'glyphicon-chevron-down': !showArchive}"
+            <td colspan="6" style="background-color:lightgray">
+                <button class="btn btn-primary" ng-class="{'glyphicon':true, 'glyphicon-chevron-right': !showArchive, 'glyphicon-chevron-down': showArchive}"
                         ng-click="showArchive = !showArchive" />
+                @R.R.Archive
             </td>
         </tr>
-        <tbody ng-show="!showArchive">
-            <tr ng-repeat="currency in archiveCurrencies">
+        <tbody ng-show="showArchive">
+            <tr ng-repeat="currency in currencies | filter: { IsArchive: true, Name: nameFilter}">
                 <td>
                     <input type="hidden" class="form-control" ng-model="currency.Id" />
                     <input type="checkbox" class="form-control"
@@ -92,10 +99,13 @@
                            value="{{currency.MyCurrency}}" />
                 </td>
                 <td>
-                    <input type="text" class="form-control" ng-model="currency.Name" value="{{currency.Name}}" />
+                    {{currency.Name}}
                 </td>
                 <td>
-                    <input type="text" class="form-control" ng-model="currency.ShortName" value="{{currency.ShortName}}" />
+                    {{currency.ShortName}}
+                </td>
+                <td>
+                    {{ (currencyTypes | filter: { Id: currency.CurrencyType })[0].Name }}
                 </td>
                 <td>
                     {{currency.Value}}

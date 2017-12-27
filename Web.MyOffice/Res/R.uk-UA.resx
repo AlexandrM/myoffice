@@ -556,9 +556,15 @@
     <value>Вже існує</value>
   </data>
   <data name="ToArchive" xml:space="preserve">
-    <value />
+    <value>В архів</value>
   </data>
   <data name="CurrencyWarning" xml:space="preserve">
     <value>Вибрати iншу головну валюту</value>
+  </data>
+  <data name="Archive" xml:space="preserve">
+    <value>Архів</value>
+  </data>
+  <data name="CantDeleteCurrency1" xml:space="preserve">
+    <value>Неможливо видалити валюту, існують прив'язані рахунки!</value>
   </data>
 </root>

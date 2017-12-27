@@ -6,63 +6,27 @@
         .controller('currencyCtrl', ['$scope', 'CurrencyService', 'ModalWindowService', currencyCtrl]);
 
     function currencyCtrl($scope, CurrencyService, ModalWindowService) {
-        /*____________________________ Infrastructure section ____________________________*/
-        $scope.sortByProp = function (array, sortProperty) {
-            if (array !== undefined || array !== undefined) {
-                var sorter = function (next, prev) {
-                    if (array[sortProperty] > array[sortProperty]) {
-                        return 1;
-                    } else if (array[sortProperty] < array[sortProperty]) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                };
-                return array.sort(sorter);
-            }
-        };
+        $scope.showArchive = false;
+        $scope.nameFilter = '';
+        $scope.currencies = [];
 
-        $scope.currencyFilter = function (criteria) {
-            if (criteria === '' || criteria === null || criteria === undefined) {
-                return $scope.allCurrencies;
-            }
-            return $scope.allCurrencies.filter(function (currency) {
-                return currency.Name.indexOf(criteria) !== -1;
+        $scope.refresh = function () {
+            CurrencyService.getCurrencyList({}, function (data) {
+                $scope.currencies = data.currencies;
+                $scope.currencyTypes = data.types;
+                $scope.warnings = data.warnings;
             });
         };
 
         $scope.closeWindow = function (name) {
             ModalWindowService.close(name);
-        };
-
-        /*______________________________ Data processing ______________________________*/
-        $scope.sortPropertyName = '';
-        $scope.refresh = function () {
-            $scope.model = CurrencyService.getCurrencyList({}, function () {
-                $scope.activeCurrencies = $scope.sortByProp(
-                    $scope.model.currencies.filter(function(currency){
-                        return !currency.IsArchive;
-                    }),
-                'Name');
-                $scope.archiveCurrencies = $scope.sortByProp(
-                   $scope.model.currencies.filter(function (currency) {
-                       return currency.IsArchive;
-                   }),
-               'Name');
-                $scope.CurrencyTypes = $scope.model.types;
-                $scope.warnings = $scope.model.warnings;
-                $scope.showArchive = true;
-            });
-        };
-
-        $scope.filter = function ($event) {
-            $scope.currencies = $scope.currencyFilter($event.currentTarget.value);
+            $scope.refresh();
         };
 
         $scope.openForm = function (viewName, size) {
             ModalWindowService.open('CurrenciesController', viewName, $scope, size);
         };
-        /*____________________________ Currency CRUD section ____________________________*/
+
         $scope.currencyEditDialog = function (currency) {
             $scope.newCurrency = currency;
             $scope.openForm('CurrencyAdd','modal-sm');
@@ -89,7 +53,7 @@
                 $scope.postCurrency(newCurrency);
             };
 
-        $scope.CurrencyArchive = function (currency) {
+        $scope.currencyArchive = function (currency) {
             if (!currency.MyCurrency) {
                 CurrencyService.editCurrency({ currencyId: currency.Id, deleted: true }, function () {
                     $scope.refresh();
@@ -106,21 +70,17 @@
         };
 
         $scope.deleteCurrency = function (Id) {
-            CurrencyService.deleteCurrency({ currencyId: Id }, function () {
+            CurrencyService.deleteCurrency({ currencyId: Id }, function (data) {
+                if (!data.result) {
+                    bootbox.alert(data.message);
+                }
                 $scope.refresh();
             });
         };
 
         $scope.setMyCurrency = function (checked) {
-                var unchecked = $scope.activeCurrencies.find(function (currency) {
-                    return currency.MyCurrency && currency.Id !== checked.Id;
-                });
-                if (unchecked !== undefined) {
-                    unchecked.MyCurrency = false;
-                    $scope.postCurrency(unchecked);
-                }
-                $scope.postCurrency(checked);
-            };
+            $scope.postCurrency(checked);
+        };
 
         $scope.ratesUpdate = function(sourceName){
                 CurrencyService.updateRates({ sourceName: sourceName }, function () {

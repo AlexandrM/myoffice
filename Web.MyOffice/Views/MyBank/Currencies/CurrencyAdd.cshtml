@@ -11,18 +11,18 @@
             <div class="form-group">
                 <label for="name" class="control-label col-sm-3">@R.R.Name</label>
                 <div class="col-sm-9">
-                    <input id="name" name="name" type="text" class="form-control" 
-                    ng-model="newCurrency.Name"
-                    value="{{newCurrency.Name}}"
-                    ng-required ="true"
-                    ng-minlength="1"
-                    ng-maxlength="25"
-                    ng-pattern="/^[A-Z]+[a-z]*[0-9]*/"
-                    ng-class="{'valid':CurrencyEditForm.name.$valid,
-                    'invalid':CurrencyEditForm.name.$invalid,
-                    'required':CurrencyEditForm.name.$error.required}" />
+                    <input id="name" name="name" type="text" class="form-control"
+                        ng-model="newCurrency.Name"
+                        value="{{newCurrency.Name}}"
+                        ng-required="true"
+                        ng-minlength="1"
+                        ng-maxlength="25"
+                        ng-class="{
+                            'valid':CurrencyEditForm.name.$valid,
+                            'invalid':CurrencyEditForm.name.$invalid,
+                            'required':CurrencyEditForm.name.$error.required}" 
+                    />
                     <div ng-if="CurrencyEditForm.name.$invalid && CurrencyEditForm.name.$dirty">
-                        <p ng-if="CurrencyEditForm.name.$error.pattern" class="error">Name should start from uppercase letter.</p>
                         <p ng-if="CurrencyEditForm.name.$error.minlength" class="error">Name should has one character at least.</p>
                         <p ng-if="CurrencyEditForm.name.$error.maxlength" class="error">Name should has up to 25 characters long.</p>
                     </div>
@@ -33,36 +33,37 @@
             <div class="form-group">
                 <label for="shortName" class="control-label col-sm-3">@R.R.ShortName</label>
                 <div class="col-sm-9">
-                    <input id="shortName" name="shortName" class="form-control" type="text" 
+                    <input id="shortName" name="shortName" class="form-control" type="text"
                            ng-model="newCurrency.ShortName"
                            value="{{newCurrency.ShortName}}"
-                           ng-required ="true"
-                           ng-pattern="/[A-Z][A-Z][A-Z]/"
-                           ng-class="{'valid':CurrencyEditForm.shortName.$valid,
-                           'invalid':CurrencyEditForm.shortName.$invalid,
-                           'required':CurrencyEditForm.shortName.$error.required}" />
+                           ng-required="true"
+                           ng-minlength="1"
+                           ng-maxlength="25"
+                           ng-class="{
+                            'valid':CurrencyEditForm.shortName.$valid,
+                            'invalid':CurrencyEditForm.shortName.$invalid,
+                            'required':CurrencyEditForm.shortName.$error.required}" />
                     <div ng-if="CurrencyEditForm.shortName.$invalid && CurrencyEditForm.shortName.$dirty">
-                        <p ng-if="CurrencyEditForm.shortName.$error.pattern" class="error">Short name should be 3 uppercase letter.</p>
+                        <p ng-if="CurrencyEditForm.shortName.$error.minlength" class="error">Short name should has one character at least.</p>
+                        <p ng-if="CurrencyEditForm.shortName.$error.maxlength" class="error">Short name should has up to 25 characters long.</p>
                     </div>
                 </div>
-             </div>
+            </div>
 
             <div class="form-group">
                 <label for="currencyType" class="control-label col-sm-3">@S.Type</label>
                 <div class="col-sm-9">
                     <select id="currencyType" name="currencyType" class="form-control" type="text"
-                           ng-model="newCurrency.CurrencyType"
-                           ng-required="true"
-                           ng-class="{'valid':CurrencyEditForm.currencyType.$valid,
-                           'invalid':CurrencyEditForm.currencyType.$invalid,
-                           'required':CurrencyEditForm.currencyType.$error.required}">
-                        <option hidden value="">...</option>
-                        <option ng-repeat="type in CurrencyTypes" value="{{$index + 1}}">
-                            {{type}}
-                        </option>
-                    </select>
+                            ng-model="newCurrency.CurrencyType"
+                            ng-required="true"
+                            ng-options="o.Id as o.Name for o in currencyTypes"
+                            ng-class="{
+                            'valid': CurrencyEditForm.currencyType.$valid,
+                            'invalid': CurrencyEditForm.currencyType.$invalid,
+                            'required': CurrencyEditForm.currencyType.$error.required}"></select>
                 </div>
             </div>
+        </div>
 
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" ng-click="addCurrency(newCurrency)">@R.R.Save</button>

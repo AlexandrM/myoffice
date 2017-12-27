@@ -151,6 +151,15 @@ namespace R {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Архив.
+        /// </summary>
+        public static string Archive {
+            get {
+                return ResourceManager.GetString("Archive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Аудио данные.
         /// </summary>
         public static string Audio {
@@ -201,6 +210,15 @@ namespace R {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Невозможно удалить валюту, существуют привязанные счета!.
+        /// </summary>
+        public static string CantDeleteCurrency1 {
+            get {
+                return ResourceManager.GetString("CantDeleteCurrency1", resourceCulture);
             }
         }
         
