@@ -555,4 +555,10 @@
   <data name="WarningExists" xml:space="preserve">
     <value>Вже існує</value>
   </data>
+  <data name="ToArchive" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CurrencyWarning" xml:space="preserve">
+    <value>Вибрати iншу головну валюту</value>
+  </data>
 </root>

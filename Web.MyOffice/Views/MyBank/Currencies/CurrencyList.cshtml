@@ -5,6 +5,9 @@
     td {
         vertical-align: middle !important;
     }
+    li>.form-control:hover {
+        background-color:dodgerblue;
+    }
 </style>
 
 <h2>@R.R.Currencies</h2>
@@ -12,7 +15,7 @@
 <div id="CurrencyList" ng-init="refresh()">
     <div class="row">
         <div class="col-sm-4">
-            <button type="button" class="btn btn-success" ng-click="currencyAddFormInvoke({})">@R.R.Add</button>
+            <button type="button" class="btn btn-success" ng-click="currencyEditDialog({})">@R.R.Add</button>
         </div>
         <div class="col-sm-4 col-sm-offset-4">
             <div class="dropdown">
@@ -30,7 +33,7 @@
         </div>
     </div>
     <table class="table table-bordered table-striped" style="width: 100%">
-        <tbody>
+        <thead>
             <tr>
                 <th>
                     @S.MyCurrency
@@ -48,10 +51,15 @@
                     @R.R.Actions
                 </th>
             </tr>
-            <tr ng-repeat="currency in currencies">
+        </thead>
+        <tbody>
+            <tr ng-repeat="currency in activeCurrencies">
                 <td>
                     <input type="hidden" class="form-control" ng-model="currency.Id" />
-                    <input type="checkbox" class="form-control" ng-model="currency.MyCurrency" ng-click="setMyCurrency(currency)" value="{{currency.MyCurrency}}" />
+                    <input type="checkbox" class="form-control" 
+                           ng-model="currency.MyCurrency" 
+                           ng-click="setMyCurrency(currency)" 
+                           value="{{currency.MyCurrency}}" />
                 </td>
                 <td>
                     <input type="text" class="form-control" ng-model="currency.Name" value="{{currency.Name}}" />
@@ -63,10 +71,43 @@
                     {{currency.Value}}
                 </td>
                 <td>
-                    <buton type="button" class="btn btn-primary" ng-click="currencyAddFormInvoke(currency)">@R.R.Edit</buton>
+                    <buton type="button" class="btn btn-primary" ng-click="currencyEditDialog(currency)">@R.R.Edit</buton>
+                    <button type="button" class="btn btn-warning" ng-click="CurrencyArchive(currency)">@R.R.ToArchive</button>
+                </td>
+            </tr>
+        </tbody>
+        <tr class="active">
+            <td colspan="5" style="background-color:lightgray">
+                <button class="btn btn-primary" ng-class="{'glyphicon':true, 'glyphicon-chevron-right': showArchive, 'glyphicon-chevron-down': !showArchive}"
+                        ng-click="showArchive = !showArchive" />
+            </td>
+        </tr>
+        <tbody ng-show="!showArchive">
+            <tr ng-repeat="currency in archiveCurrencies">
+                <td>
+                    <input type="hidden" class="form-control" ng-model="currency.Id" />
+                    <input type="checkbox" class="form-control"
+                           ng-model="currency.MyCurrency"
+                           ng-click="setMyCurrency(currency)"
+                           value="{{currency.MyCurrency}}" />
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="currency.Name" value="{{currency.Name}}" />
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="currency.ShortName" value="{{currency.ShortName}}" />
+                </td>
+                <td>
+                    {{currency.Value}}
+                </td>
+                <td>
+                    <buton type="button" class="btn btn-success" ng-click="restoreCurrency(currency)">@R.R.UnDelete</buton>
                     <button type="button" class="btn btn-danger" ng-click="deleteCurrency(currency.Id)">@R.R.Delete</button>
                 </td>
             </tr>
         </tbody>
-    </table>
+</table>
+
+
+    
 </div>

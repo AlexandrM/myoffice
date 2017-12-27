@@ -33,6 +33,7 @@ namespace Web.MyOffice.Models
 
         [LocalizedDisplayAttribute("MyCurrency")]
         public bool MyCurrency { get; set; }
+        public bool IsArchive { get; set; }
 
         [DataType(DataType.Currency)]
         [LocalizedDisplayAttribute("CurrencyRate")]

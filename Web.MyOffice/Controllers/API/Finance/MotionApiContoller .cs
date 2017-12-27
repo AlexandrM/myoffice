@@ -30,7 +30,7 @@ namespace Web.MyOffice.Controllers.API
         {
             using (db)
             {
-                var motions = db.Motions.Where(motion => motion.ItemId == itemId).ToList();
+                var motions = db.Motions.Where(motion => motion.ItemId == itemId).Include(motion=>motion.Account).ToList();
                 return ResponseObject2Json(motions);
             }
         }
@@ -75,25 +75,21 @@ namespace Web.MyOffice.Controllers.API
             var mainItem = motionMerge.mainItem;
             var selectedItem = motionMerge.selectedItem;
 
-            mainItem.Motions = mainItem.Motions != null? mainItem.Motions: new List<Motion>();
-            selectedItem.Motions = mainItem.Motions != null ? mainItem.Motions : new List<Motion>();
+            mainItem.Motions = db.Motions.Where(motion => motion.ItemId == mainItem.Id).ToList();
+            selectedItem.Motions = db.Motions.Where(motion => motion.ItemId == selectedItem.Id).ToList();
 
             using (db)
                 {
-                    Motion curMotion = null;
                     foreach (var motion in selectedItem.Motions)
                     {
-                        curMotion = db.Motions.Find(motion.Id);
-                        curMotion.ItemId = motion.ItemId;
-                        db.Entry(curMotion).State = EntityState.Modified;
+                        motion.ItemId = mainItem.Id;
+                        db.Entry(motion).State = EntityState.Modified;
                     }
                     db.SaveChanges();
                     db.Entry(db.Items.Find(selectedItem.Id)).State = EntityState.Deleted;
                     db.SaveChanges();
-                }
+            }
                 return ResponseObject2Json(HttpStatusCode.Moved);
-
-            return ResponseObject2Json(HttpStatusCode.NotModified);
         }
     }
 }
