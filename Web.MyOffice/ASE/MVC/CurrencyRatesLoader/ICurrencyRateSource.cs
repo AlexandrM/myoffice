@@ -13,7 +13,7 @@ namespace ASE
         string Name { set; get; }
         Uri BaseSource { set; get; }
         Dictionary<string, string> RouteParams { set; get; }
-        bool Load();
+        bool Load(List<string> userTypes);
         Dictionary<CurrencyType, decimal> LoadedRates { set; get; }
     }
 }

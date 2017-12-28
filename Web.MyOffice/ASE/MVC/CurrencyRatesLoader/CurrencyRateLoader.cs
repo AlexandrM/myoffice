@@ -28,11 +28,14 @@ namespace ASE
             {
                 return Sources.Find(source => source.Name == name);
             }
-            public bool UpdateRates(string name)
+            public bool UpdateRates(string name, Guid UserId)
             {
                 var source = Sources.Find(src => src.Name == name);
                 if (source == null) return false;
-                if (source.Load())
+
+                var userRates = Db.Currencies.Where(currency => currency.UserId == UserId).ToList();
+
+                if (source.Load(UserCurrencyTypeString(userRates)))
                 {
                     Db.CurrencyRates.RemoveRange(Db.CurrencyRates);
                     var currencies = Db.Currencies.ToList();
@@ -56,6 +59,17 @@ namespace ASE
             }
                 return true;
             }
+
+        private List<string> UserCurrencyTypeString(List<Currency> userCurrencies)
+        {
+            var userCurrenciesType = new List<string>();
+            foreach (var currency in userCurrencies)
+            {
+                userCurrenciesType.Add(currency.CurrencyType.ToString());
+            }
+            return userCurrenciesType;
+        }
+
         #endregion
         private DB Db { set; get; }
         public CurrencyRateLoader(DB db)

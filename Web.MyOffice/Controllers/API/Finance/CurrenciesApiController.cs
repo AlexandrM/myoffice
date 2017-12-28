@@ -35,23 +35,21 @@ namespace Web.MyOffice.Controllers.API
                     R.R.CurrencyWarning
                 },
             };
-
             return ResponseObject2Json(model);
         }
 
         [HttpGet]
         public HttpResponseMessage CurrenciesUpdate(string sourceName)
         {
-            /*var rateLoader = new CurrencyRateLoader(db);
-            if (rateLoader.UpdateRates(sourceName))
+            var rateLoader = new CurrencyRateLoader(db);
+            if (rateLoader.UpdateRates(sourceName, UserId))
             {
                 return ResponseObject2Json(HttpStatusCode.OK);
             }
             else
             {
                 return ResponseObject2Json(HttpStatusCode.NotModified);
-            }*/
-            return ResponseObject2Json(HttpStatusCode.OK);
+            }
         }
 
         [HttpPost]

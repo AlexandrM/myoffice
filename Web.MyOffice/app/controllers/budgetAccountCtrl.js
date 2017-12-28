@@ -65,7 +65,10 @@
             var currentAccount = null;
             for (var i = 0; i < category.Accounts.length; i++) {
                 currentAccount = category.Accounts[i];
-                currentAccount.Motions = budgetAccountsService.getAccountMotions({ accountId: currentAccount.Id });
+                budgetAccountsService.getAccountMotionsFlag({ accountId: currentAccount.Id },
+                    function(hasMotionFlag) {
+                        currentAccount.HasMotions = hasMotionFlag;
+                    });
             }
             $scope.selectedCategory = category;
         };

@@ -30,7 +30,6 @@ namespace Web.MyOffice.Controllers.API
 
                 Currencies = db.Currencies.Where(x => x.UserId == UserId).ToList()
             };
-
             return ResponseObject2Json(model);
         }
 
@@ -39,7 +38,7 @@ namespace Web.MyOffice.Controllers.API
         {
             using (db)
             {
-                if (db.Accounts.Where(acc => acc.Id == newAccount.Id).Count() > 0) //Any?? Find??
+                if (db.Accounts.Find(newAccount.Id) != null)
                 {
                     db.Entry(newAccount).State = EntityState.Modified;
                 }
@@ -102,24 +101,31 @@ namespace Web.MyOffice.Controllers.API
         [HttpDelete]
         public HttpResponseMessage AccountDelete(Guid accountId)
         {
-            //Not allow to delete account with motions
-            //Allow delete to owner only
-            /*var delAcc = db.Accounts.FirstOrDefault(x => x.Id == accountId && x.Budget.OwnerId == UserId);
-            if (delAcc != null)
+            var delAcc = db.Accounts.Include(acc=>acc.Motions).FirstOrDefault(x => x.Id == accountId && x.Budget.OwnerId == UserId);
+            if (delAcc != null )
             {
-                db.Entry(delAcc).State = EntityState.Deleted;
+                if (delAcc.Motions.Count == 0)
+                {
+                    db.Entry(delAcc).State = EntityState.Deleted;
+                }
+                else
+                {
+                    delAcc.Deleted = true;
+                    db.Entry(delAcc).State = EntityState.Modified;
+                }
                 db.SaveChanges();
-            }*/
-
-            return ResponseObject2Json(HttpStatusCode.Moved);
+                return ResponseObject2Json(true);
+            }
+            else
+            {
+                return ResponseObject2Json(false);
+            } 
         }
 
         [HttpGet]
         public HttpResponseMessage AccountMotionsGet(Guid accountId)
         {
-            //return ResponseObject2Json(db.Motions.Where(motion => motion.AccountId == accountId).ToList());
-            //Why? All motions can have a size more 1..10..100 mb
-            return ResponseObject2Json(HttpStatusCode.OK);
+            return ResponseObject2Json(db.Motions.Any(motion=>motion.AccountId == accountId));
         }
     }
 }

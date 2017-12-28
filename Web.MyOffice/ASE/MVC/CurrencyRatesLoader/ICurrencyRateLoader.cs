@@ -12,6 +12,6 @@ namespace ASE
         void AddSource(ICurrencyRateSource source);
         void RemoveSource(ICurrencyRateSource source);
         ICurrencyRateSource FindSource(Guid Id);
-        bool UpdateRates(string sourceName);
+        bool UpdateRates(string sourceName, Guid UserId);
     }
 }

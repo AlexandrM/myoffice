@@ -31,8 +31,12 @@
                 <td>{{account.Description}}</td>
                 <td>{{account.CreditLimit}}</td>
                 <td>
-                    <button type="button" class="btn btn-primary" ng-click="accountFormEditInvoke(account)">@R.R.Edit</button>
-                    <button  class="btn btn-danger" ng-if="account.Motions.length===0" ng-click="accountDelete(account)">@R.R.Delete</button>
+                    <button type="button" 
+                            class="btn btn-primary" 
+                            ng-click="accountFormEditInvoke(account)">@R.R.Edit</button>
+                    <button class="btn btn-danger" 
+                            ng-if="account.HasMotions" 
+                            ng-click="accountDelete(account)">@R.R.Delete</button>
                 </td>
             </tr>
         </tbody>

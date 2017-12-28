@@ -45,7 +45,7 @@ namespace ASE
             }
             return paramString;
         }
-        public bool Load()
+        public bool Load(List<string> userTypes)
         {
             if (isInited)
             {
@@ -53,9 +53,7 @@ namespace ASE
                 {
                     var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + GetRouteParamString()).Replace("RUB","RUR");
                     var loadedRates = JsonConvert.DeserializeObject<NBUCurrency[]>(stringRawData).ToList();
-                    var currencyTypes = Enum.GetNames(typeof(CurrencyType)).ToList();
-
-                    LoadedRates = loadedRates.Join(currencyTypes,
+                    LoadedRates = loadedRates.Join(userTypes,
                         rate => rate.cc,
                         type => type,
                         (rate, type) =>

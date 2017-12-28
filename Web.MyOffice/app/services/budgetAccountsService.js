@@ -8,7 +8,7 @@
     function budgetAccountsService($resource) {
         return $resource('api/BudgetAccounts/', {}, {
             getUsersBudgets: { method: 'GET', params: {}, isArray: false },
-            getAccountMotions: { method: 'GET', params: {}, isArray: true },
+            getAccountMotionsFlag: { method: 'GET', params: {}, isArray: false },
             postCategoryList: { method: 'POST', params: {}, isArray: false },
             putAccount: { method: 'PUT', params: {}, isArray: false },
             deleteAccount: { method: 'DELETE', params: {}, isArray: false }
