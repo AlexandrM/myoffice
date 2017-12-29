@@ -8,8 +8,8 @@
 
 <div id="AccountList" ng-init="refresh()">
     <p>
-        <button class="btn btn-success" ng-click="AccountFormAddInvoke()">@R.R.Account</button>
-        <button class="btn btn-success" ng-click="categoryListFormInvoke()">@R.R.Category</button>
+        <button class="btn btn-success" ng-click="accountEditDialog({})">@R.R.Account</button>
+        <button class="btn btn-success" ng-click="categoryListDialog()">@R.R.Category</button>
     </p>
     <ul class="nav nav-tabs" id="myTab">
         <li ng-repeat="category in categories">
@@ -26,14 +26,14 @@
             <th>@R.R.Actions</th>
         </tr>
         <tbody>
-            <tr ng-repeat="account in selectedCategory.Accounts">
+            <tr ng-repeat="account in selectedCategory.Accounts | filter:{ Deleted: false }">
                 <td>{{account.Name}}</td>
                 <td>{{account.Description}}</td>
                 <td>{{account.CreditLimit}}</td>
                 <td>
                     <button type="button" 
                             class="btn btn-primary" 
-                            ng-click="accountFormEditInvoke(account)">@R.R.Edit</button>
+                            ng-click="accountEditDialog(account)">@R.R.Edit</button>
                     <button class="btn btn-danger" 
                             ng-if="account.HasMotions" 
                             ng-click="accountDelete(account)">@R.R.Delete</button>

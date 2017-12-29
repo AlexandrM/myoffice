@@ -59,6 +59,12 @@ namespace Web.MyOffice.Controllers.API
                 var deletedMotion = db.Motions.Find(motionId);
                 db.Entry(deletedMotion).State = EntityState.Deleted;
                 db.SaveChanges();
+                var motionAcc = db.Accounts.Find(deletedMotion.AccountId);
+                if (motionAcc.Motions.Count == 0 && motionAcc.Deleted)
+                {
+                    db.Entry(motionAcc).State = EntityState.Deleted;
+                }
+                db.SaveChanges();
             }
             return ResponseObject2Json(HttpStatusCode.Accepted);
         }
@@ -79,7 +85,7 @@ namespace Web.MyOffice.Controllers.API
             selectedItem.Motions = db.Motions.Where(motion => motion.ItemId == selectedItem.Id).ToList();
 
             using (db)
-                {
+            {
                     foreach (var motion in selectedItem.Motions)
                     {
                         motion.ItemId = mainItem.Id;

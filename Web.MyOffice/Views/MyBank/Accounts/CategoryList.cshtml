@@ -11,7 +11,7 @@
 
 <div id="CategoryAccountList" style="padding: 10px">
     <p>
-        <a class="btn btn-success" ng-click="categoryAddFormInvoke()">@R.R.Add</a>
+        <a class="btn btn-success" ng-click="categoryEditDialog({})">@R.R.Add</a>
     </p>
 
     <table class="table table-bordered table-striped">
@@ -29,12 +29,12 @@
                 <button type="button"
                         class="btn btn-primary"
                         id="{{category.Id}}"
-                        ng-click="categoryFormEdit(category)">
+                        ng-click="categoryEditDialog(category)">
                     @R.R.Edit
                 </button>
                 <button type="button"
                         class="btn btn-danger"
-                        ng-if="category.Accounts.length == 0"
+                        ng-if="categoryDeletion(category)"
                         ng-click="categoryDelete(category)">
                     @R.R.Delete
                 </button>
@@ -44,7 +44,7 @@
     </table>
     <div class="modal-footer">
     <tr><td>
-            <button type="button" ng-click="updateCategoryList()" class="btn btn-default">@R.R.Save</button>
+            <button type="button" ng-click='windowClose("CategoryList")' class="btn btn-default">@R.R.Close</button>
     </td></tr>
     </div>
 </div>

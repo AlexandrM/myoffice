@@ -14,6 +14,7 @@
     </div>
 
     <div class="modal-body">
+        <input type="hidden" ng-model="newAccount.Id"/>
         <div class="form-group">
             <label for="name" class="control-label col-sm-2">@R.R.Name:</label>
             <div class="col-sm-10">
@@ -21,15 +22,11 @@
                        ng-required="true"
                        ng-minlength="1"
                        ng-maxlength="15"
-                       ng-pattern="/^[A-Z]+[a-z]*[0-9]*/"
-                       ng-model="newAccount.name"
+                       ng-model="newAccount.Name"
                        ng-class="{'valid':AddAccountForm.name.$valid,
                                  'invalid':AddAccountForm.name.$invalid,
-                                 'required':AddAccountForm.name.$error.required}" />
-
-                <p class="warn" ng-show="AddAccountForm.name.$error.required">Account name required!</p>
+                                 'required':AddAccountForm.name.$error.required}"/>
                 <div ng-if="AddAccountForm.name.$invalid && AddAccountForm.name.$dirty">
-                    <p ng-if="AddAccountForm.name.$error.pattern" class="error">Name should start from uppercase letter.</p>
                     <p ng-if="AddAccountForm.name.$error.minlength" class="error">Name should has one character at least.</p>
                     <p ng-if="AddAccountForm.name.$error.maxlength" class="error">Name should has up to 50 characters long.</p>
                 </div>
@@ -39,12 +36,11 @@
             <label for="currencies" class="control-label col-sm-2">@R.R.Currency:</label>
             <div class="col-sm-10">
                 <select class="form-control" id="currencies" name="currencies" required
-                        ng-model="newAccount.currency"
-                        ng-options="currency.Name for currency in model.Currencies"
+                        ng-model="newAccount.Currency"
+                        ng-options="currency.Name for currency in currencies"
                         ng-class="{'required':AddAccountForm.currencies.$error.required,
                                    'valid':AddAccountForm.currencies.$valid,
-                                   'invalid':AddAccountForm.currencies.$invalid}" />
-                <p ng-if="AddAccountForm.currencies.$error.required" class="warn">You should choose your currency.</p>
+                                   'invalid':AddAccountForm.currencies.$invalid}"/>
             </div>
         </div>
 
@@ -52,24 +48,24 @@
             <label for="categories" class="control-label col-sm-2">@R.R.Category:</label>
             <div class="col-sm-10">
                 <select class="form-control" id="categories" name="categories" required
-                        ng-model="newAccount.category"
+                        ng-model="newAccount.Category"
                         ng-options="category.Name for category in categories"
                         ng-class="{'required':AddAccountForm.categories.$error.required,
                                    'valid':AddAccountForm.categories.$valid,
-                                   'invalid':AddAccountForm.categories.$invalid}" />
-                <p ng-if="AddAccountForm.currencies.$error.required" class="warn">Name should start from uppercase letter.</p>
+                                   'invalid':AddAccountForm.categories.$invalid}"/>
             </div>
         </div>
 
         <div class="form-group">
             <label for="creditLimit" class="control-label col-sm-2">@R.R.CreditLimit:</label>
             <div class="col-sm-10">
-                <input type="number" class="form-control" id="creditLimit" name="creditLimit" min="0" value="0"
+                <input type="number" class="form-control" id="creditLimit" name="creditLimit" min="0"
                        ng-required="required"
-                       ng-model="newAccount.creditLimit"
+                       ng-model="newAccount.CreditLimit"
+                       value="{{newAccount.CreditLimit}}"
                        ng-class="{'pristine':AddAccountForm.creditLimit.$pristine,
                                  'valid':AddAccountForm.creditLimit.$valid,
-                                 'invalid':AddAccountForm.creditLimit.$invalid}" />
+                                 'invalid':AddAccountForm.creditLimit.$invalid}"/>
                 <div ng-if="AddAccountForm.creditLimit.$invalid && AddAccountForm.creditLimit.$dirty">
                     <p ng-if="AddAccountForm.creditLimit.$error.required" class="error">You should fill this filed.</p>
                 </div>
@@ -81,10 +77,10 @@
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="description" name="description"
                        ng-maxlength="50"
-                       ng-model="newAccount.description"
+                       ng-model="newAccount.Description"
                        ng-class="{'pristine':AddAccountForm.description.$pristine,
                                  'valid':AddAccountForm.description.$valid,
-                                 'invalid':AddAccountForm.description.$invalid}" />
+                                 'invalid':AddAccountForm.description.$invalid}"/>
 
                 <div ng-if="AddAccountForm.description.$invalid && AddAccountForm.description.$dirty">
                     <p ng-if="AddAccountForm.description.$error.maxlength" class="error">Description should had up to 50 characters long.</p>
@@ -93,22 +89,22 @@
         </div>
 
         <div class="form-group">
-            <label for="deleted" class="control-label col-sm-2" ng-model="newAccount.deleted"></label>
+            <label class="control-label col-sm-2"></label>
             <div class="col-sm-10">
-                <label for="deleted" class="control-label col-sm-2" ng-model="newAccount.deleted">@R.R.Deleted:</label>
+                <label for="deleted" class="control-label col-sm-2">@R.R.Deleted:</label>
                 <div class="col-sm-2">
-                    <input type="checkbox" class="form-control" id="deleted" ng-model="newAccount.deleted" />`
+                    <input type="checkbox" class="form-control" id="deleted" ng-model="newAccount.deleted"/>`
                 </div>
                 <label for="showInRest" class="control-label col-sm-4">@R.R.ShowInRest:</label>
                 <div class="col-sm-2">
-                    <input type="checkbox" class="form-control" id="showInRest" ng-model="newAccount.showInRest" />`
+                    <input type="checkbox" class="form-control" id="showInRest" ng-model="newAccount.showInRest"/>`
                 </div>
             </div>
         </div>
     </div>
 
     <div class="modal-footer">
-        <button type="submit" ng-click="newAccountAdd(AddAccountForm, newAccount)" class="btn btn-primary">@(Model == null ? R.R.Add : R.R.Save)</button>
+        <button type="submit" ng-click="newAccountAdd(newAccount)" class="btn btn-primary"> @R.R.Save</button>
         <button type="button" ng-click='windowClose("AccountAdd")' class="btn btn-default" data-dismiss="modal" ng-click="windowClose(newAccountWindow)">@R.R.Close</button>
     </div>
 </form>

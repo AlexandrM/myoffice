@@ -2,7 +2,7 @@
     ViewBag.Title = "CategoryAdd";
 }
 
-<link rel="stylesheet" href="../../../Content/FormValidationStyles.css" />
+<link rel="stylesheet" href="~/Content/FormValidationStyles.css" />
 
 <div id="categoryAccountForm" style="padding: 10px">
    <form name="CategoryEditForm" class="form-horizontal">
@@ -10,34 +10,46 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="windowClose('CategoryEdit')">&times;</button>
             <h4 class="modal-title">@R.R.Edit</h4>
         </div>
+       
+       <input type="hidden" ng-model="newCategory.Id"/>
 
-        <div class="modal-body">
+       <div class="modal-body">
             <div class="form-group">
-                <label for="name" class="control-label col-sm-2">Name:</label>
+                <label for="name" class="control-label col-sm-2">@R.R.Name:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="name" name="name" required
+                    <input type="text" class="form-control" id="name" name="name" required 
                            value="{{newCategory.Name}}"
                            ng-required ="true"
                            ng-minlength="1"
                            ng-maxlength="15"
-                           ng-pattern="/^[A-Z]+[a-z]*[0-9]*/"
                            ng-model="newCategory.Name"
                            ng-class="{'valid':CategoryEditForm.name.$valid,
                                       'invalid':CategoryEditForm.name.$invalid,
                                       'required':CategoryEditForm.name.$error.required}" />
                     
-                    <p class="warn" ng-show="CategoryEditForm.name.$error.required">Account name required!</p>
                     <div ng-if="CategoryEditForm.name.$invalid && CategoryEditForm.name.$dirty">
-                        <p ng-if="CategoryEditForm.name.$error.pattern" class="error">Name should start from uppercase letter.</p>
                         <p ng-if="CategoryEditForm.name.$error.minlength" class="error">Name should has one character at least.</p>
                         <p ng-if="CategoryEditForm.name.$error.maxlength" class="error">Name should has up to 50 characters long.</p>
                     </div>
                 </div>
             </div>
-           
+            
+            <div class="form-group">
+                <label for="budgets" class="control-label col-sm-2">@R.R.Budget:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="budgets" name="budgets" required
+                            ng-required="true"
+                            ng-model="newCategory.Budget"
+                            ng-options="budget.Name for budget in budgets"
+                            ng-class="{'required':CategoryEditForm.budgets.$error.required,
+                                   'valid':CategoryEditForm.budgets.$valid,
+                                   'invalid':CategoryEditForm.budgets.$invalid}"/>
+
+                </div>
+            </div>
 
             <div class="form-group">
-                <label for="description" class="control-label col-sm-2">Description:</label>
+                <label for="description" class="control-label col-sm-2">@R.R.Description:</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="description" name="description"
                            value="{{newCategory.Description}}" 
@@ -55,7 +67,7 @@
         </div>
      
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="categoryEdit(newCategory)">@R.R.Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="categoryUpdate(newCategory)">@R.R.Save</button>
         </div>
     </form>
 </div>
