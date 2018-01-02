@@ -10,7 +10,7 @@
             getUsersBudgets: { method: 'GET', params: {}, isArray: false },
             getAccountMotionsFlag: { method: 'GET', params: {}, isArray: false },
             postCategory: { method: 'PUT', params: {}, isArray: false },
-            deleteCategory: { method: 'GET', params: {}, isArray: false },
+            deleteCategory: { method: 'DELETE', params: {}, isArray: false },
             putAccount: { method: 'POST', params: {}, isArray: false },
             deleteAccount: { method: 'DELETE', params: {}, isArray: false }
         });

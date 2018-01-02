@@ -7,7 +7,7 @@
                 class="close"
                 data-dismiss="modal"
                 aria-hidden="true"
-                ng-click='windowClose("AccountEdit")'>
+                ng-click='MWS.close("AccountEdit")'>
             &times;
         </button>
         <h4 class="modal-title">@R.R.Edit</h4>
@@ -23,9 +23,9 @@
                        ng-minlength="1"
                        ng-maxlength="15"
                        ng-model="newAccount.Name"
-                       ng-class="{'valid':AddAccountForm.name.$valid,
-                                 'invalid':AddAccountForm.name.$invalid,
-                                 'required':AddAccountForm.name.$error.required}"/>
+                       ng-class="{'valid': AddAccountForm.name.$valid,
+                                 'invalid': AddAccountForm.name.$invalid,
+                                 'required': AddAccountForm.name.$error.required}"/>
                 <div ng-if="AddAccountForm.name.$invalid && AddAccountForm.name.$dirty">
                     <p ng-if="AddAccountForm.name.$error.minlength" class="error">Name should has one character at least.</p>
                     <p ng-if="AddAccountForm.name.$error.maxlength" class="error">Name should has up to 50 characters long.</p>
@@ -36,11 +36,11 @@
             <label for="currencies" class="control-label col-sm-2">@R.R.Currency:</label>
             <div class="col-sm-10">
                 <select class="form-control" id="currencies" name="currencies" required
-                        ng-model="newAccount.Currency"
-                        ng-options="currency.Name for currency in currencies"
-                        ng-class="{'required':AddAccountForm.currencies.$error.required,
-                                   'valid':AddAccountForm.currencies.$valid,
-                                   'invalid':AddAccountForm.currencies.$invalid}"/>
+                        ng-model="newAccount.CurrencyId"
+                        ng-options="o.Id as o.Name for o in currencies"
+                        ng-class="{'required': AddAccountForm.currencies.$error.required,
+                                   'valid': AddAccountForm.currencies.$valid,
+                                   'invalid': AddAccountForm.currencies.$invalid}"/>
             </div>
         </div>
 
@@ -48,11 +48,11 @@
             <label for="categories" class="control-label col-sm-2">@R.R.Category:</label>
             <div class="col-sm-10">
                 <select class="form-control" id="categories" name="categories" required
-                        ng-model="newAccount.Category"
-                        ng-options="category.Name for category in categories"
-                        ng-class="{'required':AddAccountForm.categories.$error.required,
-                                   'valid':AddAccountForm.categories.$valid,
-                                   'invalid':AddAccountForm.categories.$invalid}"/>
+                        ng-model="newAccount.CategoryId"
+                        ng-options="o.Id as o.Name for o in categories"
+                        ng-class="{'required': AddAccountForm.categories.$error.required,
+                                   'valid': AddAccountForm.categories.$valid,
+                                   'invalid': AddAccountForm.categories.$invalid}"/>
             </div>
         </div>
 
@@ -76,11 +76,13 @@
             <label for="description" class="control-label col-sm-2">@R.R.Description:</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="description" name="description"
-                       ng-maxlength="50"
-                       ng-model="newAccount.Description"
-                       ng-class="{'pristine':AddAccountForm.description.$pristine,
-                                 'valid':AddAccountForm.description.$valid,
-                                 'invalid':AddAccountForm.description.$invalid}"/>
+                    ng-maxlength="50"
+                    ng-model="newAccount.Description"
+                    ng-class="{
+                        'pristine': AddAccountForm.description.$pristine,
+                        'valid': AddAccountForm.description.$valid,
+                        'invalid': AddAccountForm.description.$invalid}"
+                       />
 
                 <div ng-if="AddAccountForm.description.$invalid && AddAccountForm.description.$dirty">
                     <p ng-if="AddAccountForm.description.$error.maxlength" class="error">Description should had up to 50 characters long.</p>
@@ -105,6 +107,6 @@
 
     <div class="modal-footer">
         <button type="submit" ng-click="newAccountAdd(newAccount)" class="btn btn-primary"> @R.R.Save</button>
-        <button type="button" ng-click='windowClose("AccountAdd")' class="btn btn-default" data-dismiss="modal" ng-click="windowClose(newAccountWindow)">@R.R.Close</button>
+        <button type="button" ng-click="MWS.close('AccountEdit')" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
     </div>
 </form>

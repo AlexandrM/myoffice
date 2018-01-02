@@ -17,171 +17,120 @@ namespace Web.MyOffice.Controllers.API
     public class BudgetAccountsController : ControllerApiAdv<DB>
     {
         #region Accounts
-            [HttpGet]
-            public HttpResponseMessage AccountMotionsGet(Guid accountId)
-            {
-                return ResponseObject2Json(db.Motions.Any(motion => motion.AccountId == accountId));
-            }
 
-            [HttpPost]
-            public HttpResponseMessage NewAccountPut(Account newAccount)
+        [HttpPost]
+        public HttpResponseMessage NewAccountPut(Account newAccount)
+        {
+            using (db)
             {
-                using (db)
+                newAccount.BudgetId = db.Budgets.FirstOrDefault(x => x.OwnerId == UserId & x.Id == newAccount.BudgetId).Id;
+
+                if (db.Accounts.Any(acc=> acc.Id == newAccount.Id))
                 {
-                    if (db.Accounts.Any(acc=> acc.Id == newAccount.Id))
-                    {
-                        db.Entry(newAccount).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        db.Entry(newAccount).State = EntityState.Added;
-                    }
-                    db.SaveChanges();
-                }
-
-                return ResponseObject2Json(HttpStatusCode.Accepted);
-            }
-
-            [HttpDelete]
-            public HttpResponseMessage AccountDelete(Guid accountId)
-            {
-                var delAcc = db.Accounts.Include(acc => acc.Motions).FirstOrDefault(x => x.Id == accountId && x.Budget.OwnerId == UserId);
-                if (delAcc != null)
-                {
-                    if (delAcc.Motions.Count == 0)
-                    {
-                        db.Entry(delAcc).State = EntityState.Deleted;
-                    }
-                    else
-                    {
-                        delAcc.Deleted = true;
-                        db.Entry(delAcc).State = EntityState.Modified;
-                        var accMotions = db.Motions.Where(motion=>motion.AccountId == delAcc.Id);
-                        foreach (var motion in accMotions)
-                        {
-                            motion.Deleted = true;
-                            db.Entry(motion).State = EntityState.Modified;
-                        }
-                    }
-                    db.SaveChanges();
-                    return ResponseObject2Json(true);
+                    db.Entry(newAccount).State = EntityState.Modified;
                 }
                 else
                 {
-                    return ResponseObject2Json(false);
+                    db.Entry(newAccount).State = EntityState.Added;
                 }
-            }
-        #endregion
-
-        #region Category
-            [HttpGet]
-            public HttpResponseMessage CategoryAccountsListGet()
-            {
-                var budgetUsers = db.BudgetUsers
-                    .Where(x => x.UserId == UserId || x.Budget.OwnerId == UserId)
-                    .Include(x => x.Budget)
-                    .Include(x => x.Budget.CategoryAccounts)
-                    .Include(x => x.Budget.CategoryAccounts.Select(z => z.Accounts))
-                    .ToList();
-                var categoryAccounts = budgetUsers.Select(budgetuser => budgetuser.Budget.CategoryAccounts).Distinct().ToList();
-
-                var budgets = budgetUsers.Select(budgetuser => budgetuser.Budget).Distinct().ToList();
-                dynamic model = new
-                {
-                    Categories = CategoriesFilter(categoryAccounts).OrderBy(cat=>cat.Name),
-                    Budgets = budgets.OrderBy(budget=>budget.Name),
-                    Currencies = db.Currencies.Where(x => x.UserId == UserId).ToList().OrderBy(currency=>currency.Name)
-                };
-                return ResponseObject2Json(model);
+                db.SaveChanges();
             }
 
-        private List<CategoryAccount> CategoriesFilter(List<List<CategoryAccount>> categoryAccounts)
-        {
-            var categories = new List<CategoryAccount>();
-            foreach (var catAccs in categoryAccounts)
-            {
-                categories.AddRange(catAccs.Distinct());
-            }
-            for (int i = 0; i < categories.Count; i++)
-            {
-                if (categories[i].Accounts.Count(acc=>acc.Deleted) == categories[i].Accounts.Count && categories[i].Accounts.Count != 0)
-                {
-                    categories.Remove(categories[i]);
-                    continue;
-                }
-                for (int j = 0; j < categories[i].Accounts.Count; j++)
-                {
-                    if (categories[i].Accounts[j].Deleted)
-                    {
-                        categories[i].Accounts.Remove(categories[i].Accounts[j]);
-                    }
-                }
-
-            }
-            return categories;
+            return ResponseObject2Json(HttpStatusCode.Accepted);
         }
 
-        [HttpGet]
-        public HttpResponseMessage CategoryDelete(Guid deleteId, bool totalDelete)
+        [HttpDelete]
+        public HttpResponseMessage AccountDelete(Guid accountId)
         {
-            var deleteCategory = db.CategoryAccounts
-                                .Include(cat => cat.Accounts)
-                                .FirstOrDefault(cat => cat.Id == deleteId);
-            if (deleteCategory != null)
+            var delAcc = db.Accounts.FirstOrDefault(x => x.Id == accountId && x.Budget.OwnerId == UserId);
+            if (!db.Motions.Any(x => x.AccountId == delAcc.Id))
             {
-                if (totalDelete)
-                {
-                    db.Entry(deleteCategory).State = EntityState.Deleted;
-                }
-                else
-                {
-                    if (deleteCategory.Accounts.Count == 0)
-                    {
-                        db.Entry(deleteCategory).State = EntityState.Deleted;
-                    }
-                    else
-                    {
-                        db.Entry(deleteCategory).State = EntityState.Modified;
-                        var accs = db.Accounts.Include(acc => acc.Motions)
-                            .Where(acc => acc.CategoryId == deleteCategory.Id).ToList();
-                        foreach (var acc in accs)
-                        {
-                            acc.Deleted = true;
-                            db.Entry(acc).State = EntityState.Modified;
-                            foreach (var motion in acc.Motions)
-                            {
-                                motion.Deleted = true;
-                            }
-                            db.Entry(acc).State = EntityState.Modified;
-                        }
-                    }
-                }
+                db.Entry(delAcc).State = EntityState.Deleted;
+                db.SaveChanges();
+                return ResponseObject2Json(true);
             }
             else
             {
                 return ResponseObject2Json(false);
             }
-            db.SaveChanges();
+        }
+        #endregion
+
+        #region Category
+
+        [HttpGet]
+        public HttpResponseMessage GetUsersBudgets()
+        {
+            var categories = db.CategoryAccounts
+                .AsNoTracking()
+                .Include(x => x.Accounts)
+                .Where(x => x.Budget.OwnerId == UserId)
+                .OrderBy(x => x.Name)
+                .ToList();
+
+            categories.ForEach(x => x.Accounts = x.Accounts.OrderBy(z => z.Name).ToList());
+            categories.ForEach(x => {
+                x.Accounts.ForEach(z =>
+                {
+                    z.Motions = db.Motions.Any(c => c.AccountId == z.Id) ? new List<Motion> { new Motion () } : new List<Motion>();
+                });
+            });
+
+            var model = new
+            {
+                Categories = categories,
+
+                Currencies = db.Currencies
+                    .AsNoTracking()
+                    .Where(x => x.UserId == UserId)
+                    .OrderBy(x => x.Name)
+                    .ToList(),
+
+                Budgets = db.Budgets
+                    .AsNoTracking()
+                    .Where(x => x.OwnerId == UserId)
+                    .OrderBy(x => x.Name)
+                    .ToList(),
+            };
+
+            return ResponseObject2Json(model);
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage CategoryDelete(Guid deleteId, bool totalDelete)
+        {
+            var deleteCategory = db.CategoryAccounts
+                                .Include(x => x.Accounts)
+                                .FirstOrDefault(x => x.Id == deleteId & x.Budget.OwnerId == UserId);
+
+            if (!deleteCategory.Accounts.Any())
+            {
+                db.Entry(deleteCategory).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
+            
             return ResponseObject2Json(true);
         }
     
         [HttpPut]
-            public HttpResponseMessage CategoryUpdate(CategoryAccount newCategory)
+        public HttpResponseMessage CategoryUpdate(CategoryAccount newCategory)
+        {
+            using (db)
             {
-                using (db)
+                newCategory.BudgetId = db.Budgets.FirstOrDefault(x => x.OwnerId == UserId & x.Id == newCategory.BudgetId).Id;
+                if (db.CategoryAccounts.Any(cat => cat.Id == newCategory.Id))
                 {
-                    if (db.CategoryAccounts.Any(cat => cat.Id == newCategory.Id))
-                    {
-                        db.Entry(newCategory).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        db.Entry(newCategory).State = EntityState.Added;
-                    }
-                    db.SaveChanges();
-                    return ResponseObject2Json(true);
+                    db.Entry(newCategory).State = EntityState.Modified;
                 }
+                else
+                {
+                    db.Entry(newCategory).State = EntityState.Added;
+                }
+                db.SaveChanges();
+                return ResponseObject2Json(true);
             }
+        }
+
         #endregion
     }
 }
