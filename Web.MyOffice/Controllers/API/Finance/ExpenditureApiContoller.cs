@@ -3,125 +3,167 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using Newtonsoft.Json;
-using System.Text;
 using System.Data.Entity;
-using System.Dynamic;
 
-using ASE;
 using ASE.EF;
 using ASE.MVC;
-using ASE.Json;
 
 using Web.MyOffice.Data;
 using MyBank.Models;
-using Web.MyOffice.Models;
-using System.Data.SqlClient;
-using Method = System.Web.Http;
 
 namespace Web.MyOffice.Controllers.API
 {
     public class ExpendituresController : ControllerApiAdv<DB>
     {
-        [Method.HttpGet]
-        public HttpResponseMessage ItemsCategoryGet()
+        [HttpGet]
+        public HttpResponseMessage CategoryList()
         {
             using (db)
             {
-                var budgets = db.BudgetUsers
-                    .Where(userBudget => userBudget.UserId == UserId)
-                    .Include(x => x.Budget)
-                    .Include(x => x.Budget.CategoryItems)
-                    .Include(x => x.Budget.CategoryItems
-                    .Select( y => y.Items)).ToList();
+                var model = new {
+                    Categories = db.CategoryItems
+                        .AsNoTracking()
+                        .Where(x => x.Budget.OwnerId == UserId)
+                        .OrderBy(x => x.Name)
+                        .ToList(),
 
-                return ResponseObject2Json(budgets);
-            }
-        }
+                    Budgets = db.Budgets
+                    .AsNoTracking()
+                    .Where(x => x.OwnerId == UserId)
+                    .OrderBy(x => x.Name)
+                    .ToList(),
+                };
 
-        [Method.HttpPut]
-        public HttpResponseMessage ItemsCategoryPut(Item newItem)
-        {
-            Item insertItem = null;
-            if (db.Items.Any(item => item.Id == newItem.Id))
-            {
-                insertItem = db.Items.Find(newItem.Id);
-            }
-            else
-            {
-                insertItem = db.Items.Create();
-            }
-            insertItem.Name = newItem.Name;
-            insertItem.Category = db.CategoryItems.FirstOrDefault(x => x.Id == newItem.CategoryId);
-            insertItem.Deleted = newItem.Deleted;
-            insertItem.Description = newItem.Description;
-            insertItem.BudgetId = newItem.BudgetId;
-            using (db) { 
-                if (db.Items.Any(item => item.Id == newItem.Id)) { 
-                    db.Entry(insertItem).State = EntityState.Deleted;
-                    db.SaveChanges();
-                } 
-                db.Entry(insertItem).State = EntityState.Added;
-                db.SaveChanges();
-            }
-            return ResponseObject2Json(HttpStatusCode.Accepted);
-        }
-
-        [Method.HttpDelete]
-        public HttpResponseMessage ItemDelete(Guid deleteId)
-        {
-            using (db)
-            {
-                var deleteItems = db.Items.Where(Item => Item.Id == deleteId).ToList();
-                if (deleteItems.Count == 1) {
-                    db.Entry(deleteItems.First()).State = EntityState.Deleted;
-                    db.SaveChanges();
-                }
-            }
-            return ResponseObject2Json(HttpStatusCode.Moved);
-        }
-
-        [Method.HttpGet]
-        public HttpResponseMessage CategoryDelete(Guid deleteId)
-        {
-            using (db)
-            {
-                var deleteCategory = db.CategoryItems.Where(category => category.Id == deleteId).ToList();
-                if (deleteCategory.Count == 1)
+                model.Categories.ForEach(x =>
                 {
-                    db.Entry(deleteCategory.First()).State = EntityState.Deleted;
-                    db.SaveChanges();
-                }
+                    x.Items = db.Items.Any(z => z.CategoryId == x.Id) ? new List<Item> { new Item { } } : new List<Item>();
+                });
+
+                return ResponseObject2Json(model);
             }
-            return ResponseObject2Json(HttpStatusCode.Moved);
         }
 
-        [Method.HttpPost]
+        [HttpGet]
+        public HttpResponseMessage ItemsList(Guid categoryId)
+        {
+            using (db)
+            {
+                var model = new
+                {
+                    Items = db.Items
+                        .AsNoTracking()
+                        .Where(x => x.Category.Budget.OwnerId == UserId && x.CategoryId == categoryId)
+                        .OrderBy(x => x.Name)
+                        .ToList(),
+                };
+
+                model.Items.ForEach(x =>
+                {
+                    x.Motions = db.Motions.Any(z => z.ItemId == x.Id) ? new List<Motion> { new Motion() } : new List<Motion>();
+                });
+
+                return ResponseObject2Json(model);
+            }
+        }
+
+        [HttpPost]
         public HttpResponseMessage CategoryPost(CategoryItem newCategory)
         {
             using (db)
             {
-                var postCategories = db.CategoryItems.Where(category => category.Id == newCategory.Id).ToList();
-                if (postCategories.Count == 1)
+                var postCategories = db.CategoryItems.FirstOrDefault(category => category.Id == newCategory.Id);
+                var budget = db.Budgets.FirstOrDefault(x => x.OwnerId == UserId && x.Id == newCategory.BudgetId);
+
+                if (postCategories != null)
                 {
-                    db.Entry(postCategories.First()).State = EntityState.Modified;
-                }
-                else if (postCategories.Count == 0)
-                {
-                    var category = db.CategoryItems.Create();
-                    category.Name = newCategory.Name;
-                    category.Name = newCategory.Name;
-                    db.Entry(newCategory).State = EntityState.Added;
+                    postCategories.Name = newCategory.Name;
+                    postCategories.Description = newCategory.Description;
+                    db.Entry(postCategories).State = EntityState.Modified;
                 }
                 else
                 {
-                    return ResponseObject2Json(HttpStatusCode.NotModified);
+                    var category = db.CategoryItems.Create();
+                    category.Name = newCategory.Name;
+                    category.Description = newCategory.Description;
+                    category.BudgetId = budget.Id;
+                    db.Entry(newCategory).State = EntityState.Added;
                 }
                 db.SaveChanges();
             }
             return ResponseObject2Json(HttpStatusCode.Accepted);
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage CategoryDelete(Guid categoryId)
+        {
+            using (db)
+            {
+                var deleteCategory = db.CategoryItems.FirstOrDefault(x => x.Id == categoryId & x.Budget.OwnerId == UserId);
+                if (!db.Items.Any(x => x.CategoryId == deleteCategory.Id))
+                {
+                    db.Entry(deleteCategory).State = EntityState.Deleted;
+                    db.SaveChanges();
+                }
+            }
+
+            return ResponseObject2Json(HttpStatusCode.Moved);
+        }
+        
+        [HttpPut]
+        public HttpResponseMessage ItemsCategoryPut(Item newItem)
+        {
+            Item insertItem = db.Items.FirstOrDefault(x => x.Id == newItem.Id && x.Category.Budget.OwnerId == UserId);
+            var budget = db.Budgets.FirstOrDefault(x => x.Id == newItem.BudgetId && x.OwnerId == UserId);
+
+            if (insertItem == null)
+            {
+                insertItem = db.Items.Create();
+                insertItem.Id = Guid.NewGuid();
+                db.Items.Add(insertItem);
+            }
+
+            insertItem.Name = newItem.Name;
+            insertItem.Category = db.CategoryItems.FirstOrDefault(x => x.Id == newItem.CategoryId && x.Budget.OwnerId == UserId);
+            insertItem.Deleted = newItem.Deleted;
+            insertItem.Description = newItem.Description;
+            insertItem.BudgetId = budget.Id;
+            db.SaveChanges();
+
+            return ResponseObject2Json(HttpStatusCode.Accepted);
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage ItemDelete(Guid itemId, bool delete)
+        {
+            using (db)
+            {
+                var deleteItem = db.Items.FirstOrDefault(x => x.Id == itemId && x.Category.Budget.OwnerId == UserId);
+                if ((deleteItem.Deleted) && (!db.Motions.Any(x => x.ItemId == deleteItem.Id)) && (delete)) {
+                    db.Entry(deleteItem).State = EntityState.Deleted;
+                }
+                else
+                {
+                    deleteItem.Deleted = !deleteItem.Deleted;
+                }
+                db.SaveChanges();
+            }
+
+            return ResponseObject2Json(HttpStatusCode.Moved);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage MotionList(Guid itemId)
+        {
+            var model = new
+            {
+                Motions = db.Motions
+                    .Where(x => x.ItemId == itemId && x.Item.Category.Budget.OwnerId == UserId)
+                    .OrderByDescending(x => x.DateTime)
+                    .ToList()
+            };
+
+            return ResponseObject2Json(model);
         }
     }
 }

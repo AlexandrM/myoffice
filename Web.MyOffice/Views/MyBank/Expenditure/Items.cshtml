@@ -32,7 +32,7 @@
 <div ng-init="refresh()" >
     <div class="row">
         <button class="btn btn-success" ng-click="addItemDialog()">@R.R.Add</button>
-        <button class="btn btn-success" ng-click="CategoryItemEditDialog()">@R.R.Add @R.R.Category</button>
+        <button class="btn btn-success" ng-click="categoryItemEditDialog()">@R.R.Add @R.R.Category</button>
     </div>
 
     <div class="row" style="margin-top:20px" >
@@ -40,24 +40,39 @@
             <ul class="nav nav-pills nav-stacked">
                 <li ng-click="selectCategory(null)"><a>@R.R.All</a></li>
                 <li  ng-repeat="category in Categories">
-                    <a ng-click="selectCategory(category)">{{category.Name}}</a>
+                    <a href="" ng-click="selectCategory(category)">{{category.Name}}</a>
                 </li>
             </ul>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-9" ng-if="selectedCategory.Items">
+            <button class="btn btn-danger" ng-click="deleteCategory()" ng-if="selectedCategory.Items.length == 0">@R.R.Delete</button>
+            <hr>
             <table class="table table-bordered table-striped" style="width: 100%; margin:0px">
                 <tbody>
                     <tr>
+                        <th>@R.R.Deleted</th>
                         <th>@R.R.Name</th>
                         <th style="min-width: 330px">@R.R.Actions</th>
                     </tr>
-                    <tr ng-repeat="item in displayItems">
+                    <tr ng-repeat="item in Items">
+                        <td>
+                            <span ng-if="item.Deleted">
+                                @R.R.Yes
+                            </span>
+                            <span ng-if="!item.Deleted">
+                                @R.R.No
+                            </span>
+                        </td>
                         <td>
                             <span title="{{item.Description}}">{{item.Name}}</span>
                         </td>
                         <td>
                             <button class="btn btn-primary" ng-click="itemEditDialog(item)">@R.R.Edit</button>
-                            <button class="btn btn-danger"  ng-click="itemDelete(item)">@R.R.Delete</button>
+
+                            <button class="btn btn-danger"  ng-click="itemDelete(item, true)" ng-if="item.Deleted && item.Motions.length == 0">@R.R.Delete</button>
+                            <button class="btn btn-warning" ng-click="itemDelete(item, false)" ng-if="item.Deleted">@R.R.UnDelete</button>
+                            <button class="btn btn-warning" ng-click="itemDelete(item, false)" ng-if="!item.Deleted">@R.R.Delete</button>
+
                             <button class="btn btn-success" ng-click="itemMotionList(item)">@R.R.Motions</button>
                             <button class="btn btn-warning" ng-click="MotionMergeDialog(item)">@R.R.Merge</button>
                         </td>

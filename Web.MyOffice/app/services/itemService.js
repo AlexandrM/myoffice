@@ -5,11 +5,13 @@
 
     function itemService($resource) {
         return $resource('api/expenditures/', {}, {
-            categoryList: { method: 'GET', params: {}, isArray: true },
-            itemAdd: { method: 'PUT', params:{}, isArray: false },
+            categoryList: { method: 'GET', params: {}, isArray: false },
+            itemsList: { method: 'GET', params: {}, isArray: false },
+            itemAdd: { method: 'PUT', params: {}, isArray: false },
             itemDelete: { method: 'DELETE', params: {}, isArray: false },
             categoryPost: { method: 'POST', params:{}, isArray: false },
-            categoryDelete: { method: 'GET', params: {}, isArray: false }
+            categoryDelete: { method: 'DELETE', params: {}, isArray: false },
+            motionList: { method: 'GET', params: {}, isArray: false },
         });
     }
 })();

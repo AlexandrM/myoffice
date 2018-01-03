@@ -1,7 +1,7 @@
 ﻿<div id="CategoryItemEdit">
     <form name="ItemCategoryForm">
         <div class="modal-header">
-            <button type="button" class="close" ng-click="windowClose('CategoryItemEdit')">&times;</button>
+            <button type="button" class="close" ng-click="MWS.close('CategoryItemEdit')">&times;</button>
             <h4 class="modal-title">@R.R.Category</h4>
         </div>
         
@@ -29,18 +29,20 @@
                     <label for="categoryBudget">@R.R.Budget</label>
                 </div>
                 <div class="col-sm-8">
-                    <select id="categoryBudget" class="form-control" ng-model="newCategory.BudgetId" ng-required>
-                        <option value="" hidden>...</option>
-                        <option value="{{budget.Id}}" ng-repeat="budget in Budgets">
-                            {{budget.Name}}
-                        </option>
-                    </select>
+                    <select class="form-control" id="budgets" name="budgets" required
+                            ng-required="true"
+                            ng-model="newCategory.BudgetId"
+                            ng-options="o.Id as o.Name for o in Budgets"
+                            ng-class="{
+                                'required': CategoryEditForm.budgets.$error.required,
+                                'valid': CategoryEditForm.budgets.$valid,
+                                'invalid': CategoryEditForm.budgets.$invalid}" />
                 </div>
             </div>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" ng-click="newCategorySave(newCategory)"> @R.R.Save</button>
-            <button type="button" class="btn btn-default" ng-click="windowClose('CategoryItemEdit')">@R.R.Close</button>
+            <button type="button" class="btn btn-default" ng-click="MWS.close('CategoryItemEdit')">@R.R.Close</button>
         </div>
     </form>
 </div>
