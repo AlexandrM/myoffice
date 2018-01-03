@@ -146,14 +146,14 @@
                                 <th></th>
                             </tr>
                             <tr ng-repeat="item in importData | orderBy: 'started'">
-                                <td>{{item.started | amDateFormat:'L LTS'}}</td>
-                                <td>{{item.stoped | amDateFormat:'L LTS'}}</td>
+                                <td>{{item.Started | amDateFormat:'L LTS'}}</td>
+                                <td>{{item.Stoped | amDateFormat:'L LTS'}}</td>
                                 <td>{{realUsed(item) | minutes2hm}}</td>
                                 <td>{{comments(item)}}</td>
                                 <td>
-                                    <button ng-click="item.skip = !item.skip" class="btn btn-primary">
-                                        <span ng-show="!item.skip" class="glyphicon glyphicon-ok"></span>
-                                        <span ng-show="item.skip" class="glyphicon glyphicon-none"></span>
+                                    <button ng-click="item.Skip = !item.skip" class="btn btn-primary">
+                                        <span ng-show="!item.Skip" class="glyphicon glyphicon-ok"></span>
+                                        <span ng-show="item.Skip" class="glyphicon glyphicon-none"></span>
                                     </button>
                                 </td>
                             </tr>

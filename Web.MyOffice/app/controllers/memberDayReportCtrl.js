@@ -182,6 +182,7 @@
 
         $scope.importRefresh = function (day) {
             if (day) {
+                $scope.importModel.Day = $scope.memberDayReport.DateTime;
                 $scope.importModel.From = new Date($scope.importModel.Day);
                 $scope.importModel.To = new Date($scope.importModel.Day);
             }
@@ -197,12 +198,12 @@
 
         $scope.importStart = function () {
             $('#import').modal();
-            $scope.importRefresh();
+            $scope.importRefresh(true);
         };
 
         $scope.realUsed = function (iteration) {
-            var started = moment(iteration.started).toDate();
-            var stoped = moment(iteration.stoped).toDate();
+            var started = moment(iteration.Started).toDate();
+            var stoped = moment(iteration.Stoped).toDate();
             if (stoped > moment().toDate()) {
                 return 0;
             }
@@ -212,7 +213,7 @@
         $scope.total = function (all) {
             var total = 0;
             for (var i = 0; i < $scope.importData.length; i++) {
-                if ((all) || (!$scope.importData[i].skip)) {
+                if ((all) || (!$scope.importData[i].Skip)) {
                     total = total + $scope.realUsed($scope.importData[i]);
                 }
             }
@@ -244,9 +245,9 @@
             var text = '';
             for (var i = 0; i < $scope.importData.length; i++) {
                 if (!$scope.importData[i].skip) {
-                    for (var ic = 0; ic < $scope.importData[i].comments.length; ic++) {
-                        if ($scope.importData[i].comments[ic].text.substring(0, 1) !== '[') {
-                            text += $scope.importData[i].comments[ic].text + '\n';
+                    for (var ic = 0; ic < $scope.importData[i].Comments.length; ic++) {
+                        if ($scope.importData[i].Comments[ic].Text.substring(0, 1) !== '[') {
+                            text += $scope.importData[i].Comments[ic].Text + '\n';
                         }
                     }
                 }
@@ -256,9 +257,9 @@
 
         $scope.comments = function (item) {
             var text = '';
-            for (var ic = 0; ic < item.comments.length; ic++) {
-                if (item.comments[ic].text.substring(0, 1) !== '[') {
-                    text += item.comments[ic].text + '\n';
+            for (var ic = 0; ic < item.Comments.length; ic++) {
+                if (item.Comments[ic].Text.substring(0, 1) !== '[') {
+                    text += item.Comments[ic].Text + '\n';
                 }
             }
             return text;
