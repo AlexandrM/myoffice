@@ -3,7 +3,7 @@
 }
 
 <div id="categoryForm" style="padding: 10px">
-   <form name="EditForm" class="form-horizontal" ng-model-options="{updateOn: 'submit'}" ng-submit="categoryUpdate(newCategory,EditForm)">
+   <form name="EditForm" class="form-horizontal" ng-model-options="{updateOn: 'submit'}" ng-submit="categoryUpdate(newCategory, EditForm)" novalidate>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="MWS.close('CategoryEdit')">&times;</button>
             <h4 class="modal-title">@R.R.Edit</h4>
@@ -36,7 +36,7 @@
 
            <div class="form-group has-feedback"
                 ng-class="{'has-success': EditForm.budget.$valid && EditForm.$submitted,
-                           'has-warning': EditForm.budget.$invalid && EditForm.$submitted}">
+                           'has-error': EditForm.budget.$invalid && EditForm.$submitted}">
 
                <label for="budget" class="control-label col-sm-3">@R.R.Budget:</label>
                <div class="col-sm-9">

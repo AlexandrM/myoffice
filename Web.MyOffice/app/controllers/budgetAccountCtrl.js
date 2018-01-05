@@ -33,15 +33,14 @@
             ModalWindowService.open('AccountsController', 'CategoryEdit', $scope, 'modal-sm');
         };
 
-        $scope.categoryUpdate = function (newCategory,form) {
+        $scope.categoryUpdate = function (newCategory, form) {
             if (form.$valid) {
-            budgetAccountsService.postCategory({
-                Id: newCategory.Id,
-                BudgetId: newCategory.BudgetId,
-                Name: newCategory.Name,
-                Description: newCategory.Description,
-            },
-                function () {
+                budgetAccountsService.postCategory({
+                    Id: newCategory.Id,
+                    BudgetId: newCategory.BudgetId,
+                    Name: newCategory.Name,
+                    Description: newCategory.Description,
+                }, function () {
                     $scope.refresh();
                     ModalWindowService.close('CategoryEdit');
                     ModalWindowService.close('CategoryList');
