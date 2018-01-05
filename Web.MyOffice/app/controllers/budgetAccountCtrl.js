@@ -63,24 +63,26 @@
             ModalWindowService.open('AccountsController', 'AccountEdit', $scope, 'modal-sm');
         };
 
-        $scope.newAccountAdd = function (newAccount) {
-            newAccount.BudgetId = $scope.categories.find(function (val) {
-                return val.Id = newAccount.CategoryId;
-            }).BudgetId;
+        $scope.newAccountAdd = function (newAccount,form) {
+            if (form.$valid) {
+                newAccount.BudgetId = $scope.categories.find(function(val) {
+                    return val.Id = newAccount.CategoryId;
+                }).BudgetId;
 
-            budgetAccountsService.putAccount({
-                    Id: newAccount.Id,
-                    Name: newAccount.Name,
-                    Description: newAccount.Description,
-                    CreditLimit: newAccount.CreditLimit,
-                    CategoryId: newAccount.CategoryId,
-                    BudgetId: newAccount.BudgetId,
-                    CurrencyId: newAccount.CurrencyId
-                },
-                    function () {
+                budgetAccountsService.putAccount({
+                        Id: newAccount.Id,
+                        Name: newAccount.Name,
+                        Description: newAccount.Description,
+                        CreditLimit: newAccount.CreditLimit,
+                        CategoryId: newAccount.CategoryId,
+                        BudgetId: newAccount.BudgetId,
+                        CurrencyId: newAccount.CurrencyId
+                    },
+                    function() {
                         ModalWindowService.close('AccountEdit');
                         $scope.refresh();
                     });
+            }
         };
 
         $scope.accountDelete = function (account) {
