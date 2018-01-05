@@ -1,7 +1,4 @@
-﻿
-<link rel="stylesheet" href="~/Content/FormValidationStyles.css" />
-
-<form name="AddAccountForm" class="form-horizontal" style="padding: 10px">
+﻿<form name="EditForm" class="form-horizontal" style="padding: 10px" ng-model-options="{ updateOn:'submit' }" ng-submit="newAccountAdd(newAccount)"> 
     <div class="modal-header">
         <button type="button"
                 class="close"
@@ -15,84 +12,70 @@
 
     <div class="modal-body">
         <input type="hidden" ng-model="newAccount.Id"/>
-        <div class="form-group">
-            <label for="name" class="control-label col-sm-2">@R.R.Name:</label>
-            <div class="col-sm-10">
+        <div class="form-group has-feedback"
+             ng-class="{'has-success': EditForm.name.$valid  &&  EditForm.$submitted,
+                        'has-error':   EditForm.name.$invalid && EditForm.$submitted}">
+            <label for="name" class="control-label col-sm-3">@R.R.Name:</label>
+            <div class="col-sm-9">
                 <input type="text" class="form-control" id="name" name="name" required
+                       value="{{newAccount.Name}}"
                        ng-required="true"
-                       ng-minlength="1"
-                       ng-maxlength="15"
-                       ng-model="newAccount.Name"
-                       ng-class="{'valid': AddAccountForm.name.$valid,
-                                 'invalid': AddAccountForm.name.$invalid,
-                                 'required': AddAccountForm.name.$error.required}"/>
-                <div ng-if="AddAccountForm.name.$invalid && AddAccountForm.name.$dirty">
-                    <p ng-if="AddAccountForm.name.$error.minlength" class="error">Name should has one character at least.</p>
-                    <p ng-if="AddAccountForm.name.$error.maxlength" class="error">Name should has up to 50 characters long.</p>
+                       ng-minlength="@R.R.InputMinLength"
+                       ng-maxlength="@R.R.InputMaxLength"
+                       ng-model="newAccount.Name">
+                <div ng-if="EditForm.$submitted">
+                    <p ng-if="EditForm.name.$error.minlength" class="help-block has-error">@R.R.InputMinLengthWarning  @R.R.InputMinLength</p>
+                    <p ng-if="EditForm.name.$error.maxlength" class="help-block has-error">@R.R.InputMaxLengthWarning  @R.R.InputMaxLength</p>
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label for="currencies" class="control-label col-sm-2">@R.R.Currency:</label>
-            <div class="col-sm-10">
-                <select class="form-control" id="currencies" name="currencies" required
+        
+        <div class="form-group has-feedback" 
+             ng-class="{ 'has-success': EditForm.currency.$valid  && EditForm.$submitted,
+                         'has-warning':  EditForm.currency.$invalid && EditForm.$submitted }">
+            <label for="currency" class="control-label col-sm-3">@R.R.Currency:</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="currency" name="currency" ng-required="true"
                         ng-model="newAccount.CurrencyId"
-                        ng-options="o.Id as o.Name for o in currencies"
-                        ng-class="{'required': AddAccountForm.currencies.$error.required,
-                                   'valid': AddAccountForm.currencies.$valid,
-                                   'invalid': AddAccountForm.currencies.$invalid}"/>
+                        ng-options="o.Id as o.Name for o in currencies"/>
+                <p ng-if="EditForm.currency.$invalid && EditForm.$submitted" class="help-block has-error">@R.R.SelectValueWarning</p>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="categories" class="control-label col-sm-2">@R.R.Category:</label>
-            <div class="col-sm-10">
-                <select class="form-control" id="categories" name="categories" required
+        <div class="form-group has-feedback" 
+             ng-class="{ 'has-success': EditForm.category.$valid && EditForm.$submitted,
+                         'has-warning': EditForm.category.$invalid && EditForm.$submitted }">
+            <label for="category" class="control-label col-sm-3">@R.R.Category:</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="category" name="category" ng-required="true"
                         ng-model="newAccount.CategoryId"
-                        ng-options="o.Id as o.Name for o in categories"
-                        ng-class="{'required': AddAccountForm.categories.$error.required,
-                                   'valid': AddAccountForm.categories.$valid,
-                                   'invalid': AddAccountForm.categories.$invalid}"/>
+                        ng-options="o.Id as o.Name for o in categories"/>
+                <p ng-if="EditForm.$submitted" class="help-block has-error">@R.R.SelectValueWarning</p>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="creditLimit" class="control-label col-sm-2">@R.R.CreditLimit:</label>
-            <div class="col-sm-10">
-                <input type="number" class="form-control" id="creditLimit" name="creditLimit" min="0"
+        <div class="form-group has-feedback">
+            <label for="creditLimit" class="control-label col-sm-3">@R.R.CreditLimit:</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" id="creditLimit" name="creditLimit"
                        ng-required="required"
                        ng-model="newAccount.CreditLimit"
-                       value="{{newAccount.CreditLimit}}"
-                       ng-class="{'pristine':AddAccountForm.creditLimit.$pristine,
-                                 'valid':AddAccountForm.creditLimit.$valid,
-                                 'invalid':AddAccountForm.creditLimit.$invalid}"/>
-                <div ng-if="AddAccountForm.creditLimit.$invalid && AddAccountForm.creditLimit.$dirty">
-                    <p ng-if="AddAccountForm.creditLimit.$error.required" class="error">You should fill this filed.</p>
-                </div>
+                       value="{{newAccount.CreditLimit}}"/>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="description" class="control-label col-sm-2">@R.R.Description:</label>
-            <div class="col-sm-10">
+        <div class="form-group has-feedback">
+            <label for="description" class="control-label col-sm-3">@R.R.Description:</label>
+            <div class="col-sm-9">
                 <input type="text" class="form-control" id="description" name="description"
-                    ng-maxlength="50"
-                    ng-model="newAccount.Description"
-                    ng-class="{
-                        'pristine': AddAccountForm.description.$pristine,
-                        'valid': AddAccountForm.description.$valid,
-                        'invalid': AddAccountForm.description.$invalid}"
-                       />
-
-                <div ng-if="AddAccountForm.description.$invalid && AddAccountForm.description.$dirty">
-                    <p ng-if="AddAccountForm.description.$error.maxlength" class="error">Description should had up to 50 characters long.</p>
-                </div>
+                       ng-maxlength="50"
+                       ng-model="newAccount.Description"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2"></label>
-            <div class="col-sm-10">
+            <label class="control-label col-sm-3"></label>
+            <div class="col-sm-9">
                 <label for="deleted" class="control-label col-sm-2">@R.R.Deleted:</label>
                 <div class="col-sm-2">
                     <input type="checkbox" class="form-control" id="deleted" ng-model="newAccount.deleted"/>`
@@ -106,7 +89,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="submit" ng-click="newAccountAdd(newAccount)" class="btn btn-primary"> @R.R.Save</button>
+        <button type="submit" value="Submit" class="btn btn-primary"> @R.R.Save</button>
         <button type="button" ng-click="MWS.close('AccountEdit')" class="btn btn-default" data-dismiss="modal">@R.R.Close</button>
     </div>
 </form>
