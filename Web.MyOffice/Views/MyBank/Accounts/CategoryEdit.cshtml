@@ -2,73 +2,71 @@
     ViewBag.Title = "CategoryAdd";
 }
 
-<link rel="stylesheet" href="~/Content/FormValidationStyles.css" />
-
-<div id="categoryAccountForm" style="padding: 10px">
-   <form name="CategoryEditForm" class="form-horizontal">
+<div id="categoryForm" style="padding: 10px">
+   <form name="EditForm" class="form-horizontal" ng-model-options="{updateOn: 'submit'}" ng-submit="categoryUpdate(newCategory, EditForm)" novalidate>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="MWS.close('CategoryEdit')">&times;</button>
             <h4 class="modal-title">@R.R.Edit</h4>
         </div>
        
        <input type="hidden" ng-model="newCategory.Id"/>
-
+       
        <div class="modal-body">
-            <div class="form-group">
-                <label for="name" class="control-label col-sm-2">@R.R.Name:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="name" name="name" required 
-                           value="{{newCategory.Name}}"
-                           ng-required ="true"
-                           ng-minlength="1"
-                           ng-maxlength="15"
-                           ng-model="newCategory.Name"
-                           ng-class="{'valid':CategoryEditForm.name.$valid,
-                                      'invalid':CategoryEditForm.name.$invalid,
-                                      'required':CategoryEditForm.name.$error.required}" />
-                    
-                    <div ng-if="CategoryEditForm.name.$invalid && CategoryEditForm.name.$dirty">
-                        <p ng-if="CategoryEditForm.name.$error.minlength" class="error">Name should has one character at least.</p>
-                        <p ng-if="CategoryEditForm.name.$error.maxlength" class="error">Name should has up to 50 characters long.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="budgets" class="control-label col-sm-2">@R.R.Budget:</label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="budgets" name="budgets" required
-                            ng-required="true"
-                            ng-model="newCategory.BudgetId"
-                            ng-options="o.Id as o.Name for o in budgets"
-                            ng-class="{
-                                'required': CategoryEditForm.budgets.$error.required,
-                                'valid': CategoryEditForm.budgets.$valid,
-                                'invalid': CategoryEditForm.budgets.$invalid}"
-                            />
-                </div>
-            </div>
+           <div class="form-group has-feedback"
+                ng-class="{'has-success': EditForm.name.$valid && EditForm.$submitted,
+                           'has-error':  EditForm.name.$invalid && EditForm.$submitted}">
+               <label for="name" class="control-label col-sm-3">@R.R.Name:</label>
+               <div class="col-sm-9">
+                   <input type="text" class="form-control" id="name" name="name" required
+                          value="{{newCategory.Name}}"
+                          ng-required="true"
+                          ng-minlength="@R.R.InputMinLength"
+                          ng-maxlength="@R.R.InputMaxLength"
+                          ng-model="newCategory.Name">
+                   <div>
+                       <span ng-if="EditForm.name.$valid && EditForm.$submitted" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                       <span ng-if="EditForm.name.$invalid && EditForm.$submitted" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                   </div>
+                   <div ng-if="EditForm.$submitted">
+                        <p ng-if="EditForm.name.$error.minlength" class="help-block has-error">@R.R.InputMinLengthWarning  @R.R.InputMinLength </p>
+                        <p ng-if="EditForm.name.$error.maxlength" class="help-block has-error">@R.R.InputMaxLengthWarning  @R.R.InputMaxLength </p>
+                   </div>
+                   </div>
+           </div>
 
-            <div class="form-group">
-                <label for="description" class="control-label col-sm-2">@R.R.Description:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="description" name="description"
-                           value="{{newCategory.Description}}" 
-                           ng-maxlength="50"
-                           ng-model="newCategory.Description" 
-                           ng-class="{'valid':CategoryEditForm.description.$valid,
-                                      'invalid':CategoryEditForm.description.$invalid,
-                                      'required':CategoryEditForm.description.$error.required}"/>
-                   
-                    <div ng-if="CategoryEditForm.description.$invalid && CategoryEditForm.description.$dirty">
-                        <p ng-if="CategoryEditForm.description.$error.maxlength" class="error">Description should had up to 50 characters long.</p>
-                    </div>
-                </div>
+           <div class="form-group has-feedback"
+                ng-class="{'has-success': EditForm.budget.$valid && EditForm.$submitted,
+                           'has-error': EditForm.budget.$invalid && EditForm.$submitted}">
+
+               <label for="budget" class="control-label col-sm-3">@R.R.Budget:</label>
+               <div class="col-sm-9">
+                   <select class="form-control" id="budget" name="budget" ng-required="true"
+                           ng-model="newCategory.BudgetId"
+                           ng-options="o.Id as o.Name for o in budgets" />
+                   <p ng-if="EditForm.budget.$invalid && EditForm.$submitted" class="help-block has-error">@R.R.SelectValueWarning</p>
+                   <div ng-if="EditForm.$submitted">
+                       <span ng-if="EditForm.budget.$valid"
+                             class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                       <span ng-if="EditForm.budget.$invalid"
+                             class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true"></span>
+                   </div>
+               </div>
             </div>
-        </div>
+               <div class="form-group has-feedback"
+                    ng-class="{'has-success': EditForm.description.$valid && EditForm.$submitted}">
+                   <label for="description" class="control-label col-sm-3">@R.R.Description:</label>
+                   <div class="col-sm-9">
+                       <input type="text" class="form-control" id="description" name="description"
+                              value="{{newCategory.Description}}"
+                              ng-model="newCategory.Description" />
+                       <span ng-if="EditForm.description.$valid && EditForm.$submitted" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                   </div>
+               </div>
+           </div>
+
      
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="categoryUpdate(newCategory)">@R.R.Save</button>
+            <button type="submit" value="submit" class="btn btn-default" data-dismiss="modal" >@R.R.Save</button>
         </div>
     </form>
 </div>
