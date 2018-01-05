@@ -33,7 +33,8 @@
             ModalWindowService.open('AccountsController', 'CategoryEdit', $scope, 'modal-sm');
         };
 
-        $scope.categoryUpdate = function (newCategory) {
+        $scope.categoryUpdate = function (newCategory,form) {
+            if (form.$valid) {
             budgetAccountsService.postCategory({
                 Id: newCategory.Id,
                 BudgetId: newCategory.BudgetId,
@@ -45,6 +46,7 @@
                     ModalWindowService.close('CategoryEdit');
                     ModalWindowService.close('CategoryList');
                 });
+            }
         };
 
         $scope.categoryDelete = function (category) {

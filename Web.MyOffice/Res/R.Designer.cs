@@ -673,6 +673,42 @@ namespace R {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 25.
+        /// </summary>
+        public static string InputMaxLength {
+            get {
+                return ResourceManager.GetString("InputMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Длинна не более.
+        /// </summary>
+        public static string InputMaxLengthWarning {
+            get {
+                return ResourceManager.GetString("InputMaxLengthWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3.
+        /// </summary>
+        public static string InputMinLength {
+            get {
+                return ResourceManager.GetString("InputMinLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Длинна не менее.
+        /// </summary>
+        public static string InputMinLengthWarning {
+            get {
+                return ResourceManager.GetString("InputMinLengthWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Внутренние движения.
         /// </summary>
         public static string InternalMotions {
@@ -1164,6 +1200,15 @@ namespace R {
         public static string SelectBudget {
             get {
                 return ResourceManager.GetString("SelectBudget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пожалуйста, выберите значение.
+        /// </summary>
+        public static string SelectValueWarning {
+            get {
+                return ResourceManager.GetString("SelectValueWarning", resourceCulture);
             }
         }
         

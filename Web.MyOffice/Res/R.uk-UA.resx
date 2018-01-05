@@ -567,4 +567,19 @@
   <data name="CantDeleteCurrency1" xml:space="preserve">
     <value>Неможливо видалити валюту, існують прив'язані рахунки!</value>
   </data>
+  <data name="InputMaxLength" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="InputMaxLengthWarning" xml:space="preserve">
+    <value>Довжина не бiльше</value>
+  </data>
+  <data name="InputMinLength" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="InputMinLengthWarning" xml:space="preserve">
+    <value>Довжина не менше</value>
+  </data>
+  <data name="SelectValueWarning" xml:space="preserve">
+    <value>Будь ласка, виберiть значення</value>
+  </data>
 </root>
