@@ -44,6 +44,7 @@
                     $scope.refresh();
                     ModalWindowService.close('CategoryEdit');
                     ModalWindowService.close('CategoryList');
+                    ModalWindowService.close('AccountEdit');
                 });
             }
         };
