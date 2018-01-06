@@ -25,7 +25,7 @@
                 <div ng-if="EditForm.$submitted && EditForm.$invalid">
                     <p ng-if="EditForm.name.$error.minlength" class="help-block has-error">@R.R.InputMinLengthWarning  @R.R.InputMinLength</p>
                     <p ng-if="EditForm.name.$error.maxlength" class="help-block has-error">@R.R.InputMaxLengthWarning  @R.R.InputMaxLength</p>
-                    <p ng-if="EditForm.name.$isEmpty()" class="help-block has-error">@R.R.SelectValueWarning</p>
+                    <p ng-if="EditForm.name.$error.required" class="help-block has-error">@R.R.SelectValueWarning</p>
                 </div>
             </div>
         </div>
