@@ -1,4 +1,4 @@
-﻿<form name="EditForm" class="form-horizontal" style="padding: 10px" ng-model-options="{ updateOn:'submit' }" ng-submit="newAccountAdd(newAccount, form)"> 
+﻿<form name="EditForm" class="form-horizontal" style="padding: 10px" novalidate  ng-model-options="{ updateOn:'submit' }" ng-submit="newAccountAdd(newAccount,EditForm)"> 
     <div class="modal-header">
         <button type="button"
                 class="close"
@@ -13,8 +13,7 @@
     <div class="modal-body">
         <input type="hidden" ng-model="newAccount.Id"/>
         <div class="form-group has-feedback"
-             ng-class="{'has-success': EditForm.name.$valid  &&  EditForm.$submitted,
-                        'has-error':   EditForm.name.$invalid && EditForm.$submitted }">
+             ng-class="{'has-error':   EditForm.name.$invalid && EditForm.$submitted }">
             <label for="name" class="control-label col-sm-3">@R.R.Name:</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control" id="name" name="name" required
@@ -23,16 +22,16 @@
                        ng-minlength="@R.R.InputMinLength"
                        ng-maxlength="@R.R.InputMaxLength"
                        ng-model="newAccount.Name">
-                <div ng-if="EditForm.$submitted">
+                <div ng-if="EditForm.$submitted && EditForm.$invalid">
                     <p ng-if="EditForm.name.$error.minlength" class="help-block has-error">@R.R.InputMinLengthWarning  @R.R.InputMinLength</p>
                     <p ng-if="EditForm.name.$error.maxlength" class="help-block has-error">@R.R.InputMaxLengthWarning  @R.R.InputMaxLength</p>
+                    <p ng-if="EditForm.name.$isEmpty()" class="help-block has-error">@R.R.SelectValueWarning</p>
                 </div>
             </div>
         </div>
         
         <div class="form-group has-feedback" 
-             ng-class="{ 'has-success': EditForm.currency.$valid  && EditForm.$submitted,
-                         'has-error':  EditForm.currency.$invalid && EditForm.$submitted }">
+             ng-class="{ 'has-error':  EditForm.currency.$invalid && EditForm.$submitted }">
             <label for="currency" class="control-label col-sm-3">@R.R.Currency:</label>
             <div class="col-sm-9">
                 <select class="form-control" id="currency" name="currency" ng-required="true"
@@ -43,14 +42,13 @@
         </div>
 
         <div class="form-group has-feedback" 
-             ng-class="{ 'has-success': EditForm.category.$valid && EditForm.$submitted,
-                         'has-error': EditForm.category.$invalid && EditForm.$submitted }">
+             ng-class="{ 'has-error': EditForm.category.$invalid && EditForm.$submitted }">
             <label for="category" class="control-label col-sm-3">@R.R.Category:</label>
             <div class="col-sm-9">
                 <select class="form-control" id="category" name="category" ng-required="true"
                         ng-model="newAccount.CategoryId"
                         ng-options="o.Id as o.Name for o in categories"/>
-                <p ng-if="EditForm.$submitted" class="help-block has-error">@R.R.SelectValueWarning</p>
+                <p ng-if="EditForm.$submitted && EditForm.$invalid" class="help-block has-error">@R.R.SelectValueWarning</p>
             </div>
         </div>
 
@@ -60,7 +58,7 @@
                 <input type="number" class="form-control" id="creditLimit" name="creditLimit"
                        ng-required="required"
                        ng-model="newAccount.CreditLimit"
-                       value="{{newAccount.CreditLimit}}"/>
+                       value="{{+newAccount.CreditLimit}}"/>
             </div>
         </div>
 
