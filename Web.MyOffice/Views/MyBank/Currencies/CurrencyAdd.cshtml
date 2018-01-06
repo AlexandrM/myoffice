@@ -1,72 +1,64 @@
-﻿<link rel="stylesheet" href="~/Content/FormValidationStyles.css" /> 
-    <form name="CurrencyEditForm" class="form-horizontal" style="padding: 10px">
+﻿<form name="EditForm"
+      class="form-horizontal"
+      style="padding: 10px"
+      novalidate
+      ng-model-options="{updateOn:'submit'}"
+      ng-submit="addCurrency(newCurrency,EditForm)">
+    
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="closeWindow('CurrencyAdd')" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">@R.R.Currency</h4>
+    </div>
 
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" ng-click="closeWindow('CurrencyAdd')" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">@R.R.Currency</h4>
+    <div class="modal-body">
+        <div class="form-group has-feedback" ng-class="{'has-error':EditForm.name.$invalid && EditForm.$submitted}">
+            <label for="name" class="control-label col-sm-3">@R.R.Name</label>
+            <div class="col-sm-9">
+                <input id="name" name="name" type="text" class="form-control"
+                       ng-model="newCurrency.Name"
+                       value="{{newCurrency.Name}}"
+                       ng-required="true"
+                       ng-minlength="@R.R.InputMinLength"
+                       ng-maxlength="@R.R.InputMaxLength"/>
+                <div ng-if="EditForm.name.$invalid && EditForm.$submitted">
+                    <p ng-if="EditForm.name.$error.minlength" class="help-block has-error">@R.R.InputMinLengthWarning @R.R.InputMinLength</p>
+                    <p ng-if="EditForm.name.$error.maxlength" class="help-block has-error">@R.R.InputMaxLengthWarning @R.R.InputMaxLength</p>
+                    <p ng-if="EditForm.name.$error.required" class="help-block has-error">@R.R.SelectValueWarning</p>
+                </div>
+            </div>
         </div>
 
-        <div class="modal-body">
+        <div class="form-group has-feedback" ng-class="{'has-error':EditForm.shortName.$invalid && EditForm.$submitted}">
+            <label for="shortName" class="control-label col-sm-3">@R.R.ShortName</label>
+            <div class="col-sm-9">
+                <input id="shortName" name="shortName" class="form-control" type="text"
+                       ng-model="newCurrency.ShortName"
+                       value="{{newCurrency.ShortName}}"
+                       ng-required="true"
+                       ng-minlength="@R.R.InputMinLength"
+                       ng-maxlength="@R.R.InputMaxLength"/>
+                <div ng-if="EditForm.shortName.$invalid && EditForm.$submitted">
+                    <p ng-if="EditForm.shortName.$error.minlength" class="help-block has-error">@R.R.InputMinLengthWarning @R.R.InputMinLength</p>
+                    <p ng-if="EditForm.shortName.$error.maxlength" class="help-block has-error">@R.R.InputMaxLengthWarning @R.R.InputMaxLength</p>
+                    <p ng-if="EditForm.shortName.$error.required" class="help-block has-error">@R.R.SelectValueWarning</p>
+                </div>
+            </div>
+        </div>
 
-            <div class="form-group">
-                <label for="name" class="control-label col-sm-3">@R.R.Name</label>
-                <div class="col-sm-9">
-                    <input id="name" name="name" type="text" class="form-control"
-                        ng-model="newCurrency.Name"
-                        value="{{newCurrency.Name}}"
+        <div class="form-group has-feedback" ng-class="{'has-error':EditForm.currencyType.$invalid && EditForm.$submitted}">
+            <label for="currencyType" class="control-label col-sm-3">@S.Type</label>
+            <div class="col-sm-9">
+                <select id="currencyType" name="currencyType" class="form-control" type="text"
+                        ng-model="newCurrency.CurrencyType"
                         ng-required="true"
-                        ng-minlength="1"
-                        ng-maxlength="25"
-                        ng-class="{
-                            'valid':CurrencyEditForm.name.$valid,
-                            'invalid':CurrencyEditForm.name.$invalid,
-                            'required':CurrencyEditForm.name.$error.required}" 
-                    />
-                    <div ng-if="CurrencyEditForm.name.$invalid && CurrencyEditForm.name.$dirty">
-                        <p ng-if="CurrencyEditForm.name.$error.minlength" class="error">Name should has one character at least.</p>
-                        <p ng-if="CurrencyEditForm.name.$error.maxlength" class="error">Name should has up to 25 characters long.</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="form-group">
-                <label for="shortName" class="control-label col-sm-3">@R.R.ShortName</label>
-                <div class="col-sm-9">
-                    <input id="shortName" name="shortName" class="form-control" type="text"
-                           ng-model="newCurrency.ShortName"
-                           value="{{newCurrency.ShortName}}"
-                           ng-required="true"
-                           ng-minlength="1"
-                           ng-maxlength="25"
-                           ng-class="{
-                            'valid':CurrencyEditForm.shortName.$valid,
-                            'invalid':CurrencyEditForm.shortName.$invalid,
-                            'required':CurrencyEditForm.shortName.$error.required}" />
-                    <div ng-if="CurrencyEditForm.shortName.$invalid && CurrencyEditForm.shortName.$dirty">
-                        <p ng-if="CurrencyEditForm.shortName.$error.minlength" class="error">Short name should has one character at least.</p>
-                        <p ng-if="CurrencyEditForm.shortName.$error.maxlength" class="error">Short name should has up to 25 characters long.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="currencyType" class="control-label col-sm-3">@S.Type</label>
-                <div class="col-sm-9">
-                    <select id="currencyType" name="currencyType" class="form-control" type="text"
-                            ng-model="newCurrency.CurrencyType"
-                            ng-required="true"
-                            ng-options="o.Id as o.Name for o in currencyTypes"
-                            ng-class="{
-                            'valid': CurrencyEditForm.currencyType.$valid,
-                            'invalid': CurrencyEditForm.currencyType.$invalid,
-                            'required': CurrencyEditForm.currencyType.$error.required}"></select>
-                </div>
+                        ng-options="o.Id as o.Name for o in currencyTypes"/>
+                <p ng-if="EditForm.currencyType.$error.required && EditForm.$submitted" class="help-block has-error">@R.R.SelectValueWarning</p>
             </div>
         </div>
+    </div>
 
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" ng-click="addCurrency(newCurrency)">@R.R.Save</button>
-            <button type="button" class="btn btn-default" ng-click="closeWindow('CurrencyAdd')">@R.R.Close</button>
-        </div>
-    </form>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-click="">@R.R.Save</button>
+        <button type="button" class="btn btn-default" ng-click="closeWindow('CurrencyAdd')">@R.R.Close</button>
+    </div>
+</form>

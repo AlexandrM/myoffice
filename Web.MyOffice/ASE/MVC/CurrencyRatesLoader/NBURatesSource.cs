@@ -53,7 +53,7 @@ namespace ASE
                 {
                     var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + GetRouteParamString()).Replace("RUB","RUR");
                     var loadedRates = JsonConvert.DeserializeObject<NBUCurrency[]>(stringRawData).ToList();
-                    LoadedRates = loadedRates.Join(userTypes,
+                    LoadedRates = loadedRates.Join(userTypes.Distinct(),
                         rate => rate.cc,
                         type => type,
                         (rate, type) =>
