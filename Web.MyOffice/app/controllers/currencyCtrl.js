@@ -49,9 +49,11 @@
                 });
         };
 
-        $scope.addCurrency = function (newCurrency) {
+        $scope.addCurrency = function (newCurrency, form) {
+            if (form.$valid) {
                 $scope.postCurrency(newCurrency);
-            };
+            }
+        };
 
         $scope.currencyArchive = function (currency) {
             if (!currency.MyCurrency) {

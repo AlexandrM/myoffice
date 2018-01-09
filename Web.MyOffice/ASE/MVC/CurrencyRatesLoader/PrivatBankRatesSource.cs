@@ -56,7 +56,7 @@ namespace ASE
                 {
                     var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + GetRouteParamString());
                     var loadedRates = JsonConvert.DeserializeObject<PrivateBankCurrency[]>(stringRawData).ToList();
-                    LoadedRates = loadedRates.Join(userTypes,
+                    LoadedRates = loadedRates.Join(userTypes.Distinct(),
                         rate => rate.ccy,
                         type => type,
                         (rate, type) =>

@@ -68,7 +68,7 @@ namespace ASE
                 {
                     var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + GetRouteParamString()).Replace(',','.');                    
                     var loadedRates = JsonConvert.DeserializeObject<CBRCurrencyContainer>(JsonConvert.SerializeXNode(XDocument.Parse(stringRawData).Root)).ValCurs.Valute.ToList(); 
-                    LoadedRates = loadedRates.Join(userTypes,
+                    LoadedRates = loadedRates.Join(userTypes.Distinct(),
                         rate => rate.CharCode,
                         type => type,
                         (rate, type) =>
