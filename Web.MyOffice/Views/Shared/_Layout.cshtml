@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html >
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -112,10 +112,11 @@
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Settlements<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" >
                                 <li><a href="~/Project#/Debts/1">@S.MemberDebt</a></li>
                                 <li><a href="~/Project#/Debts/2">@S.ImplementerDebt</a></li>
                                 <li class="divider"></li>
+                                {{}}
                                 <li><a href="~/Project#/memberdayreport">@S.MemberDayReports</a></li>
                                 <li><a href="~/Project#/memberpayment">@S.Payments</a></li>
                                 <li class="divider"></li>
@@ -126,7 +127,7 @@
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Finance<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" ng-controller="">
                                 @{
                                     Guid budgetId = Guid.Empty;
                                     if (Request.Cookies["BudgetId"] != null)
@@ -173,6 +174,8 @@
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink(S.Reports, "Index", "MyBankReports")</li>
                                 <li class="divider"></li>
+                                <li><a href="~/Project#/counter">@R.R.DepostitsCredits</a></li>
+                                <li class="divider"></li>
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.References</a>
                                     <ul class="dropdown-menu">
@@ -207,53 +210,55 @@
         </footer>
     </div>
 
-    <div class="navbar navbar-inverse navbar-fixed-bottom">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse">
-                @{
-                    List<KeyValuePair<string, string>> history = (Session["ASEHistory"] as List<KeyValuePair<string, string>>);
-                    history = history ?? new List<KeyValuePair<string, string>>();
+<div class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse">
+            @{
+                List<KeyValuePair<string, string>> history = (Session["ASEHistory"] as List<KeyValuePair<string, string>>);
+                history = history ?? new List<KeyValuePair<string, string>>();
+            }
+            <ul class="nav navbar-nav">
+                @if (history.Count > 1)
+                { 
+                    <li><a href="@history[history.Count - 2].Value"><span class="glyphicon glyphicon-chevron-left" title="@S.Back (@history[history.Count - 2].Key)"></span></a></li>
                 }
-                <ul class="nav navbar-nav">
-                    @if (history.Count > 1)
-                    { 
-                        <li><a href="@history[history.Count - 2].Value"><span class="glyphicon glyphicon-chevron-left" title="@S.Back (@history[history.Count - 2].Key)"></span></a></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.History<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    @{
+                        for (int i = history.Count - 2; i >= 0; i--)
+                        {
+                            <li><a href="@history[i].Value">@history[i].Key</a></li>
+                        }
                     }
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.History<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            @{
-                                for (int i = history.Count - 2; i >= 0; i--)
-                                {
-                                    <li><a href="@history[i].Value">@history[i].Key</a></li>
-                                }
-                            }
-                        </ul>
-                    <li/>
                 </ul>
-                <ul class="nav navbar-nav">
-                    @Html.Partial("Language")
-                </ul>
+                <li/>
+            </ul>
+            <ul class="nav navbar-nav">
+                @Html.Partial("Language")
+            </ul>
 
-                @if (Request.IsAuthenticated)
-                {
-                    @Html.Partial("_LoginPartial")
-                }
-            </div>
+            @if (Request.IsAuthenticated)
+            {
+                @Html.Partial("_LoginPartial")
+            }
         </div>
     </div>
+</div>
 </body>
 </html>
 
 <script>
     "use strict";
+
+
 
     var globalDateFormats = [];
 

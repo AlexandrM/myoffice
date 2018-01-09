@@ -304,6 +304,7 @@
     <Compile Include="Controllers\API\TimeLogger\TimeLoggerLogItemController.cs" />
     <Compile Include="Controllers\API\TimeLogger\TimeLoggerApplicationArgumentController.cs" />
     <Compile Include="Controllers\API\TimeLogger\TimeLoggerStartStopController.cs" />
+    <Compile Include="Controllers\CounterController.cs" />
     <Compile Include="Controllers\DebtsController.cs" />
     <Compile Include="Controllers\ImplementerDebtController.cs" />
     <Compile Include="Controllers\ImplementerMotionsController.cs" />
@@ -412,6 +413,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\controllers\budgetCtrl.js" />
+    <Content Include="app\controllers\counterCtrl.js" />
     <Content Include="app\services\budgetAccountsService.js" />
     <Content Include="app\controllers\currencyCtrl.js" />
     <Content Include="app\controllers\debtsCtrl.js" />
@@ -1293,6 +1295,7 @@
     <Content Include="Views\MyBank\Accounts\AccountList.cshtml" />
     <Content Include="Views\MyBank\Accounts\CategoryEdit.cshtml" />
     <Content Include="Views\MyBank\Accounts\CategoryList.cshtml" />
+    <Content Include="Views\MyBank\Counter\List.cshtml" />
     <None Include="Web.appSettings.config" />
     <Content Include="Web.appSettings.config.default" />
     <None Include="Web.connectionStrings.config">
@@ -1435,6 +1438,7 @@
     <Folder Include="ASE\MVC\Angular\" />
     <Folder Include="Rotativa\" />
     <Folder Include="Scripts\jqPlot\plugins\" />
+    <Folder Include="Views\Counter\" />
     <Folder Include="Views\GlobalSelect\" />
     <Folder Include="Views\Member\" />
     <Folder Include="Views\MyBank\Finance\" />

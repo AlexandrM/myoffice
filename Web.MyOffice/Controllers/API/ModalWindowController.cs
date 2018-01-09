@@ -35,6 +35,9 @@ namespace Web.MyOffice.Controllers.API
                 case "ExpenditureController":
                     htmlText = (new MVC.ExpenditureController()).RenderPartialView(viewName);
                     break;
+                case "CounterController":
+                    htmlText = (new MVC.CounterController()).RenderPartialView(viewName);
+                    break;
             }
             return ResponseObject2Json(htmlText);
         }

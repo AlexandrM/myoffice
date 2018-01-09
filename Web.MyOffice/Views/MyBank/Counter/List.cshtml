@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+<form class="">
+    <div class="modal-header">
+        <h4 class="modal-title">@R.R.BanknoteCounter</h4>
+    </div>
+    <div clas="modal-body">
+        <table class="table  table-striped">
+            <tr>
+                <th>@R.R.Banknote</th>
+                <th>@R.R.Quantity</th>
+                <th>@R.R.Total</th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="banknote in banknotes">
+                <td>
+                    <input type="number" class="form-control" disabled ng-model="banknote.nominal"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" min="0"  ng-change="banknote.totalCostCalc()"  ng-model="banknote.quantity"/>
+                </td>
+                <td>
+                    <input class="form-control" type="text"disabled value="{{banknote.totalCost}}"/>
+                </td>
+                <td>
+                    <button class="form-control btn btn-danger" ng-click="DeleteBanknote(banknote)">@R.R.Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="form-control btn btn-success"  ng-disabled="disableButton" ng-click="AddBanknote()">@R.R.Add</button>
+                </td>
+                <td>
+                    <select class="form-control" ng-options="nominal as nominal for nominal in nominals" ng-model="banknote.selectedNominal"></select>
+                </td>
+                <th class="text-right">
+                    @R.R.Total:
+                </th>
+                <td >
+                    <input id="totalMoney"  type="text" class="form-control" disabled value="{{totalMoney}}"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default">@R.R.Close</button>
+    </div>
+</form>
