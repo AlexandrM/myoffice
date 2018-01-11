@@ -75,6 +75,7 @@ namespace ASE
                         new KeyValuePair<string, decimal>(type, rate.Value/ rate.Nominal))
                         .ToDictionary(KeyValuePair => (CurrencyType)Enum.Parse(typeof(CurrencyType), KeyValuePair.Key),
                                       KeyValuePair => KeyValuePair.Value);
+                    LoadedRates.Add(CurrencyType.RUR, 1);
                 }
                 return true;
             }
