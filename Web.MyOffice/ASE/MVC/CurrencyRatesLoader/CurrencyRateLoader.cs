@@ -5,6 +5,8 @@ using System.Web;
 using Web.MyOffice.Models;
 using Web.MyOffice.Data;
 using System.Data.Entity;
+using System.Drawing.Drawing2D;
+using WebGrease.Css.Extensions;
 
 namespace ASE
 {
@@ -33,30 +35,49 @@ namespace ASE
                 var source = Sources.Find(src => src.Name == name);
                 if (source == null) return false;
 
-                var userRates = Db.Currencies.Where(currency => currency.UserId == UserId).ToList();
+                var userCurrencies = Db.Currencies.Where(currency => currency.UserId == UserId).ToList();
 
-                if (source.Load(UserCurrencyTypeString(userRates)))
+                if (source.Load(UserCurrencyTypeString(userCurrencies)))
                 {
-                    Db.CurrencyRates.RemoveRange(Db.CurrencyRates);
-                    var currencies = Db.Currencies.ToList();
-                    CurrencyRate currencyRate = null;
-                    var rates = new List<CurrencyRate>();
-                    decimal value = 0;
-
-                    foreach (var currency in currencies)
+                    var Idgroups = Db.CurrencyRates.Where(rate => rate.Currency.UserId == UserId)
+                        .GroupBy(rate => rate.CurrencyId);
+                    var lastDbRates = new List<CurrencyRate>();
+                    foreach (var group in Idgroups)
                     {
-                        value = source.LoadedRates.FirstOrDefault(rate => rate.Key == currency.CurrencyType).Value;
-                        currency.Value = value==0?1:value;
-                        currencyRate = new CurrencyRate();
-                        currencyRate.CurrencyId = currency.Id;
-                        currencyRate.Currency = currency;
-                        currencyRate.Value = currency.Value;
-                        currencyRate.DateTime = DateTime.Now;
-                        rates.Add(currencyRate);
+                        lastDbRates.Add(group.FirstOrDefault(
+                            rate => rate.DateTime == group.Max(grp => grp.DateTime)));
                     }
-                Db.CurrencyRates.AddRange(rates);
-                Db.SaveChanges();
-            }
+
+                   var  newDbRates = source.LoadedRates.Join(lastDbRates,
+                            outer => outer.Key,
+                            inner => inner.Currency.CurrencyType,
+                            (outer, inner) => new CurrencyRate()
+                            {
+                                Id = inner.Id,
+                                Currency = inner.Currency,
+                                CurrencyId = inner.CurrencyId,
+                                DateTime = DateTime.Now,
+                                Value = Math.Round(inner.Value,4) != Math.Round(outer.Value, 4) ? outer.Value : 0
+                            }).Where(rate => rate.Value != 0).Distinct().ToList();
+
+                    var DbCurTypes = lastDbRates.Select(x => x.Currency.CurrencyType).ToList();
+                    var LoadedRatesCurTypes = source.LoadedRates.Keys.ToList();
+                    var newCurTypes = LoadedRatesCurTypes.Except(DbCurTypes).ToList();
+
+                    newDbRates.AddRange(newCurTypes.Select(type => new CurrencyRate()
+                    { 
+
+                        Currency = userCurrencies.Find(cur => cur.CurrencyType == type),
+                        CurrencyId = userCurrencies.Find(cur => cur.CurrencyType == type).Id,
+                        DateTime=DateTime.Now,
+                        Value = source.LoadedRates.ToList().Find(pair=>pair.Key == type).Value
+                    }));
+
+                   Db.CurrencyRates.AddRange(newDbRates);
+                   newDbRates.ForEach(rate=> userCurrencies.Find(cur=>cur.Id == rate.CurrencyId).Value = rate.Value);
+                   userCurrencies.ForEach(currency=> Db.Entry(currency).State = EntityState.Modified);
+                   Db.SaveChanges();
+                }
                 return true;
             }
 

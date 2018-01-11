@@ -60,6 +60,7 @@ namespace ASE
                         new KeyValuePair<string, decimal>(type, rate.rate))
                         .ToDictionary(KeyValuePair => (CurrencyType)Enum.Parse(typeof(CurrencyType), KeyValuePair.Key),
                                       KeyValuePair => KeyValuePair.Value);
+                    LoadedRates.Add(CurrencyType.UAH, 1);
                 }
                 return true;
             }
