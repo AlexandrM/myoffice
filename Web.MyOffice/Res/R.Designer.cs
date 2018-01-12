@@ -511,15 +511,6 @@ namespace R {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Депозиты/кредиты.
-        /// </summary>
-        public static string DepostitsCredits {
-            get {
-                return ResourceManager.GetString("DepostitsCredits", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Описание.
         /// </summary>
         public static string Description {

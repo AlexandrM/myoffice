@@ -86,7 +86,7 @@
                 controller: 'itemCtrl'
             }).
 			when('/counter', {
-                templateUrl: 'counter/list',
+                template: '',
                 controller: 'counterCtrl'
             }).
             otherwise({

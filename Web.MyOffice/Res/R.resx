@@ -594,7 +594,4 @@
   <data name="Quantity" xml:space="preserve">
     <value>Колличество</value>
   </data>
-  <data name="DepostitsCredits" xml:space="preserve">
-    <value>Депозиты/кредиты</value>
-  </data>
 </root>
