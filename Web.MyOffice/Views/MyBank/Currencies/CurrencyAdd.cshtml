@@ -55,6 +55,18 @@
                 <p ng-if="EditForm.currencyType.$error.required && EditForm.$submitted" class="help-block has-error">@R.R.SelectValueWarning</p>
             </div>
         </div>
+
+        <div class="form-group has-feedback" ng-class="{'has-error':EditForm.currencyType.$invalid && EditForm.$submitted}">
+            <label for="value" class="control-label col-sm-3">@S.Rate</label>
+            <div class="col-sm-9">
+                <input type="number" id="value" name="value" class="form-control"
+                       ng-model="newCurrency.Value"
+                       ng-required="true"
+                       ng-disabled="newCurrency.Value==1"/>
+                <p ng-if="EditForm.value.$error.required && EditForm.$submitted" class="help-block has-error">@R.R.SelectValueWarning</p>
+
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer">

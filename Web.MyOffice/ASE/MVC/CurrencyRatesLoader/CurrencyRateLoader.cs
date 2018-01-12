@@ -6,6 +6,7 @@ using Web.MyOffice.Models;
 using Web.MyOffice.Data;
 using System.Data.Entity;
 using System.Drawing.Drawing2D;
+
 using WebGrease.Css.Extensions;
 
 namespace ASE
@@ -105,24 +106,19 @@ namespace ASE
                 "RatesPrivatbank1", 
                 new Uri("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5", UriKind.Absolute), 
                 null);
-
-            /*var privatBankSource2 = new PrivatBankRatesSource(
-                "RatesPrivatbank2",
-                new Uri("https://privat24.privatbank.ua/p24/accountorder?oper=prp&PUREXML&apicour&country={0}&full", UriKind.Absolute),
-                null);*/
+                AddSource(privatBankSource1);
 
             var NBUSource = new NBURatesSource(
                 "RatesNBU",
                 new Uri("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json", UriKind.Absolute),
                 null);
+                AddSource(NBUSource);
+
             var CBRSource = new CBRRatesSource(
                 "RatesCBR",
                 new Uri("https://www.cbr-xml-daily.ru/daily_utf8.xml", UriKind.Absolute),
                 null);
-
-            AddSource(privatBankSource1);
-            AddSource(NBUSource);
-            AddSource(CBRSource);
+                AddSource(CBRSource);
         }
     }
 }

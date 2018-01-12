@@ -58,20 +58,39 @@ namespace Web.MyOffice.Controllers.API
             using (db)
             {
                 newCurrency.UserId = UserId;
-                if (db.Currencies.Where(currency => currency.Id == newCurrency.Id && currency.UserId == UserId).Any())
+                if (db.Currencies.Any(x => x.Id != newCurrency.Id && x.UserId == UserId))
                 {
-                    if (newCurrency.MyCurrency)
+                    var prevMyCurrency = db.Currencies.Where(currency => currency.MyCurrency).ToList();
+                    if (prevMyCurrency.Count!=0)
                     {
-                        foreach (var currency in db.Currencies.Where(x => x.Id != newCurrency.Id && x.UserId == UserId && x.MyCurrency))
-                        {
-                            currency.MyCurrency = false;
-                        }
+                        prevMyCurrency.ForEach(cur=>cur.MyCurrency=false);
+                        db.Entry(newCurrency).State = EntityState.Modified;
                     }
+                    db.Currencies.Attach(newCurrency);
                     db.Entry(newCurrency).State = EntityState.Modified;
                 }
                 else
                 {
                     db.Entry(newCurrency).State = EntityState.Added;
+                }
+                db.SaveChanges();
+
+                var curRates = db.CurrencyRates.Where(rate => rate.CurrencyId == newCurrency.Id && rate.Currency.UserId ==UserId).ToList();
+                CurrencyRate lastRate = null;
+                if (curRates.Count > 0)
+                {
+                    var maxDate = curRates.Max(rate => rate.DateTime);
+                    lastRate = curRates.FirstOrDefault(rate => rate.DateTime == maxDate);
+                }
+
+                if (lastRate== null || lastRate.Value != newCurrency.Value)
+                {
+                    var newRate = new CurrencyRate();
+                    newRate.CurrencyId = newCurrency.Id;
+                    newRate.Currency = newCurrency;
+                    newRate.DateTime = DateTime.Now;
+                    newRate.Value = newCurrency.Value;
+                    db.Entry(newRate).State = EntityState.Added;
                 }
                 db.SaveChanges();
 
