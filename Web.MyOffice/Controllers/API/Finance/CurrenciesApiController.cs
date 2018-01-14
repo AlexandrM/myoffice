@@ -58,9 +58,9 @@ namespace Web.MyOffice.Controllers.API
             using (db)
             {
                 newCurrency.UserId = UserId;
-                if (db.Currencies.Any(x => x.Id != newCurrency.Id && x.UserId == UserId))
+                if (db.Currencies.Any(x => x.Id == newCurrency.Id && x.UserId == UserId))
                 {
-                    var prevMyCurrency = db.Currencies.Where(currency => currency.MyCurrency).ToList();
+                    var prevMyCurrency = db.Currencies.Where(currency => currency.MyCurrency && currency.UserId == UserId).ToList();
                     if (prevMyCurrency.Count!=0)
                     {
                         prevMyCurrency.ForEach(cur=>cur.MyCurrency=false);
@@ -71,31 +71,40 @@ namespace Web.MyOffice.Controllers.API
                 }
                 else
                 {
+                    db.Currencies.Attach(newCurrency);
                     db.Entry(newCurrency).State = EntityState.Added;
-                }
-                db.SaveChanges();
-
-                var curRates = db.CurrencyRates.Where(rate => rate.CurrencyId == newCurrency.Id && rate.Currency.UserId ==UserId).ToList();
-                CurrencyRate lastRate = null;
-                if (curRates.Count > 0)
-                {
-                    var maxDate = curRates.Max(rate => rate.DateTime);
-                    lastRate = curRates.FirstOrDefault(rate => rate.DateTime == maxDate);
-                }
-
-                if (lastRate== null || lastRate.Value != newCurrency.Value)
-                {
-                    var newRate = new CurrencyRate();
-                    newRate.CurrencyId = newCurrency.Id;
-                    newRate.Currency = newCurrency;
-                    newRate.DateTime = DateTime.Now;
-                    newRate.Value = newCurrency.Value;
-                    db.Entry(newRate).State = EntityState.Added;
                 }
                 db.SaveChanges();
 
                 return ResponseObject2Json(HttpStatusCode.Accepted);
             }
+        }
+
+        [HttpPut]
+        public HttpResponseMessage CurrencyRatePut(CurrencyRate newCurrencyRate) {
+            var curRates = db.CurrencyRates.AsNoTracking().Where(rate => 
+                rate.CurrencyId == newCurrencyRate.CurrencyId && 
+                rate.Currency.UserId == UserId).ToList();
+
+            CurrencyRate lastRate = null;
+            if (curRates.Count > 0)
+            {
+                var maxDate = curRates.Max(rate => rate.DateTime);
+                lastRate = curRates.FirstOrDefault(rate => rate.DateTime == maxDate);
+            }
+
+            if (lastRate == null || lastRate.Value != newCurrencyRate.Value)
+            {
+                db.CurrencyRates.Attach(newCurrencyRate);
+                db.Entry(newCurrencyRate).State = EntityState.Added;
+                newCurrencyRate.Currency.Value = newCurrencyRate.Value;
+                db.Currencies.Attach(newCurrencyRate.Currency);
+                db.Entry(newCurrencyRate.Currency).State = EntityState.Modified;
+            }
+            db.SaveChanges();
+
+
+            return ResponseObject2Json(HttpStatusCode.Accepted);
         }
 
         [HttpGet]

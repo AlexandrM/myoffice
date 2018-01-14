@@ -1,5 +1,4 @@
 ﻿(function () {
-
     'use strict';
 
     angular.module('MyOffice.app')
@@ -29,10 +28,15 @@
 
         $scope.currencyEditDialog = function (currency) {
             $scope.newCurrency = currency;
+            $scope.newRate = { Value: currency.Value };
             $scope.openForm('CurrencyAdd','modal-sm');
         };
 
-        $scope.postCurrency = function(newCurrency) {
+        $scope.setNewRateDate = function () {
+            $('#newRateDate').datetimepicker({ locale: navigator.language });
+        };
+
+        $scope.postCurrency = function(newCurrency, newRate) {
             CurrencyService.postCurrency({
                     Id: newCurrency.Id,
                     Name: newCurrency.Name,
@@ -41,18 +45,38 @@
                     MyCurrency: newCurrency.MyCurrency,
                     Value: newCurrency.Value
                 },
-                function() {
-                    if (windows['CurrencyAdd'] !== undefined) {
-                        $scope.refresh();
-                    }
+                function () {
+                    if (newRate && newRate.Value !== undefined) {
+                        if (newRate.Value > 0 && newRate.DateTime === undefined) {
+                            newRate.DateTime = Date();
+                        }
+                        newRate.Id = 0;
+                        newRate.Currency = newCurrency;
+                        newRate.CurrencyId = newCurrency.Id;
+                        CurrencyService.putCurrencyRate({
+                            Id: 0,
+                            Currency:newCurrency,
+                            CurrencyId:newCurrency.Id,
+                            DateTime: newRate.DateTime,
+                            Value:newRate.Value
+                        }, function () {
+                            if (windows['CurrencyAdd'] !== undefined) {
+                                $scope.refresh();
+                            };
+                        });
+                    } else  {
+                        if (windows['CurrencyAdd'] !== undefined) {
+                            $scope.refresh();
+                        };
+                    };
                     $scope.closeWindow('CurrencyAdd');
                 });
         };
 
-        $scope.addCurrency = function (newCurrency, form) {
+        $scope.addCurrency = function (newCurrency, currencyRate, form) {
             if (form.$valid) {
-                $scope.postCurrency(newCurrency);
-            }
+                $scope.postCurrency(newCurrency, currencyRate);
+            };
         };
 
         $scope.currencyArchive = function (currency) {
@@ -80,8 +104,8 @@
             });
         };
 
-        $scope.setMyCurrency = function (checked) {
-            $scope.postCurrency(checked);
+        $scope.setMyCurrency = function (currency) {
+            $scope.postCurrency(currency);
         };
 
         $scope.ratesUpdate = function(sourceName){
