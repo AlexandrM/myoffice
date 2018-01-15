@@ -27,6 +27,8 @@
     @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap.js")
     @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap-tpls.js")
 
+    @Scripts.Render("~/Scripts/angular-ase.com.ua.js")
+    @Scripts.Render("~/Scripts/dis.js")
     <script>
         $.fn.datetimepicker.defaults.pickDate = true;
         $.fn.datetimepicker.defaults.pickTime = true;
@@ -50,7 +52,7 @@
     @Html.Partial("_JSLocalization")
 </head>
 
-<body>
+<body ng-app="MyOffice.app">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -116,7 +118,6 @@
                                 <li><a href="~/Project#/Debts/1">@S.MemberDebt</a></li>
                                 <li><a href="~/Project#/Debts/2">@S.ImplementerDebt</a></li>
                                 <li class="divider"></li>
-                                {{}}
                                 <li><a href="~/Project#/memberdayreport">@S.MemberDayReports</a></li>
                                 <li><a href="~/Project#/memberpayment">@S.Payments</a></li>
                                 <li class="divider"></li>
@@ -127,7 +128,7 @@
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Finance<b class="caret"></b></a>
-                            <ul class="dropdown-menu" ng-controller="">
+                            <ul class="dropdown-menu">
                                 @{
                                     Guid budgetId = Guid.Empty;
                                     if (Request.Cookies["BudgetId"] != null)
@@ -174,7 +175,7 @@
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink(S.Reports, "Index", "MyBankReports")</li>
                                 <li class="divider"></li>
-                                <li><a href="~/Project#/counter">@R.R.BanknoteCounter</a></li>
+                                <li ng-controller="counterCtrl"><a ng-click="openDialog()">@R.R.BanknoteCounter</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.References</a>

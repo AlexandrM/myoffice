@@ -37,10 +37,10 @@
             </tr>
             <tr>
                 <td>
-                    <button class="form-control btn btn-success" tabindex="-1"  ng-click="AddBanknote(selectedNominal)">@R.R.Add</button>
+                    <button class="form-control btn btn-success" tabindex="-1"  ng-click="AddBanknote(nominalStorage.current)">@R.R.Add</button>
                 </td>
                 <td>
-                    <input type="number"  min="1" class="form-control" ng-model="selectedNominal"/>
+                    <input type="number"  min="1" class="form-control" value="{{nominalStorage.current}}" ng-model="nominalStorage.current"/>
                 </td>
                 <th class="text-right">
                     @R.R.Total:
