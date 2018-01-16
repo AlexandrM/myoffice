@@ -34,7 +34,7 @@ namespace ASE
 
         private List<CurrencyRate> GetChangedRates(Dictionary<CurrencyType,decimal> loadedRates, Guid UserId)
         {
-            var Idgroups = Db.CurrencyRates.Where(rate => rate.Currency.UserId == UserId)
+            var Idgroups = Db.CurrencyRates.Where(rate => rate.Currency.UserId == UserId && !rate.Currency.IsArchive)
                            .GroupBy(rate => rate.CurrencyId);
             var lastDbRates = new List<CurrencyRate>();
             foreach (var group in Idgroups)
@@ -61,7 +61,7 @@ namespace ASE
                 var source = Sources.Find(src => src.Name == name);
                 if (source == null) return false;
 
-                var userCurrencies = Db.Currencies.Where(currency => currency.UserId == UserId).ToList();
+                var userCurrencies = Db.Currencies.Where(currency => currency.UserId == UserId && !currency.IsArchive).ToList();
 
                 if (source.Load(UserCurrencyTypeString(userCurrencies)))
                 {

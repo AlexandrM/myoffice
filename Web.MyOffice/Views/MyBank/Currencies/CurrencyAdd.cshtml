@@ -71,10 +71,11 @@
             <div class="col-sm-9">
                 <div class='input-group date'  name='newRateDate' id='newRateDate' 
                      ng-model="newRate.DateTime" 
-                     value="{{newRate.DateTime}}"
                      ng-click="setNewRateDate()"
                      ng-disabled="newCurrency.Value==1">
-                    <input type='text' class="form-control" />
+                    <input type='text' class="form-control" 
+                           ng-model="newRate.DateTime" 
+                           ng-click="setNewRateDate()"/>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>

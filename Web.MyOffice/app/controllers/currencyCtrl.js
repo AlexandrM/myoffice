@@ -12,7 +12,9 @@
         $scope.refresh = function () {
             CurrencyService.getCurrencyList({}, function (data) {
                 $scope.currencies = data.currencies;
-                $scope.currencyTypes = data.types;
+                $scope.currencyTypes = data.types.filter(function(type){
+                    return type.Name !== 'OTHER';
+                });
                 $scope.warnings = data.warnings;
             });
         };
@@ -27,8 +29,19 @@
         };
 
         $scope.currencyEditDialog = function (currency) {
+
             $scope.newCurrency = currency;
-            $scope.newRate = { Value: currency.Value };
+            $scope.newCurrency.isEdited = Object.keys(currency).length>0;
+            var currentDate = new Date();
+            currentDate.setTime(Date.now());
+            var options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric'
+            };
+            $scope.newRate = { Value: currency.Value, DateTime: currentDate.toLocaleDateString(navigator.language, options) };
             $scope.openForm('CurrencyAdd','modal-sm');
         };
 
@@ -47,12 +60,6 @@
                 },
                 function () {
                     if (newRate && newRate.Value !== undefined) {
-                        if (newRate.Value > 0 && newRate.DateTime === undefined) {
-                            newRate.DateTime = Date();
-                        }
-                        newRate.Id = 0;
-                        newRate.Currency = newCurrency;
-                        newRate.CurrencyId = newCurrency.Id;
                         CurrencyService.putCurrencyRate({
                             Id: 0,
                             Currency:newCurrency,
@@ -75,7 +82,14 @@
 
         $scope.addCurrency = function (newCurrency, currencyRate, form) {
             if (form.$valid) {
-                $scope.postCurrency(newCurrency, currencyRate);
+                var newCurrencyAlreadyExists = $scope.currencies.find(function (_currency) {
+                    return +_currency.CurrencyType === +newCurrency.CurrencyType;
+                }) !== undefined;
+                if (!newCurrencyAlreadyExists || newCurrency.isEdited) {
+                    $scope.postCurrency(newCurrency, currencyRate);
+                } else {
+                    bootbox.alert($scope.warnings[0]);
+                }
             };
         };
 
@@ -85,7 +99,7 @@
                     $scope.refresh();
                 });
             } else {
-                bootbox.alert($scope.model.warnings[1]);
+                bootbox.alert($scope.warnings[1]);
             }
         };
 

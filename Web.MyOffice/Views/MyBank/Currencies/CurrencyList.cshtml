@@ -93,10 +93,7 @@
             <tr ng-repeat="currency in currencies | filter: { IsArchive: true, Name: nameFilter}">
                 <td>
                     <input type="hidden" class="form-control" ng-model="currency.Id" />
-                    <input type="checkbox" class="form-control"
-                           ng-model="currency.MyCurrency"
-                           ng-click="setMyCurrency(currency)"
-                           value="{{currency.MyCurrency}}" />
+                    <input type="checkbox" class="form-control" ng-disabled="true" />
                 </td>
                 <td>
                     {{currency.Name}}

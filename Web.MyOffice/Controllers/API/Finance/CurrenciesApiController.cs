@@ -60,18 +60,18 @@ namespace Web.MyOffice.Controllers.API
                 newCurrency.UserId = UserId;
                 if (db.Currencies.Any(x => x.Id == newCurrency.Id && x.UserId == UserId))
                 {
-                    var prevMyCurrency = db.Currencies.Where(currency => currency.MyCurrency && currency.UserId == UserId).ToList();
-                    if (prevMyCurrency.Count!=0)
+                    var prevMyCurrency = db.Currencies.Where(currency => currency.MyCurrency && 
+                                                                         currency.Id != newCurrency.Id && 
+                                                                         currency.UserId == UserId).ToList();
+                    if (prevMyCurrency.Count != 0)
                     {
-                        prevMyCurrency.ForEach(cur=>cur.MyCurrency=false);
-                        db.Entry(newCurrency).State = EntityState.Modified;
+                        prevMyCurrency.ForEach(cur => cur.MyCurrency = false);
                     }
                     db.Currencies.Attach(newCurrency);
                     db.Entry(newCurrency).State = EntityState.Modified;
                 }
                 else
                 {
-                    db.Currencies.Attach(newCurrency);
                     db.Entry(newCurrency).State = EntityState.Added;
                 }
                 db.SaveChanges();
@@ -82,8 +82,11 @@ namespace Web.MyOffice.Controllers.API
 
         [HttpPut]
         public HttpResponseMessage CurrencyRatePut(CurrencyRate newCurrencyRate) {
+            var currency = db.Currencies.FirstOrDefault(crncy => crncy.CurrencyType == newCurrencyRate.Currency.CurrencyType);
+            newCurrencyRate.Currency = null;
+
             var curRates = db.CurrencyRates.AsNoTracking().Where(rate => 
-                rate.CurrencyId == newCurrencyRate.CurrencyId && 
+                rate.CurrencyId == currency.Id && 
                 rate.Currency.UserId == UserId).ToList();
 
             CurrencyRate lastRate = null;
@@ -95,14 +98,12 @@ namespace Web.MyOffice.Controllers.API
 
             if (lastRate == null || lastRate.Value != newCurrencyRate.Value)
             {
-                db.CurrencyRates.Attach(newCurrencyRate);
-                db.Entry(newCurrencyRate).State = EntityState.Added;
-                newCurrencyRate.Currency.Value = newCurrencyRate.Value;
-                db.Currencies.Attach(newCurrencyRate.Currency);
-                db.Entry(newCurrencyRate.Currency).State = EntityState.Modified;
+                newCurrencyRate.CurrencyId = currency.Id;
+                currency.Value = newCurrencyRate.Value;
+                db.CurrencyRates.Add(newCurrencyRate);
+                db.Entry(currency).State = EntityState.Modified;
             }
             db.SaveChanges();
-
 
             return ResponseObject2Json(HttpStatusCode.Accepted);
         }
