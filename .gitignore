@@ -35,3 +35,4 @@ Web.MyOffice/Properties/PublishProfiles/localhost.pubxml.user
 Web.MyOffice/Properties/PublishProfiles/localhost.pubxml.userMyOffice.Test
 /MyOffice.Web.sln
 MyOffice.Test
+.vs.expert.ignore.txt
