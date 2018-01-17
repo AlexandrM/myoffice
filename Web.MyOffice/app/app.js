@@ -85,10 +85,6 @@
                 templateUrl: 'expenditure/Items',
                 controller: 'itemCtrl'
             }).
-			/*when('/counter', {
-                template: '',
-                controller: 'counterCtrl'
-            }).*/
             otherwise({
                 redirectTo: '/project'
             });
