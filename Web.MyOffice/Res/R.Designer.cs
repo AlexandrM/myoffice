@@ -187,6 +187,24 @@ namespace R {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Купюра.
+        /// </summary>
+        public static string Banknote {
+            get {
+                return ResourceManager.GetString("Banknote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подсчет купюр.
+        /// </summary>
+        public static string BanknoteCounter {
+            get {
+                return ResourceManager.GetString("BanknoteCounter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Бюджет.
         /// </summary>
         public static string Budget {
@@ -309,6 +327,15 @@ namespace R {
         public static string ConnectionStringSaved {
             get {
                 return ResourceManager.GetString("ConnectionStringSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подсчет купюр.
+        /// </summary>
+        public static string ContingBanknotes {
+            get {
+                return ResourceManager.GetString("ContingBanknotes", resourceCulture);
             }
         }
         
@@ -1074,6 +1101,15 @@ namespace R {
         public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Колличество.
+        /// </summary>
+        public static string Quantity {
+            get {
+                return ResourceManager.GetString("Quantity", resourceCulture);
             }
         }
         

@@ -582,4 +582,16 @@
   <data name="SelectValueWarning" xml:space="preserve">
     <value>Будь ласка, виберiть значення</value>
   </data>
+  <data name="ContingBanknotes" xml:space="preserve">
+    <value>Підрахунок купюр</value>
+  </data>
+  <data name="BanknoteCounter" xml:space="preserve">
+    <value>Пiдрахунок купюр</value>
+  </data>
+  <data name="Banknote" xml:space="preserve">
+    <value>Купюра</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Колличество</value>
+  </data>
 </root>

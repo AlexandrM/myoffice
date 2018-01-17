@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+<form style="padding: 10px">
+    <div class="modal-header">
+        <button type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+                tabindex="-1"
+                ng-click="MWC.close('list')">
+            &times;
+        </button>
+        <h4 class="modal-title">@R.R.BanknoteCounter</h4>
+    </div>
+    <div clas="modal-body">
+        <table class="table  table-striped">
+            <tr>
+                <th>@R.R.Banknote</th>
+                <th>@R.R.Quantity</th>
+                <th>@R.R.Total</th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="item in model.data">
+                <td>
+                    <input type="number" class="form-control" ng-change="save()" tabindex="-1" ng-model="item.nominal"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" min="0" autofocus onfocus="this.select();" tabindex="$index" ng-model="item.count" ng-keyup="next($event)"/>
+                </td>
+                <td>
+                    <input class="form-control" type="text" disabled value="{{(item.nominal * item.count)}}"/>
+                </td>
+                <td>
+                    <a href="" class="form-control btn btn-danger" tabindex="-1" ng-click="deleteBanknote($index)">@R.R.Delete</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="number" min="1" class="form-control" ng-model="model.nominal" />
+                </td>
+                <td>
+                    <a href="" class="form-control btn btn-success" tabindex="-1"  ng-click="addBanknote()">@R.R.Add</a>
+                </td>
+                <th class="text-right">
+                    @R.R.Total:
+                </th>
+                <td >
+                    <input id="totalMoney" tabindex="-1"  type="text" class="form-control" value="{{getTotal()}}"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default"  tabindex="-1" ng-click="MWC.close('list')">@R.R.Close</button>
+    </div>
+</form>
