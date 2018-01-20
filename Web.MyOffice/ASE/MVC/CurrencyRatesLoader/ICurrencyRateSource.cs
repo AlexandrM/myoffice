@@ -15,5 +15,6 @@ namespace ASE
         Dictionary<string, string> RouteParams { set; get; }
         bool Load(List<string> userTypes);
         Dictionary<CurrencyType, decimal> LoadedRates { set; get; }
+        CurrencyType BaseCurrency { set; get; }
     }
 }

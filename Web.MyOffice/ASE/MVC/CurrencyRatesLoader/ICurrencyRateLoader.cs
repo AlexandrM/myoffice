@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Web.MyOffice.Models;
 
 namespace ASE
 {
@@ -13,5 +14,6 @@ namespace ASE
         void RemoveSource(ICurrencyRateSource source);
         ICurrencyRateSource FindSource(Guid Id);
         bool UpdateRates(string sourceName, Guid UserId);
+        CurrencyType BaseCurrency{ set; get; }          
     }
 }

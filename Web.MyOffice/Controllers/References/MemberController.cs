@@ -122,7 +122,7 @@ namespace Web.MyOffice.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Member model)
         {
-            CurrencyType currencyType = CurrencyType.OTHER;
+            var currencyType = new CurrencyType();
             if (ModelState.IsValid && CurrencyType.TryParse(Request.Form["MyCurrencyType"], out currencyType))
             {
                 AttachModel(model);

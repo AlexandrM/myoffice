@@ -41,32 +41,34 @@ namespace ASE
         public string Name { set; get; }
         public Dictionary<string, string> RouteParams { set; get; }
         public Dictionary<CurrencyType, decimal> LoadedRates { set; get; }
+        public CurrencyType BaseCurrency { set; get; }
         private bool isInited = false;
         public CBRRatesSource(string name, Uri baseSource, Dictionary<string, string> routeParams)
         {
             BaseSource = baseSource;
             RouteParams = routeParams;
             Name = name;
+            BaseCurrency = CurrencyType.RUR;
             isInited = true;
             Id = Guid.NewGuid();
-        }
-        private string GetRouteParamString()
-        {
-            if (RouteParams == null) return string.Empty;
-            var paramString = string.Empty;
-            foreach (var param in RouteParams)
+            if (routeParams != null && routeParams.Count>0)
             {
-                paramString = param.Key + "=" + param.Value + "&";
+                RouteParamString = routeParams.ToList().Aggregate("?", (key, value) => key + "=" + value + "&");
             }
-            return paramString;
+            else
+            {
+                RouteParamString = string.Empty;
+            }
+
         }
+        public string RouteParamString { set; get; }
         public bool Load(List<string> userTypes)
         {
             if (isInited)
             {
                 using (var wc = new WebClient())
                 {
-                    var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + GetRouteParamString()).Replace(',','.');                    
+                    var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + RouteParamString).Replace(',','.');                    
                     var loadedRates = JsonConvert.DeserializeObject<CBRCurrencyContainer>(JsonConvert.SerializeXNode(XDocument.Parse(stringRawData).Root)).ValCurs.Valute.ToList(); 
                     LoadedRates = loadedRates.Join(userTypes.Distinct(),
                         rate => rate.CharCode,
@@ -75,7 +77,6 @@ namespace ASE
                         new KeyValuePair<string, decimal>(type, rate.Value/ rate.Nominal))
                         .ToDictionary(KeyValuePair => (CurrencyType)Enum.Parse(typeof(CurrencyType), KeyValuePair.Key),
                                       KeyValuePair => KeyValuePair.Value);
-                    LoadedRates.Add(CurrencyType.RUR, 1);
                 }
                 return true;
             }

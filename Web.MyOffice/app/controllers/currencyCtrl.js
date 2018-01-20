@@ -12,9 +12,8 @@
         $scope.refresh = function () {
             CurrencyService.getCurrencyList({}, function (data) {
                 $scope.currencies = data.currencies;
-                $scope.currencyTypes = data.types.filter(function(type){
-                    return type.Name !== 'OTHER';
-                });
+                $scope.currencyTypes = data.types;
+                $scope.baseCurrency = data.BaseCurrency;
                 $scope.warnings = data.warnings;
             });
         };
@@ -29,19 +28,20 @@
         };
 
         $scope.currencyEditDialog = function (currency) {
+            $scope.newCurrency = currency === undefined ? {} : currency;
+            $scope.newCurrency.isEdited = currency !== undefined;
+            var value = 0;
+            if (currency) {
+                value = $scope.currencyTypes[currency.CurrencyType - 1].Name === $scope.baseCurrency ? 1 : currency.Value;
+                value = currency.Value === undefined ||
+                        currency.Value === null      ||
+                        currency.Value === '' ? 0 : value;
 
-            $scope.newCurrency = currency;
-            $scope.newCurrency.isEdited = Object.keys(currency).length>0;
-            var currentDate = new Date();
-            currentDate.setTime(Date.now());
-            var options = {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric'
-            };
-            $scope.newRate = { Value: currency.Value, DateTime: currentDate.toLocaleDateString(navigator.language, options) };
+            }
+
+            var options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+            var date = (new Date()).toLocaleDateString(navigator.language, options);
+            $scope.newRate = { Value: value, DateTime: date };
             $scope.openForm('CurrencyAdd','modal-sm');
         };
 
@@ -49,34 +49,31 @@
             $('#newRateDate').datetimepicker({ locale: navigator.language });
         };
 
-        $scope.postCurrency = function(newCurrency, newRate) {
+        $scope.postCurrency = function (newCurrency, newRate) {
             CurrencyService.postCurrency({
-                    Id: newCurrency.Id,
-                    Name: newCurrency.Name,
-                    ShortName: newCurrency.ShortName,
-                    CurrencyType: newCurrency.CurrencyType,
-                    MyCurrency: newCurrency.MyCurrency,
-                    Value: newCurrency.Value
-                },
+                Id: newCurrency.Id,
+                Name: newCurrency.Name,
+                ShortName: newCurrency.ShortName,
+                CurrencyType: newCurrency.CurrencyType,
+                MyCurrency: newCurrency.MyCurrency,
+                Value: newCurrency.Value
+            },
                 function () {
-                    if (newRate && newRate.Value !== undefined) {
+                    if (newRate) {
                         CurrencyService.putCurrencyRate({
                             Id: 0,
-                            Currency:newCurrency,
-                            CurrencyId:newCurrency.Id,
+                            Currency: newCurrency,
+                            CurrencyId: newCurrency.Id,
                             DateTime: newRate.DateTime,
-                            Value:newRate.Value
+                            Value: newRate.Value
                         }, function () {
-                            if (windows['CurrencyAdd'] !== undefined) {
-                                $scope.refresh();
-                            };
-                        });
-                    } else  {
-                        if (windows['CurrencyAdd'] !== undefined) {
                             $scope.refresh();
-                        };
-                    };
-                    $scope.closeWindow('CurrencyAdd');
+                            $scope.closeWindow('CurrencyAdd');
+                        });
+                    } else {
+                        $scope.refresh();
+                        $scope.closeWindow('CurrencyAdd');
+                    }
                 });
         };
 

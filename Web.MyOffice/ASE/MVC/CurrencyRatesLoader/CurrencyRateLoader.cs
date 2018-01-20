@@ -31,85 +31,66 @@ namespace ASE
             {
                 return Sources.Find(source => source.Name == name);
             }
+            public CurrencyType BaseCurrency { set; get;}
 
-        private List<CurrencyRate> GetChangedRates(Dictionary<CurrencyType,decimal> loadedRates, Guid UserId)
-        {
-            var Idgroups = Db.CurrencyRates.Where(rate => rate.Currency.UserId == UserId && !rate.Currency.IsArchive)
-                           .GroupBy(rate => rate.CurrencyId);
-            var lastDbRates = new List<CurrencyRate>();
-            foreach (var group in Idgroups)
+            private List<Currency> UserCurrenciesInit(Guid UserId, CurrencyType BaseCurrency)
             {
-                lastDbRates.Add(group.FirstOrDefault(
-                    rate => rate.DateTime == group.Max(grp => grp.DateTime)));
+                var userCurrencies = Db.Currencies.Where(currency => currency.UserId == UserId).ToList();
+                if (userCurrencies.Count == 0)
+                {
+                    Db.Currencies.Add(new Currency() { CurrencyType = BaseCurrency, UserId = UserId, Value = 1, MyCurrency = true, IsArchive = false });
+                }
+                else if (!Db.Currencies.Any(currency => currency.UserId == UserId && currency.MyCurrency))
+                {
+                    var baseCurrency = Db.Currencies.FirstOrDefault(currency => currency.CurrencyType == BaseCurrency);
+                    if (baseCurrency != null)
+                    {
+                        baseCurrency.MyCurrency = true;
+                    }
+                    else
+                    {
+                        var currency = userCurrencies.First();
+                        currency.MyCurrency = true;
+                        Db.Entry(currency).State = EntityState.Modified;
+                    }
+                }
+                Db.SaveChanges();
+                return userCurrencies;
             }
-            var newDbRates = loadedRates.Join(lastDbRates,
-                     outer => outer.Key,
-                     inner => inner.Currency.CurrencyType,
-                     (outer, inner) => new CurrencyRate()
-                     {
-                         Id = inner.Id,
-                         Currency = inner.Currency,
-                         CurrencyId = inner.CurrencyId,
-                         DateTime = DateTime.Now,
-                         Value = Math.Round(inner.Value, 4) != Math.Round(outer.Value, 4) ? outer.Value : 0
-                     }).Where(rate => rate.Value != 0).Distinct().ToList();
-            return newDbRates;
-        }
 
             public bool UpdateRates(string name, Guid UserId)
             {
                 var source = Sources.Find(src => src.Name == name);
                 if (source == null) return false;
-
-                var userCurrencies = Db.Currencies.Where(currency => currency.UserId == UserId && !currency.IsArchive).ToList();
-
-                if (source.Load(UserCurrencyTypeString(userCurrencies)))
+                BaseCurrency = source.BaseCurrency;
+                var userCurrencies = UserCurrenciesInit(UserId, BaseCurrency);
+                if (source.Load(userCurrencies.Select(currency => currency.CurrencyType.ToString()).ToList()))
                 {
-                    //All loaded currency types from net
                     var loadedTypes = source.LoadedRates.Select(currency => currency.Key).ToList();
-                    //Currency rates in Db have new loaded rate value
-                    var changedRates = GetChangedRates(source.LoadedRates, UserId);
-                    Db.CurrencyRates.AddRange(changedRates);
-                    if (changedRates.Count > 0)
+                    Currency currentCurrency = null;
+                    CurrencyRate rate = null;
+
+                    foreach (var loadedRate in source.LoadedRates)
                     {
-                        changedRates.ForEach(rate => userCurrencies.Find(cur => cur.Id == rate.CurrencyId).Value = rate.Value);
+                        currentCurrency = userCurrencies.FirstOrDefault(crncy => crncy.CurrencyType == loadedRate.Key);
+                        
+                        if (currentCurrency != null && decimal.Round(currentCurrency.Value, 4) != decimal.Round(loadedRate.Value,4))
+                        {
+                            currentCurrency.Value = loadedRate.Value;
+                            Db.Entry(currentCurrency).State = EntityState.Modified;
+                            rate = new CurrencyRate()
+                            {
+                                CurrencyId = currentCurrency.Id,
+                                DateTime = DateTime.Now,
+                                Value = decimal.Round(loadedRate.Value, 4)
+                            };
+                            Db.CurrencyRates.Add(rate);
+                        }
                     }
-                    //CurrencyTypes don't have any rate value in Db
-                    var newLodedTypes = loadedTypes.Except(changedRates.Select(rate => rate.Currency.CurrencyType)).ToList();
-                    //User currency types
-                    var userCurrencyTypes = userCurrencies.Select(currency => currency.CurrencyType).Distinct().ToList();
-                    //User currency types don't have any rate in b
-                    var newUserTypes = newLodedTypes.Intersect(userCurrencyTypes).ToList();
-                    //User currency types don't have any rate in b
-                    var newUserRates = newUserTypes.Select(type => new CurrencyRate()
-                    { 
-                        Currency = userCurrencies.Find(cur => cur.CurrencyType == type),
-                        CurrencyId = userCurrencies.Find(cur => cur.CurrencyType == type).Id,
-                        DateTime=DateTime.Now,
-                        Value = source.LoadedRates.ToList().Find(pair=>pair.Key == type).Value
-                    }).ToList();
-                    
-                    Db.CurrencyRates.AddRange(newUserRates);
-                    if (newUserRates.Count>0)
-                    {
-                        newUserRates.ForEach(rate => userCurrencies.Find(cur => cur.Id == rate.CurrencyId).Value = rate.Value); ;
-                    }
-                    userCurrencies.ForEach(currency=> Db.Entry(currency).State = EntityState.Modified);
                     Db.SaveChanges();
                 }
                 return true;
             }
-
-        private List<string> UserCurrencyTypeString(List<Currency> userCurrencies)
-        {
-            var userCurrenciesType = new List<string>();
-            foreach (var currency in userCurrencies)
-            {
-                userCurrenciesType.Add(currency.CurrencyType.ToString());
-            }
-            userCurrenciesType.Distinct();
-            return userCurrenciesType;
-        }
 
         #endregion
         private DB Db { set; get; }

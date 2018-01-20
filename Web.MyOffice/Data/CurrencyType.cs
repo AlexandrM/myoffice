@@ -8,7 +8,6 @@ namespace Web.MyOffice.Models
         UAH = 1,
         USD = 2,
         EUR = 3,
-        RUR = 4,
-        OTHER = 999999,
+        RUR = 4
     }
 }

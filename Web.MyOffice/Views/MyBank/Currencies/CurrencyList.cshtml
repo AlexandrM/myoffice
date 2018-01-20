@@ -15,7 +15,7 @@
 <div id="CurrencyList" ng-init="refresh()">
     <div class="row">
         <div class="col-sm-4">
-            <button type="button" class="btn btn-success" ng-click="currencyEditDialog({})">@R.R.Add</button>
+            <button type="button" class="btn btn-success" ng-click="currencyEditDialog()">@R.R.Add</button>
         </div>
         <div class="col-sm-4 col-sm-offset-4">
             <div class="dropdown">
@@ -29,7 +29,7 @@
                     <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesCBR')">@S.ImportRatesCBR</button></li>
                 </ul>
             </div>
-            <input class="form-control" type="text" ng-blur="filter($event)" ng-keydown="" ng-model="nameFilter"/>
+            <input class="form-control" type="text" ng-blur="filter($event)" ng-model="nameFilter"/>
         </div>
     </div>
     <table class="table table-bordered table-striped" style="width: 100%">
@@ -48,7 +48,7 @@
                     @S.Type
                 </th>
                 <th>
-                    @R.R.Rate
+                    <span>@R.R.Rate ({{baseCurrency}})</span>
                 </th>
                 <th width="410px;">
                     @R.R.Actions
@@ -71,10 +71,10 @@
                     {{currency.ShortName}}
                 </td>
                 <td>
-                    {{ (currencyTypes | filter: { Id: currency.CurrencyType })[0].Name }}
+                    {{(currencyTypes | filter: { Id: currency.CurrencyType })[0].Name }}
                 </td>
                 <td>
-                    {{currency.Value}}
+                    {{currencyTypes[currency.CurrencyType-1].Name === baseCurrency ? 1 : currency.Value}}
                 </td>
                 <td>
                     <buton type="button" class="btn btn-primary" ng-click="currencyEditDialog(currency)">@R.R.Edit</buton>
@@ -105,7 +105,7 @@
                     {{ (currencyTypes | filter: { Id: currency.CurrencyType })[0].Name }}
                 </td>
                 <td>
-                    {{currency.Value}}
+                    {{currencyTypes[currency.CurrencyType-1].Name === baseCurrency ? 1 : currency.Value}}
                 </td>
                 <td>
                     <buton type="button" class="btn btn-success" ng-click="restoreCurrency(currency)">@R.R.UnDelete</buton>
@@ -114,7 +114,4 @@
             </tr>
         </tbody>
 </table>
-
-
-    
 </div>

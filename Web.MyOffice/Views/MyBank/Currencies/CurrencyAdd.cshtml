@@ -61,8 +61,7 @@
             <div class="col-sm-9">
                 <input type="number" id="value" name="value" class="form-control" min="0"
                        ng-model="newRate.Value"
-                       value="{{newRate.Value}}"
-                       ng-disabled="newCurrency.Value==1"/>
+                       ng-disabled="currencyTypes[newCurrency.CurrencyType - 1].Name === baseCurrency"/>
             </div>
         </div>
 
@@ -71,8 +70,7 @@
             <div class="col-sm-9">
                 <div class='input-group date'  name='newRateDate' id='newRateDate' 
                      ng-model="newRate.DateTime" 
-                     ng-click="setNewRateDate()"
-                     ng-disabled="newCurrency.Value==1">
+                     ng-click="setNewRateDate()">
                     <input type='text' class="form-control" 
                            ng-model="newRate.DateTime" 
                            ng-click="setNewRateDate()"/>

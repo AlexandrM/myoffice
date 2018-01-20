@@ -25,10 +25,12 @@ namespace Web.MyOffice.Controllers.API
                     .Where(currency => currency.UserId == UserId)
                     .OrderBy(x => x.Name)
                     .ToList(),
-
+                
                 types = Enum.GetValues(typeof(CurrencyType))
                     .Cast<CurrencyType>()
-                    .Select(x => new { Id = x, Name = Enum.GetName(typeof(CurrencyType), x) }),
+                    .Select(x => new { Id = x, Name = Enum.GetName(typeof(CurrencyType), x) }).OrderBy(x=>x.Id),
+
+                BaseCurrency = CurrenciesController.BaseCurrency.ToString(),
 
                 warnings = new List<string>() {
                     R.R.WarningExists,
@@ -38,12 +40,14 @@ namespace Web.MyOffice.Controllers.API
             return ResponseObject2Json(model);
         }
 
+        private static CurrencyType BaseCurrency { set; get; }
         [HttpGet]
         public HttpResponseMessage CurrenciesUpdate(string sourceName)
         {
             var rateLoader = new CurrencyRateLoader(db);
             if (rateLoader.UpdateRates(sourceName, UserId))
             {
+                CurrenciesController.BaseCurrency = rateLoader.BaseCurrency;
                 return ResponseObject2Json(HttpStatusCode.OK);
             }
             else
@@ -60,12 +64,12 @@ namespace Web.MyOffice.Controllers.API
                 newCurrency.UserId = UserId;
                 if (db.Currencies.Any(x => x.Id == newCurrency.Id && x.UserId == UserId))
                 {
-                    var prevMyCurrency = db.Currencies.Where(currency => currency.MyCurrency && 
-                                                                         currency.Id != newCurrency.Id && 
-                                                                         currency.UserId == UserId).ToList();
-                    if (prevMyCurrency.Count != 0)
+                    var prevMyCurrency = db.Currencies.FirstOrDefault(currency => currency.MyCurrency &&
+                                                                                  currency.Id != newCurrency.Id &&
+                                                                                  currency.UserId == UserId);
+                    if (prevMyCurrency != null && newCurrency.MyCurrency)
                     {
-                        prevMyCurrency.ForEach(cur => cur.MyCurrency = false);
+                        prevMyCurrency.MyCurrency = false;
                     }
                     db.Currencies.Attach(newCurrency);
                     db.Entry(newCurrency).State = EntityState.Modified;
