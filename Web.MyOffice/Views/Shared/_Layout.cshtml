@@ -7,7 +7,8 @@
     <title>@this.Title</title>
     @Styles.Render("~/CSS/css")
     @Styles.Render("~/Content/bootstrap/css/bootstrap-cosmo.min.css")
-    @*Styles.Render("~/Content/bootstrap/css/bootstrap-select.min.css")*@
+    @Styles.Render("~/Content/bootstrap/css/bootstrap-submenu.css")
+
     @Scripts.Render("~/JS/modernizr")
     @Scripts.Render("~/Libs/jquery/dist/jquery.min.js")
     @Scripts.Render("~/JS/jquery")
@@ -26,6 +27,8 @@
     @Scripts.Render("~/Libs/angular-moment/angular-moment.min.js")
     @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap.min.js")
     @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap-tpls.min.js")
+    @Scripts.Render("~/Libs/ngBootbox/dist/ngBootbox.min.js")
+    
     @Scripts.Render("~/Scripts/angular-ase.com.ua.js")
     @Scripts.Render("~/Scripts/dis.js")
     <script>
@@ -120,11 +123,11 @@
                                         }
                                         <ul class="dropdown-menu">
                                             @foreach (var item in db.BudgetUsers
-                    .Include(x => x.Budget.Owner)
-                    .Where(x => x.UserId == UserId)
-                    .Select(x => x.Budget)
-                    .ToList()
-                    .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
+                                                .Include(x => x.Budget.Owner)
+                                                .Where(x => x.UserId == UserId)
+                                                .Select(x => x.Budget)
+                                                .ToList()
+                                                .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
                                             {
                                                 if ((item != null) && (item.OwnerId != UserId))
                                                 {
@@ -134,7 +137,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <li>@Html.ActionLink(@item.Name, "SelectBudget", "References", new { id = item.Id }, null)</li>
+                                                    <li>@Html.ActionLink((String.IsNullOrEmpty(item.Name) ? "-" : item.Name), "SelectBudget", "References", new { id = item.Id }, null)</li>
                                                 }
                                             }
                                         </ul>
@@ -164,11 +167,11 @@
                             </ul>
                         </li>
                     </ul>
-                                    }
-                                    else
-                                    {
-                                        @Html.Partial("_LoginPartial")
-                                    }
+                }
+                else
+                {
+                    @Html.Partial("_LoginPartial")
+                }
             </div>
         </div>
     </div>

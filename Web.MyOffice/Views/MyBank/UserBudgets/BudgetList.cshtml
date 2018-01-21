@@ -1,4 +1,6 @@
-﻿@{Layout = null;}
+﻿@{
+    Layout = null;
+}
 <style>
     td
     {
@@ -8,9 +10,9 @@
 
 <h2>@R.R.Budgets</h2>
 
-<div id="AccountList" ng-init="refresh()"  style="padding: 10px">
+<div ng-init="refresh()"  style="padding: 10px">
     <p>
-        <button type="button" class="btn btn-success" ng-click="budgetAddFormInvoke()">@R.R.Add</button>
+        <button type="button" class="btn btn-success" ng-click="budgetAdd()">@R.R.Add</button>
     </p>
 
     <table class="table table-bordered table-striped" style="width: 100%">
@@ -19,13 +21,16 @@
             <th>@R.R.Name</th>
             <th></th>
         </tr>
-        <tr ng-repeat="budget in budgets track by $index">
+        <tr ng-repeat="budget in budgets">
             <td>
                {{budget.Name}}
             </td>
             <td>
-                <button type="button" class="btn btn-primary" ng-click="budgetEditFormInvoke(budget)">@R.R.Edit</button>
-                <button type="button"  class="btn btn-warning" ng-click ="budgetUsersFormInvoke(budget)">@R.R.Users</button>
+                <span ng-if="budget.OwnerId == userId">
+                    <button type="button" class="btn btn-primary" ng-click="budgetAdd(budget)">@R.R.Edit</button>
+                    <button type="button" class="btn btn-warning" ng-click="budgetUsers(budget)">@R.R.Users</button>
+                    <button type="button" class="btn btn-danger" ng-click="budgetDelete(budget)">@R.R.Delete</button>
+                </span>
             </td>
         </tr>
         </tbody>

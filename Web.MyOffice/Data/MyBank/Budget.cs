@@ -6,8 +6,9 @@ using Web.MyOffice.Models;
 
 namespace MyBank.Models
 {
-    public class Budget : AutoGuidId
+    public class Budget// : AutoGuidId
     {
+        public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
         [Display(ResourceType = typeof(R.R), Name = "Account")]
         public Member Owner { get; set; }
