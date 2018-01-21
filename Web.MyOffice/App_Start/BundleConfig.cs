@@ -8,8 +8,7 @@ namespace Web.MyOffice
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/JS/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"
-                        , "~/Scripts/jquery.unobtrusive-ajax*"
+                         "~/Scripts/jquery.unobtrusive-ajax*"
                         , "~/Scripts/jquery.numeric.js"
                         ));
 
@@ -27,10 +26,6 @@ namespace Web.MyOffice
                 "~/Content/bootstrap/js/locales/*.js"
                 ));
 
-            bundles.Add(new StyleBundle("~/CSS/bootstrap").Include(
-                "~/Content/bootstrap/css/*.css"
-                ));
-
             bundles.Add(new StyleBundle("~/CSS/tree").Include("~/Content/tree/*.css"));
             bundles.Add(new ScriptBundle("~/JS/tree").Include("~/Content/tree/*.js"));
 
@@ -41,9 +36,6 @@ namespace Web.MyOffice
                         "~/Scripts/DateFormat.js",
                         "~/Scripts/clearableinput.js"
                         ));
-
-            bundles.Add(new ScriptBundle("~/JS/moment").Include(
-                "~/Scripts/moment*"));
 
             bundles.Add(new ScriptBundle("~/JS/typehead").Include("~/Content/typeahead/js/*.js"));
             bundles.Add(new StyleBundle("~/CSS/typehead").Include("~/Content/typeahead/css/*.css"));
