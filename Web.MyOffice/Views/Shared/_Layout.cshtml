@@ -7,7 +7,8 @@
     <title>@this.Title</title>
     @Styles.Render("~/CSS/css")
     @Styles.Render("~/Content/bootstrap/css/bootstrap-cosmo.min.css")
-    @*Styles.Render("~/Content/bootstrap/css/bootstrap-select.min.css")*@
+    @Styles.Render("~/Content/bootstrap/css/bootstrap-submenu.css")
+
     @Scripts.Render("~/JS/modernizr")
     @Scripts.Render("~/Libs/jquery/dist/jquery.min.js")
     @Scripts.Render("~/JS/jquery")
@@ -120,11 +121,11 @@
                                         }
                                         <ul class="dropdown-menu">
                                             @foreach (var item in db.BudgetUsers
-                    .Include(x => x.Budget.Owner)
-                    .Where(x => x.UserId == UserId)
-                    .Select(x => x.Budget)
-                    .ToList()
-                    .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
+                                                .Include(x => x.Budget.Owner)
+                                                .Where(x => x.UserId == UserId)
+                                                .Select(x => x.Budget)
+                                                .ToList()
+                                                .Union(db.Budgets.Include(x => x.Owner).Where(z => z.OwnerId == UserId)).OrderBy(x => x.Name))
                                             {
                                                 if ((item != null) && (item.OwnerId != UserId))
                                                 {
@@ -164,11 +165,11 @@
                             </ul>
                         </li>
                     </ul>
-                                    }
-                                    else
-                                    {
-                                        @Html.Partial("_LoginPartial")
-                                    }
+                }
+                else
+                {
+                    @Html.Partial("_LoginPartial")
+                }
             </div>
         </div>
     </div>
