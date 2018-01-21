@@ -20,6 +20,7 @@ namespace MyBank.Controllers
 {
     //[RequireHttps]
     [Authorize]
+    [ViewEngineAdv("")]
     public class MyBankController : ControllerAdv<DB>
     {
         public static readonly string LoadingImage = String.Format("<img src='{0}' />", VirtualPathUtility.ToAbsolute("~/Images/loading.gif"));

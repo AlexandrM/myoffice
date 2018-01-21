@@ -12,8 +12,10 @@
 		'ui.bootstrap'
     ]);
 
-    angular.module('MyOffice.app').config(['$routeProvider',
-        function ($routeProvider) {
+    angular.module('MyOffice.app').config(['$routeProvider', '$locationProvider',
+        function ($routeProvider, $locationProvider) {
+            $locationProvider.hashPrefix('');
+
             $routeProvider.
             when('/project', {
                 templateUrl: 'project/list',
@@ -40,11 +42,11 @@
                 controller: 'projectTaskCtrl'
             }).
             when('/finance/:id/:lang?', {
-               templateUrl: function (params) {
-                   return 'finance/list/' + params.id + '?lang=' + params.lang;
-               },
-               controller: 'financeCtrl'
-           }).
+                templateUrl: function (params) {
+                    return 'finance/list/' + params.id + '?lang=' + params.lang;
+                },
+                controller: 'financeCtrl'
+            }).
             when('/memberdayreport', {
                 templateUrl: 'memberdayreport/list',
                 controller: 'memberDayReportCtrl'
@@ -70,21 +72,21 @@
                 controller: 'debtsCtrl'
             }).
 			when('/Budgets', {
-                 templateUrl: 'UserBudgets/BudgetList',
-                 controller: 'budgetCtrl'
-             }).
+                templateUrl: 'UserBudgets/BudgetList',
+                controller: 'budgetCtrl'
+			}).
 			when('/Currencies', {
-                  templateUrl: 'Currencies/CurrencyList',
-                    controller: 'currencyCtrl'
-                }).
+                templateUrl: 'Currencies/CurrencyList',
+                controller: 'currencyCtrl'
+			}).
 			when('/BankAccounts', {
                 templateUrl: 'Accounts/AccountList',
                 controller: 'budgetAccountCtrl'
-				}).
+			}).
 			when('/items', {
                 templateUrl: 'expenditure/Items',
                 controller: 'itemCtrl'
-            }).
+			}).
             otherwise({
                 redirectTo: '/project'
             });
@@ -92,9 +94,9 @@
     ])
     .config(function () {
     })
-    .run(function ($UserSettingsService) {
+    .run(['$UserSettingsService', function ($UserSettingsService) {
         jQuery.extend($UserSettingsService, JSON.parse(localStorage.getItem('SkypeBot.MyOffice.$UserSettingsService') || '{}'));
         $UserSettingsService.Language = $UserSettingsService.Language || moment.locale();
         $UserSettingsService.Prices = $UserSettingsService.Prices || [];
-    });
+    }]);
 })();

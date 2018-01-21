@@ -8,8 +8,9 @@
         $scope.MWC = ModalWindowService;
         $scope.model = {
             nominal: 1,
-            data: JSON.parse(localStorage.getItem('counterCtrl.data')) || []
+            data: JSON.parse(localStorage.getItem('counterCtrl.data'))
         };
+        $scope.model.data = $scope.model.data === null ? [] : $scope.model.data;
         $scope.model.data.forEach(function (e) {
             e.count = 0;
         });
@@ -45,7 +46,7 @@
         };
 
         $scope.getTotal = function () {
-            return $scope.model.data.reduce(function (t, e) {
+            return $scope.model.data.length === 0 ? 0 : $scope.model.data.reduce(function (t, e) {
                 return (t.nominal ? (t.nominal * t.count) : t) + (e.nominal * e.count);
             });
         };
