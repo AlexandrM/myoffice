@@ -7,9 +7,12 @@
         'ngRoute',
         'ngResource',
         'angularMoment',
+		'ui.bootstrap',
+		'ngBootbox',
+
         'ase.com.ua',
+
         'MyOffice.app',
-		'ui.bootstrap'
     ]);
 
     angular.module('MyOffice.app').config(['$routeProvider', '$locationProvider',

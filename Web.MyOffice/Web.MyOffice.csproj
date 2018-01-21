@@ -507,6 +507,7 @@
     <Content Include="Libs\moment\locale\ru.js" />
     <Content Include="Libs\moment\locale\uk.js" />
     <Content Include="Libs\moment\min\locales.min.js" />
+    <Content Include="Libs\ngBootbox\dist\ngBootbox.min.js" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-aria.js" />
