@@ -198,15 +198,15 @@ namespace Web.MyOffice.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
         {
-            ManageMessageId? message = null;
+            //ManageMessageId? message = null;
             IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
-                message = ManageMessageId.RemoveLoginSuccess;
+                //message = ManageMessageId.RemoveLoginSuccess;
             }
             else
             {
-                message = ManageMessageId.Error;
+                //message = ManageMessageId.Error;
             }
             return RedirectToAction("MyProfile", "Member");
         }

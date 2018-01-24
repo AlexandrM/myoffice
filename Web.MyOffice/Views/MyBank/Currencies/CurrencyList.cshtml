@@ -24,9 +24,9 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesPrivatbank1')">@S.ImportRatesPrivatbank1</button></li>
-                    <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesNBU')">@S.ImportRatesNBU</button></li>
-                    <li><button type="button" class="form-control" ng-click="ratesUpdate('RatesCBR')">@S.ImportRatesCBR</button></li>
+                    <li><a href="" ng-click="ratesUpdate('RatesPrivatbank1')">@S.ImportRatesPrivatbank1</a></li>
+                    <li><a href="" ng-click="ratesUpdate('RatesNBU')">@S.ImportRatesNBU</a></li>
+                    <li><a href="" ng-click="ratesUpdate('RatesCBR')">@S.ImportRatesCBR</a></li>
                 </ul>
             </div>
             <input class="form-control" type="text" ng-blur="filter($event)" ng-model="nameFilter"/>
@@ -78,7 +78,7 @@
                 </td>
                 <td>
                     <buton type="button" class="btn btn-primary" ng-click="currencyEditDialog(currency)">@R.R.Edit</buton>
-                    <button type="button" class="btn btn-warning" ng-click="currencyArchive(currency)">@R.R.ToArchive</button>
+                    <button type="button" class="btn btn-danger" ng-click="currencyDelete(currency)">@R.R.Delete</button>
                 </td>
             </tr>
         </tbody>

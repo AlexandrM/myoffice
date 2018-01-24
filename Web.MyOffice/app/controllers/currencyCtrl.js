@@ -8,48 +8,35 @@
         $scope.showArchive = false;
         $scope.nameFilter = '';
         $scope.currencies = [];
+        $scope.MWS = ModalWindowService;
 
         $scope.refresh = function () {
             CurrencyService.getCurrencyList({}, function (data) {
                 $scope.currencies = data.currencies;
                 $scope.currencyTypes = data.types;
-                $scope.baseCurrency = data.BaseCurrency;
-                $scope.warnings = data.warnings;
             });
         };
 
-        $scope.closeWindow = function (name) {
-            ModalWindowService.close(name);
-            $scope.refresh();
-        };
-
-        $scope.openForm = function (viewName, size) {
-            ModalWindowService.open('CurrenciesController', viewName, $scope, size);
-        };
-
         $scope.currencyEditDialog = function (currency) {
-            $scope.newCurrency = currency === undefined ? {} : currency;
-            $scope.newCurrency.isEdited = currency !== undefined;
+            $scope.newCurrency = currency || {};
+            $scope.newCurrency.isEdited = !currency;
             var value = 0;
             if (currency) {
                 value = $scope.currencyTypes[currency.CurrencyType - 1].Name === $scope.baseCurrency ? 1 : currency.Value;
                 value = currency.Value === undefined ||
-                        currency.Value === null      ||
+                        currency.Value === null ||
                         currency.Value === '' ? 0 : value;
 
             }
 
-            var options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-            var date = (new Date()).toLocaleDateString(navigator.language, options);
-            $scope.newRate = { Value: value, DateTime: date };
-            $scope.openForm('CurrencyAdd','modal-sm');
+            $scope.newRate = { Value: value, DateTime: new Date() };
+            ModalWindowService.open('CurrenciesController', 'CurrencyAdd', $scope, 'modal-sm');
         };
 
-        $scope.setNewRateDate = function () {
-            $('#newRateDate').datetimepicker({ locale: navigator.language });
-        };
-
-        $scope.postCurrency = function (newCurrency, newRate) {
+        $scope.addCurrency = function (newCurrency, newRate, form) {
+            if (!form.$valid) {
+                return;
+            };
             CurrencyService.postCurrency({
                 Id: newCurrency.Id,
                 Name: newCurrency.Name,
@@ -57,72 +44,33 @@
                 CurrencyType: newCurrency.CurrencyType,
                 MyCurrency: newCurrency.MyCurrency,
                 Value: newCurrency.Value
-            },
-                function () {
-                    if (newRate) {
-                        CurrencyService.putCurrencyRate({
-                            Id: 0,
-                            Currency: newCurrency,
-                            CurrencyId: newCurrency.Id,
-                            DateTime: newRate.DateTime,
-                            Value: newRate.Value
-                        }, function () {
-                            $scope.refresh();
-                            $scope.closeWindow('CurrencyAdd');
-                        });
-                    } else {
-                        $scope.refresh();
-                        $scope.closeWindow('CurrencyAdd');
-                    }
-                });
-        };
-
-        $scope.addCurrency = function (newCurrency, currencyRate, form) {
-            if (form.$valid) {
-                var newCurrencyAlreadyExists = $scope.currencies.find(function (_currency) {
-                    return +_currency.CurrencyType === +newCurrency.CurrencyType;
-                }) !== undefined;
-                if (!newCurrencyAlreadyExists || newCurrency.isEdited) {
-                    $scope.postCurrency(newCurrency, currencyRate);
-                } else {
-                    bootbox.alert($scope.warnings[0]);
-                }
-            };
-        };
-
-        $scope.currencyArchive = function (currency) {
-            if (!currency.MyCurrency) {
-                CurrencyService.editCurrency({ currencyId: currency.Id, deleted: true }, function () {
+            }, function (data) {
+                CurrencyService.putCurrencyRate({
+                    Id: 0,
+                    CurrencyId: data.Currency.Id,
+                    DateTime: newRate.DateTime,
+                    Value: newRate.Value
+                }, function () {
                     $scope.refresh();
+                    ModalWindowService.close('CurrencyAdd');
                 });
-            } else {
-                bootbox.alert($scope.warnings[1]);
-            }
-        };
-
-        $scope.restoreCurrency = function (currency) {
-            CurrencyService.editCurrency({ currencyId: currency.Id, deleted: false }, function () {
-                $scope.refresh();
             });
         };
 
-        $scope.deleteCurrency = function (Id) {
-            CurrencyService.deleteCurrency({ currencyId: Id }, function (data) {
-                if (!data.result) {
+        $scope.currencyDelete = function (currency) {
+            CurrencyService.deleteCurrency({ currencyId: currency.Id, deleted: true }, function (data) {
+                if (!data.ok) {
                     bootbox.alert(data.message);
+                    return;
                 }
                 $scope.refresh();
             });
         };
 
-        $scope.setMyCurrency = function (currency) {
-            $scope.postCurrency(currency);
+        $scope.ratesUpdate = function (name) {
+            CurrencyService.ratesUpdate({ name: name }, function (data) {
+                $scope.refresh();
+            });
         };
-
-        $scope.ratesUpdate = function(sourceName){
-                CurrencyService.updateRates({ sourceName: sourceName }, function () {
-                    $scope.refresh();
-                });
-            };
-        }
+    }
 })();

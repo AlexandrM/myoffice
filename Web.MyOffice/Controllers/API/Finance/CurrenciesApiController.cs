@@ -30,8 +30,6 @@ namespace Web.MyOffice.Controllers.API
                     .Cast<CurrencyType>()
                     .Select(x => new { Id = x, Name = Enum.GetName(typeof(CurrencyType), x) }).OrderBy(x=>x.Id),
 
-                BaseCurrency = CurrenciesController.BaseCurrency.ToString(),
-
                 warnings = new List<string>() {
                     R.R.WarningExists,
                     R.R.CurrencyWarning
@@ -40,14 +38,12 @@ namespace Web.MyOffice.Controllers.API
             return ResponseObject2Json(model);
         }
 
-        private static CurrencyType BaseCurrency { set; get; }
         [HttpGet]
         public HttpResponseMessage CurrenciesUpdate(string sourceName)
         {
             var rateLoader = new CurrencyRateLoader(db);
             if (rateLoader.UpdateRates(sourceName, UserId))
             {
-                CurrenciesController.BaseCurrency = rateLoader.BaseCurrency;
                 return ResponseObject2Json(HttpStatusCode.OK);
             }
             else
@@ -57,94 +53,106 @@ namespace Web.MyOffice.Controllers.API
         }
 
         [HttpPost]
-        public HttpResponseMessage CurrencyPost(Currency newCurrency)
+        [Route("api/currencies/postCurrency")]
+        public HttpResponseMessage PostCurrency(Currency currency)
         {
-            using (db)
+            var model = db.Currencies.FirstOrDefault(x => x.UserId == UserId && x.Id == currency.Id);
+            if (model == null)
             {
-                newCurrency.UserId = UserId;
-                if (db.Currencies.Any(x => x.Id == newCurrency.Id && x.UserId == UserId))
-                {
-                    var prevMyCurrency = db.Currencies.FirstOrDefault(currency => currency.MyCurrency &&
-                                                                                  currency.Id != newCurrency.Id &&
-                                                                                  currency.UserId == UserId);
-                    if (prevMyCurrency != null && newCurrency.MyCurrency)
-                    {
-                        prevMyCurrency.MyCurrency = false;
-                    }
-                    db.Currencies.Attach(newCurrency);
-                    db.Entry(newCurrency).State = EntityState.Modified;
-                }
-                else
-                {
-                    db.Entry(newCurrency).State = EntityState.Added;
-                }
+                currency.Id = Guid.NewGuid();
+                currency.UserId = UserId;
+                db.Currencies.Add(currency);
+            }
+            else
+            {
+                model.Name = currency.Name;
+                model.ShortName = currency.ShortName;
+                model.CurrencyType = currency.CurrencyType;
+            }
+            db.SaveChanges();
+
+            return ResponseObject2Json(new {
+                Currency = currency,
+            });
+        }
+
+        [HttpPost]
+        [Route("api/currencies/postCrrencyRate")]
+        public HttpResponseMessage PostCrrencyRate(CurrencyRate rate) {
+            var currency = db.Currencies.FirstOrDefault(x => x.Id == rate.CurrencyId);
+
+            var lastRate = db.CurrencyRates
+                .AsNoTracking()
+                .OrderByDescending(x => x.DateTime)
+                .Where(x => x.CurrencyId == currency.Id & x.DateTime <= rate.DateTime)
+                .FirstOrDefault();
+
+            if (lastRate == null || lastRate.Value != rate.Value)
+            {
+                rate.CurrencyId = currency.Id;
+                db.CurrencyRates.Add(rate);
                 db.SaveChanges();
-
-                return ResponseObject2Json(HttpStatusCode.Accepted);
-            }
-        }
-
-        [HttpPut]
-        public HttpResponseMessage CurrencyRatePut(CurrencyRate newCurrencyRate) {
-            var currency = db.Currencies.FirstOrDefault(crncy => crncy.CurrencyType == newCurrencyRate.Currency.CurrencyType);
-            newCurrencyRate.Currency = null;
-
-            var curRates = db.CurrencyRates.AsNoTracking().Where(rate => 
-                rate.CurrencyId == currency.Id && 
-                rate.Currency.UserId == UserId).ToList();
-
-            CurrencyRate lastRate = null;
-            if (curRates.Count > 0)
-            {
-                var maxDate = curRates.Max(rate => rate.DateTime);
-                lastRate = curRates.FirstOrDefault(rate => rate.DateTime == maxDate);
             }
 
-            if (lastRate == null || lastRate.Value != newCurrencyRate.Value)
-            {
-                newCurrencyRate.CurrencyId = currency.Id;
-                currency.Value = newCurrencyRate.Value;
-                db.CurrencyRates.Add(newCurrencyRate);
-                db.Entry(currency).State = EntityState.Modified;
-            }
+            lastRate = db.CurrencyRates
+                .AsNoTracking()
+                .OrderByDescending(x => x.DateTime)
+                .Where(x => x.CurrencyId == currency.Id)
+                .FirstOrDefault();
+            currency.Value = lastRate.Value;
             db.SaveChanges();
 
-            return ResponseObject2Json(HttpStatusCode.Accepted);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage CurrencyArchive(Guid currencyId, bool deleted)
-        {
-            var delcurrency = db.Currencies.FirstOrDefault(x => x.Id == currencyId && x.UserId == UserId);
-            delcurrency.IsArchive = deleted;
-            db.SaveChanges();
 
             return ResponseObject2Json(HttpStatusCode.Accepted);
         }
 
         [HttpDelete]
-        public HttpResponseMessage CurrencyDelete(Guid currencyId)
+        [Route("api/currencies/deleteCurrency")]
+        public object DeleteCurrency([FromUri]Guid currencyId)
         {
-            var delAccounts = db.Accounts
-                .Include(acc => acc.Currency)
-                .Where(acc => acc.CurrencyId == currencyId & acc.Budget.OwnerId == UserId)
-                .ToList();
+            var currency = db.Currencies.FirstOrDefault(x => x.Id == currencyId && x.UserId == UserId);
 
-            if (delAccounts.Any())
+            var acc = db.Accounts.FirstOrDefault(x => x.CurrencyId == currencyId);
+            if (acc != null)
             {
-                return ResponseObject2Json(new {
-                    result = false,
-                    message = R.R.CantDeleteCurrency1
-                });
+                return new
+                {
+                    ok = false,
+                    message = $"There are account '{acc.Name}' whith currency '{currency.Name}'",
+                };
+            }
+            var mr = db.MemberRates.Include(x => x.Member).FirstOrDefault(x => x.CurrencyId == currencyId);
+            if (mr != null)
+            {
+                return new
+                {
+                    ok = false,
+                    message = $"There are member '{mr.Member.FullName}' whith currency '{currency.Name}'",
+                };
             }
 
-            var m = db.Currencies.FirstOrDefault(x => x.Id == currencyId && x.UserId == UserId);
-            db.Currencies.Remove(m);
+            db.CurrencyRates.RemoveRange(db.CurrencyRates.Where(x => x.CurrencyId == currency.Id));
+            db.Currencies.Remove(currency);
             db.SaveChanges();
 
-            return ResponseObject2Json(new {
-                result = true
-            });
+            return new
+            {
+                ok = true,
+                message = "",
+            };
+        }
+
+
+        [HttpGet]
+        [Route("api/currencies/ratesUpdate")]
+        public object RatesUpdate([FromUri] string name)
+        {
+            var cl = new CurrencyRateLoader(db);
+            cl.UpdateRates(name, UserId);
+
+            return new
+            {
+            };
         }
     }
 }

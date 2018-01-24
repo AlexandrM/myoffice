@@ -46,7 +46,7 @@ namespace Web.MyOffice.Controllers.API
             var userBudgets = db.BudgetUsers.Where(userBudget => userBudget.UserId == UserId).ToList();
 
             model.budgetUsers = db.BudgetUsers.Include(userBudget => userBudget.Budget).ToList()
-                .Where(x => userBudgets.Contains(x, new UserBudgetComparer()) != null);
+                .Where(x => userBudgets.Contains(x, new UserBudgetComparer()));
 
             model.users = db.Members.ToList();
             return ResponseObject2Json(model);
@@ -104,7 +104,7 @@ namespace Web.MyOffice.Controllers.API
         {
             using (db)
             {
-                var hasChanges = false;
+                //var hasChanges = false;
                 if (UpdatingList != null)
                 {
                     if (UpdatingList.NewUsers != null && UpdatingList.NewUsers.Count > 0)

@@ -33,7 +33,7 @@ namespace ASE
 
         private class CBRCurrencyContainer
         {
-            public ValCurs ValCurs;
+            public ValCurs ValCurs = null;
         }
 
         public Uri BaseSource { set; get; }
