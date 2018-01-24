@@ -8,7 +8,7 @@ namespace ASE.MVC
 {
     public class ViewEngineAdv: RazorViewEngine
     {
-        public ViewEngineAdv()
+        public ViewEngineAdv(): base()
         {
         }
 
@@ -28,7 +28,16 @@ namespace ASE.MVC
             {
                 var virtualPath = String.Format("~/Views/{0}{1}/{2}.cshtml", attr.SubPath, controllerContext.Controller.GetType().Name.Replace("Controller", ""), partialViewName);
                 if (FileExists(controllerContext, virtualPath))
-                return new ViewEngineResult(CreatePartialView(controllerContext, virtualPath), this);
+                    return new ViewEngineResult(CreatePartialView(controllerContext, virtualPath), this);
+            }
+            else
+            {
+                foreach(var item in this.PartialViewLocationFormats)
+                {
+                    var virtualPath = String.Format(item, partialViewName, controllerContext.Controller.GetType().Name.Replace("Controller", ""));
+                    if (FileExists(controllerContext, virtualPath))
+                        return new ViewEngineResult(CreatePartialView(controllerContext, virtualPath), this);
+                }
             }
 
             return base.FindPartialView(controllerContext, partialViewName, useCache);
