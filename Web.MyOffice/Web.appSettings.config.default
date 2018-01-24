@@ -5,6 +5,7 @@
   <add key="ClientValidationEnabled" value="true" />
   <add key="UnobtrusiveJavaScriptEnabled" value="true" />
 
+  <add key="Auth.AuthCookieName" value="MyOfficeLocal" />
   <add key="ASE.AllowRegistration" value="true" />
   <add key="ASE.SiteName" value="office.ase.com.ua" />
 
