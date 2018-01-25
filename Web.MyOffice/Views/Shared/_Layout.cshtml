@@ -4,7 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link id="linkRoot" href="~/" rel="tag" />
+    <link rel="icon" href="~/favicon.ico?v=2" />
+
     <title>@this.Title</title>
+
     @Styles.Render("~/CSS/css")
     @Styles.Render("~/Content/bootstrap/css/bootstrap-cosmo.min.css")
     @Styles.Render("~/Content/bootstrap/css/bootstrap-submenu.css")
@@ -75,11 +78,11 @@
                                     <a data-target="#" class="dropdown-toggle angulare" data-toggle="dropdown">@S.Projects</a>
                                     <ul class="dropdown-menu">
                                         @foreach (var item in db.ProjectMembers
-                    .Where(x => x.Member.MainMemberId == UserId & x.Project.State != ProjectState.Approved)
-                    .Select(x => x.Project)
-                    .ToList()
-                    .Distinct()
-                    .OrderBy(x => x.Name))
+                                            .Where(x => x.Member.MainMemberId == UserId & x.Project.State != ProjectState.Approved)
+                                            .Select(x => x.Project)
+                                            .ToList()
+                                            .Distinct()
+                                            .OrderBy(x => x.Name))
                                         {
                                             <li><a href="~/Project#/tasks/@item.Id">@item.Name</a></li>
                                         }
@@ -111,6 +114,14 @@
                                         Guid.TryParse(Request.Cookies["BudgetId"].Value, out budgetId);
                                     }
                                     var budget = db.Budgets.Find(budgetId);
+                                    if (budget == null)
+                                    {
+                                        budget = db.Budgets.FirstOrDefault(x => x.OwnerId == UserId);
+                                        if (budget != null)
+                                        {
+                                            Response.Cookies.Add(new HttpCookie("BudgetId", budget.Id.ToString()));
+                                        }
+                                    }
 
                                     <li class="dropdown-submenu">
                                         @if (budget == null)
@@ -156,9 +167,9 @@
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.References</a>
                                     <ul class="dropdown-menu">
                                         <li><a href="~/Project#/Budgets">@R.R.Budgets</a></li>
+                                        <li><a href="~/Project#/Currencies">@R.R.Currencies</a></li>
                                         @if ((budget != null) && (budget.OwnerId == UserId))
                                         {
-                                            <li><a href="~/Project#/Currencies">@R.R.Currencies</a></li>
                                             <li><a href="~/Project#/BankAccounts">@R.R.Accounts</a></li>
                                             <li><a href="~/Project#/items">@R.R.Items</a></li>
                                         }

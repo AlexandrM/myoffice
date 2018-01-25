@@ -18,6 +18,7 @@ using Web.MyOffice.Res;
 using BotDetect.Web.Mvc;
 using System.Data.Entity.Validation;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyBank.Models;
 
 namespace Web.MyOffice.Controllers
 {
@@ -282,7 +283,7 @@ namespace Web.MyOffice.Controllers
                         db.SaveChanges();
                     }
                     SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Currency");
+                    return RedirectToLocal("~/Project#/Currencies");
                 }
 
                 return RedirectToLocal(returnUrl);
@@ -360,7 +361,6 @@ namespace Web.MyOffice.Controllers
             Response.Cookies.Add(new HttpCookie("UserEmail") { Value = user.Email, Expires = DateTime.Now.AddYears(1) });
 
             Guid userId = Guid.Parse(user.Id);
-            //Web.MyOffice.Controllers.ProjectController.RefreshProjects(this, userId);
 
             var currentMember = db.Members.FirstOrDefault(x => x.Id == userId);
             if (currentMember == null)
@@ -372,6 +372,18 @@ namespace Web.MyOffice.Controllers
                 currentMember.UserId = userId;
                 currentMember.MainMemberId = userId;
                 db.Members.Add(currentMember);
+                db.SaveChanges();
+            }
+
+            var budget = db.Budgets.FirstOrDefault(x => x.OwnerId == userId);
+            if (budget == null)
+            {
+                db.Budgets.Add(new Budget
+                {
+                    Id = Guid.NewGuid(),
+                    Name = R.R.MainBudget,
+                    OwnerId = userId,
+                });
                 db.SaveChanges();
             }
 

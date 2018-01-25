@@ -12,7 +12,7 @@ using Web.MyOffice.Data;
 
 namespace Web.MyOffice.Controllers.API
 {
-    public class TimeLoggerLogItemController : ControllerApiAdv<DB>
+    /*public class TimeLoggerLogItemController : ControllerApiAdv<DB>
     {
         [AllowAnonymous]
         [HttpPost]
@@ -29,5 +29,5 @@ namespace Web.MyOffice.Controllers.API
 
             return new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.InternalServerError, Content = new StringContent("false", Encoding.UTF8, "application/json") };
         }
-    }
+    }*/
 }

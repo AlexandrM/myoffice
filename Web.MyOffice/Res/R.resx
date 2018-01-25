@@ -594,4 +594,7 @@
   <data name="Quantity" xml:space="preserve">
     <value>Колличество</value>
   </data>
+  <data name="MainBudget" xml:space="preserve">
+    <value>Основной бюджет</value>
+  </data>
 </root>

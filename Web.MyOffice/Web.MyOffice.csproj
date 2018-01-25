@@ -507,6 +507,7 @@
     <Content Include="Libs\moment\locale\ru.js" />
     <Content Include="Libs\moment\locale\uk.js" />
     <Content Include="Libs\moment\min\locales.min.js" />
+    <Content Include="Libs\moment\min\moment.min.js" />
     <Content Include="Libs\ngBootbox\dist\ngBootbox.min.js" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
@@ -548,6 +549,7 @@
     <None Include=".eslintrc" />
     <None Include="package.json" />
     <None Include="bower.json" />
+    <None Include="Properties\PublishProfiles\1.201 - m.pubxml" />
     <None Include="Properties\PublishProfiles\1.201 - office.pubxml" />
     <None Include="Properties\PublishProfiles\localhost.pubxml" />
     <None Include="Properties\PublishProfiles\office.ase.com.ua.pubxml" />

@@ -12,7 +12,7 @@ using Web.MyOffice.Data;
 
 namespace Web.MyOffice.Controllers.API
 {
-    public class TimeLoggerStartStopController : ControllerApiAdv<DB>
+    /*public class TimeLoggerStartStopController : ControllerApiAdv<DB>
     {
         public static List<Guid> KnownClients = new List<Guid>();
 
@@ -50,5 +50,5 @@ namespace Web.MyOffice.Controllers.API
 
             return new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.InternalServerError, Content = new StringContent("false", Encoding.UTF8, "application/json") };
         }
-    }
+    }*/
 }

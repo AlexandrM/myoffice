@@ -19,7 +19,7 @@ namespace ASE.EF
             var configuration = new DbMigrationsConfiguration<TContext>();
             configuration.AutomaticMigrationDataLossAllowed = true;
             configuration.AutomaticMigrationsEnabled = true;
-            if (System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] != null)
+            if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"]))
             {
                 configuration.ContextKey = System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_" + configuration.ContextKey;
             }

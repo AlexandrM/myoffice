@@ -853,6 +853,15 @@ namespace R {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Основной бюджет.
+        /// </summary>
+        public static string MainBudget {
+            get {
+                return ResourceManager.GetString("MainBudget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Основные преимущества.
         /// </summary>
         public static string MainFutures {
