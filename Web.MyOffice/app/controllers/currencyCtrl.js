@@ -68,7 +68,14 @@
         };
 
         $scope.ratesUpdate = function (name) {
-            CurrencyService.ratesUpdate({ name: name }, function (data) {
+            CurrencyService.ratesUpdate({ name: name }, function () {
+                $scope.refresh();
+            });
+        };
+
+        $scope.setMyCurrency = function (currency) {
+            currency.MyCurrency = true;
+            CurrencyService.postCurrency(currency, function () {
                 $scope.refresh();
             });
         };

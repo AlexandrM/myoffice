@@ -46,7 +46,7 @@ namespace ASE.MVC
         {
             base.OnModelCreating(modelBuilder);
 
-            if (System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] != null)
+            if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"]))
             {
                 modelBuilder.Entity<ApplicationUser>().ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_AspNetUsers"); //AspNetUsers
                 modelBuilder.Entity<IdentityRole>().ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_AspNetRoles"); //AspNetRoles

@@ -16,32 +16,6 @@ namespace Web.MyOffice.Data
 {
     public class DB : DbContext
     {
-        #region TimeLogger
-
-        //public DbSet<TimeLoggerSetting> TimeLoggerSettings { get; set; }
-
-        public DbSet<TimeLoggerSettingWorkStation> TimeLoggerSettingWorkStations { get; set; }
-
-
-        public DbSet<TimeLoggerApplicationCategory> TimeLoggerApplicationCategories { get; set; }
-
-        public DbSet<TimeLoggerStartStop> TimeLoggerStartStop { get; set; }
-
-        public DbSet<TimeLoggerApplicationArgument> TimeLoggerApplicationArguments { get; set; }
-
-        public DbSet<TimeLoggerLogItem> TimeLoggerLogItems { get; set; }
-        
-        #endregion TimeLogger
-
-        #region QuickRecords
-
-        public DbSet<QuickRecordCategory> QuickRecordCategories { get; set; }
-
-        public DbSet<QuickRecord> QuickRecords { get; set; }
-
-        #endregion QuickRecords
-
-
         public DbSet<Member> Members { get; set; }
 
         public DbSet<MemberRate> MemberRates { get; set; }
@@ -187,21 +161,9 @@ namespace Web.MyOffice.Data
             modelBuilder.Entity<CurrencyRate>().Property(x => x.Value).HasPrecision(19, 4);
             modelBuilder.Entity<Currency>().Property(x => x.Value).HasPrecision(19, 4);
 
-            //modelBuilder.Entity<AccountUser>().HasRequired(x => x.User).WithMany().WillCascadeOnDelete(false);
-            //modelBuilder.Entity<AccountUser>().HasOptional(x => x.Category).WithMany().WillCascadeOnDelete(false);
-
             #endregion MyBank
 
-            //modelBuilder.Ignore<Budget>();
-            //modelBuilder.Ignore<BudgetUser>();
-            //modelBuilder.Ignore<CategoryAccount>();
-            //modelBuilder.Ignore<CategoryItem>();
-            //modelBuilder.Ignore<Account>();
-            //modelBuilder.Ignore<Item>();
-            //modelBuilder.Ignore<Motion>();
-            //modelBuilder.Ignore<Record>();
-
-            if (System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] != null)
+            if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"]))
             {
                 modelBuilder.Types()
                     .Configure(entity => entity.ToTable(System.Configuration.ConfigurationManager.AppSettings["TablePrefix"] + "_" + entity.ClrType.Name));

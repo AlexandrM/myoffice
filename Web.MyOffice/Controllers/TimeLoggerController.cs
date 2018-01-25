@@ -12,7 +12,7 @@ using System.Data.Entity.SqlServer;
 namespace Web.MyOffice.Controllers
 {
     //[RequireHttps]
-    [Authorize]
+    /*[Authorize]
     public class TimeLoggerController : ControllerAdv<DB>
     {
         //
@@ -233,7 +233,6 @@ namespace Web.MyOffice.Controllers
                     result = result
                 }
             };
-        }
-       
-    }
+        }       
+    }*/
 }

@@ -383,9 +383,9 @@ namespace MyBank.Models
             db.SaveChanges();
         }
 
-        public void CurrencySetPrimary(Guid id)
+        /*public void CurrencySetPrimary(Guid id)
         {
-            /*foreach (Currency currency in db.Currencies.Where(x => x.Budget.Id == CurrentOwner.Id && x.Primary).ToList())
+            foreach (Currency currency in db.Currencies.Where(x => x.Budget.Id == CurrentOwner.Id && x.Primary).ToList())
             {
                 currency.Primary = false;
                 db.SaveChanges();
@@ -393,8 +393,8 @@ namespace MyBank.Models
 
             Currency item = db.Currencies.FirstOrDefault(x => x.Budget.Id == CurrentOwner.Id && x.Id == id);
             item.Primary = true;
-            db.SaveChanges();*/
-        }
+            db.SaveChanges();
+        }*/
 
         public CurrencyRate CurrencyRateGet(long id)
         {
@@ -405,33 +405,6 @@ namespace MyBank.Models
         {
             return db.CurrencyRates.Where(x => x.Currency.Owner.Id == CurrentOwner.Id && x.Currency.Id == id).OrderByDescending(x => x.DateTime).ToList();
         }
-
-        /*public Currency CurrencyAddUpdate(Currency model)
-        {
-            return CurrencyAddUpdate(model.Id, model.Name, model.ShortName);
-        }
-
-        public Currency CurrencyAddUpdate(Guid id, string name, string shortName)
-        {
-            return CurrencyAddUpdate(id, name, shortName, false);
-        }
-
-        public Currency CurrencyAddUpdate(Guid id, string name, string shortName, bool primary)
-        {
-            Currency item = db.Currencies.FirstOrDefault(x => x.Id == id && x.Owner.Id == CurrentOwner.Id);
-            if (item == null)
-            {
-                item = db.Currencies.Create();
-                item.Owner = CurrentOwner;
-                db.Currencies.Add(item);
-            }
-            item.Name = name;
-            item.ShortName = shortName;
-            //item.Primary = primary;
-            db.SaveChanges(); ;
-
-            return item;
-        }*/
 
         public List<Currency> Currencies
         {
@@ -447,11 +420,6 @@ namespace MyBank.Models
             {
                 List<SelectListItem> list = new List<SelectListItem>();
                 SelectListItem item;
-
-                /*item = new SelectListItem();
-                item.Text = "---";
-                item.Value = "0";
-                list.Add(item);*/
 
                 foreach (Currency cur in Currencies)
                 {

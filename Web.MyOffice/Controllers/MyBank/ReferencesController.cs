@@ -150,12 +150,12 @@ namespace MyBank.Controllers
             };
         }*/
 
-        public ActionResult CurrencySetPrimary(Guid id)
+        /*public ActionResult CurrencySetPrimary(Guid id)
         {
             DAL.CurrencySetPrimary(id);
 
             return RedirectToAction("Currencies");
-        }
+        }*/
 
         public ActionResult CurrencyRates(Guid id)
         {

@@ -68,6 +68,15 @@ namespace Web.MyOffice.Controllers.API
                 model.Name = currency.Name;
                 model.ShortName = currency.ShortName;
                 model.CurrencyType = currency.CurrencyType;
+                model.MyCurrency = currency.MyCurrency;
+                if (currency.MyCurrency)
+                {
+                    foreach(var item in db.Currencies.Where(x => x.UserId == UserId))
+                    {
+                        item.MyCurrency = false;
+                    }
+                    db.SaveChanges();
+                }
             }
             db.SaveChanges();
 
