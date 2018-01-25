@@ -73,7 +73,7 @@ namespace Web.MyOffice.Controllers.API
                 {
                     foreach(var item in db.Currencies.Where(x => x.UserId == UserId))
                     {
-                        item.MyCurrency = false;
+                        item.MyCurrency = item.Id == currency.Id ? currency.MyCurrency : false;
                     }
                     db.SaveChanges();
                 }
