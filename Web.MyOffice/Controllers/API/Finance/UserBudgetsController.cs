@@ -123,7 +123,7 @@ namespace Web.MyOffice.Controllers.API
         [Route("api/UserBudgets/addUser")]
         public object AddUser(BudgetUser user)
         {
-            var b = db.Budgets.FirstOrDefault(x => x.Id == user.BudgetId);
+            var b = db.Budgets.FirstOrDefault(x => x.Id == user.BudgetId );
             var bu = db.BudgetUsers
                 .Include(x => x.User)
                 .FirstOrDefault(x => x.BudgetId == b.Id && x.UserId == user.UserId);

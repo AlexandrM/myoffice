@@ -2,6 +2,10 @@
 
     'use strict';
 
+    Date.prototype.toJSON = function () { return moment(this).format(); }
+
+    var module = angular.module('ase.com.ua', []);
+
     window.l = function (p1, p2, p3, p4, p5) {
         if (arguments.length > 5) {
             console.log(arguments);
@@ -17,9 +21,6 @@
             console.log(p1);
         }
     };
-
-    var module = angular.module('ase.com.ua', []);
-
     /*
         https://github.com/Eonasdan/bootstrap-datetimepicker
         eonasdan-bootstrap-datetimepicker

@@ -25,33 +25,34 @@ namespace ASE
         public string Name { set; get; }
         public Dictionary<string, string> RouteParams { set; get; }
         public Dictionary<CurrencyType, decimal> LoadedRates { set; get; }
+        public CurrencyType BaseCurrency { set; get; }
         private bool isInited = false;
         public NBURatesSource(string name, Uri baseSource, Dictionary<string, string> routeParams)
         {
             BaseSource = baseSource;
             RouteParams = routeParams;
+            if(routeParams != null)
+            {
+                RouteParamString = routeParams.ToList().Aggregate("?", (key, value) => key + "=" + value + "&");
+            }
+            else
+            {
+                RouteParamString = string.Empty;
+            }
+            BaseCurrency = CurrencyType.UAH;
             Name = name;
             isInited = true;
             Id = Guid.NewGuid();
+            BaseCurrency = CurrencyType.UAH;
         }
-
-        private string GetRouteParamString()
-        {
-            if (RouteParams == null) return string.Empty;
-            var paramString = string.Empty;
-            foreach (var param in RouteParams)
-            {
-                paramString = param.Key + "=" + param.Value + "&";
-            }
-            return paramString;
-        }
+        public string RouteParamString { set; get; }
         public bool Load(List<string> userTypes)
         {
             if (isInited)
             {
                 using (var wc = new WebClient())
                 {
-                    var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + GetRouteParamString()).Replace("RUB","RUR");
+                    var stringRawData = wc.DownloadString(BaseSource.AbsoluteUri + RouteParamString.Replace("RUB","RUR"));
                     var loadedRates = JsonConvert.DeserializeObject<NBUCurrency[]>(stringRawData).ToList();
                     LoadedRates = loadedRates.Join(userTypes.Distinct(),
                         rate => rate.cc,
@@ -60,7 +61,7 @@ namespace ASE
                         new KeyValuePair<string, decimal>(type, rate.rate))
                         .ToDictionary(KeyValuePair => (CurrencyType)Enum.Parse(typeof(CurrencyType), KeyValuePair.Key),
                                       KeyValuePair => KeyValuePair.Value);
-                    LoadedRates.Add(CurrencyType.UAH, 1);
+
                 }
                 return true;
             }
