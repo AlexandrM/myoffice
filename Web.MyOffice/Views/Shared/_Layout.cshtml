@@ -4,29 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link id="linkRoot" href="~/" rel="tag" />
-
     <title>@this.Title</title>
-
     @Styles.Render("~/CSS/css")
-    @Styles.Render("~/CSS/bootstrap")
+    @Styles.Render("~/Content/bootstrap/css/bootstrap-cosmo.min.css")
+    @Styles.Render("~/Content/bootstrap/css/bootstrap-submenu.css")
 
     @Scripts.Render("~/JS/modernizr")
+    @Scripts.Render("~/Libs/jquery/dist/jquery.min.js")
     @Scripts.Render("~/JS/jquery")
     @Scripts.Render("~/JS/jqueryval")
     <script src="@Url.Content(String.Format("~/Scripts/locale/messages_{0}.js", CultureHelper.AcceptLanguage().ToString()))"></script>
-    @Scripts.Render("~/JS/moment")
+    @Scripts.Render("~/Libs/moment/min/moment.min.js")
+    @Scripts.Render("~/Libs/moment/locale/ru.js")
+    @Scripts.Render("~/Libs/moment/locale/uk.js")
+
     @Scripts.Render("~/JS/bootstrap")
     @Scripts.Render("~/JS/ASE")
     @Scripts.Render("~/JS/PDF")
-
-    @Scripts.Render("~/Scripts/angular.js")
-    @Scripts.Render("~/Scripts/angular-resource.js")
-    @Scripts.Render("~/Scripts/angular-route.js")
-    @Scripts.Render("~/Scripts/angular-moment.js")
-
-    @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap.js")
-    @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap-tpls.js")
-
+    @Scripts.Render("~/Libs/angular/angular.min.js")
+    @Scripts.Render("~/Libs/angular-resource/angular-resource.min.js")
+    @Scripts.Render("~/Libs/angular-route/angular-route.min.js")
+    @Scripts.Render("~/Libs/angular-moment/angular-moment.min.js")
+    @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap.min.js")
+    @Scripts.Render("~/Libs/angular-bootstrap/ui-bootstrap-tpls.min.js")
+    @Scripts.Render("~/Libs/ngBootbox/dist/ngBootbox.min.js")
+    
+    @Scripts.Render("~/Scripts/angular-ase.com.ua.js")
+    @Scripts.Render("~/Scripts/dis.js")
     <script>
         $.fn.datetimepicker.defaults.pickDate = true;
         $.fn.datetimepicker.defaults.pickTime = true;
@@ -46,11 +50,9 @@
         ASE.Init('@Url.Content("~")');
         ASE.UserId = '@UserId';
     </script>
-
     @Html.Partial("_JSLocalization")
 </head>
-
-<body>
+<body ng-app="MyOffice.app">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -65,42 +67,19 @@
                 @if (Request.IsAuthenticated)
                 {
                     <ul class="nav navbar-nav">
-                        @*<li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.QuickRecords<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                @foreach (var item in db.QuickRecordCategories.Where(x => x.UserId == UserId & x.ParentId == null).OrderBy(x => x.Name).ToList())
-                                {
-                                    <li>@Html.ActionLink(@item.Name, "QuickRecords", "QuickRecords", new { category = item.Id }, null)</li>
-                                }
-                                <li class="divider"></li>
-                                <li>@Html.ActionLink(@S.Settings, "Settings", "QuickRecords")</li>
-                            </ul>
-                        </li>*@
-
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.MenuTimeLogger<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink(@S.SummaryInformation, "SummaryInformation", "TimeLogger")</li>
-                                <li>@Html.ActionLink(@S.Journal, "Journal", "TimeLogger")</li>
-                                <li class="divider"></li>
-                                <li>@Html.ActionLink(@S.Applications, "Applications", "TimeLogger")</li>
-                                <li>@Html.ActionLink(@S.Settings, "Settings", "TimeLogger")</li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Projects<b class="caret"></b></a>
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">@S.Projects<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink(@S.AllProjects, "Index", "Project")</li>
                                 <li class="dropdown-submenu">
                                     <a data-target="#" class="dropdown-toggle angulare" data-toggle="dropdown">@S.Projects</a>
                                     <ul class="dropdown-menu">
                                         @foreach (var item in db.ProjectMembers
-                                            .Where(x => x.Member.MainMemberId == UserId & x.Project.State != ProjectState.Approved)
-                                            .Select(x => x.Project)
-                                            .ToList()
-                                            .Distinct()
-                                            .OrderBy(x => x.Name))
+                    .Where(x => x.Member.MainMemberId == UserId & x.Project.State != ProjectState.Approved)
+                    .Select(x => x.Project)
+                    .ToList()
+                    .Distinct()
+                    .OrderBy(x => x.Name))
                                         {
                                             <li><a href="~/Project#/tasks/@item.Id">@item.Name</a></li>
                                         }
@@ -109,9 +88,8 @@
                                 <li><a href="~/Project#/project/0">@S.Add</a></li>
                             </ul>
                         </li>
-
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Settlements<b class="caret"></b></a>
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">@S.Settlements<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="~/Project#/Debts/1">@S.MemberDebt</a></li>
                                 <li><a href="~/Project#/Debts/2">@S.ImplementerDebt</a></li>
@@ -123,9 +101,8 @@
                                 <li>@Html.ActionLink(@S.Members, "Index", "Member")</li>
                             </ul>
                         </li>
-
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.Finance<b class="caret"></b></a>
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">@S.Finance<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 @{
                                     Guid budgetId = Guid.Empty;
@@ -160,7 +137,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <li>@Html.ActionLink(@item.Name, "SelectBudget", "References", new { id = item.Id }, null)</li>
+                                                    <li>@Html.ActionLink((String.IsNullOrEmpty(item.Name) ? "-" : item.Name), "SelectBudget", "References", new { id = item.Id }, null)</li>
                                                 }
                                             }
                                         </ul>
@@ -172,6 +149,8 @@
                                 }
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink(S.Reports, "Index", "MyBankReports")</li>
+                                <li class="divider"></li>
+                                <li ng-controller="counterCtrl"><a href="" ng-click="openDialog()">@R.R.BanknoteCounter</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.References</a>
@@ -196,7 +175,6 @@
             </div>
         </div>
     </div>
-
     <div class="container body-content">
         <div id="content">
             @RenderBody()
@@ -206,7 +184,6 @@
             <p>&copy; @DateTime.Now.Year - @S.AppName @@ ase.com.ua</p>
         </footer>
     </div>
-
     <div class="navbar navbar-inverse navbar-fixed-bottom">
         <div class="container">
             <div class="navbar-header">
@@ -217,33 +194,11 @@
                 </button>
             </div>
             <div class="navbar-collapse collapse">
-                @{
-                    List<KeyValuePair<string, string>> history = (Session["ASEHistory"] as List<KeyValuePair<string, string>>);
-                    history = history ?? new List<KeyValuePair<string, string>>();
-                }
-                <ul class="nav navbar-nav">
-                    @if (history.Count > 1)
-                    { 
-                        <li><a href="@history[history.Count - 2].Value"><span class="glyphicon glyphicon-chevron-left" title="@S.Back (@history[history.Count - 2].Key)"></span></a></li>
-                    }
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@S.History<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            @{
-                                for (int i = history.Count - 2; i >= 0; i--)
-                                {
-                                    <li><a href="@history[i].Value">@history[i].Key</a></li>
-                                }
-                            }
-                        </ul>
-                    <li/>
-                </ul>
                 <ul class="nav navbar-nav">
                     @Html.Partial("Language")
                 </ul>
-
                 @if (Request.IsAuthenticated)
-                {
+            {
                     @Html.Partial("_LoginPartial")
                 }
             </div>
@@ -251,10 +206,8 @@
     </div>
 </body>
 </html>
-
 <script>
     "use strict";
-
     var globalDateFormats = [];
 
     $(function () {

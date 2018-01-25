@@ -25,31 +25,52 @@ using MVC = Web.MyOffice.Controllers.MyBank;
 
 namespace Web.MyOffice.Controllers.API
 {
+    [Authorize]
     public class UserBudgetsController : ControllerApiAdv<DB>
     {
-        private class UserBudgetComparer : IEqualityComparer<BudgetUser>
-        {
-            public virtual int GetHashCode(BudgetUser user1)
-            {
-                return user1.GetHashCode();
-            }
-            public virtual bool Equals(BudgetUser user1, BudgetUser user2)
-            {
-                return user1.BudgetId == user2.BudgetId && user1.BudgetId == user2.BudgetId;
-            }
-        }
-
         [Method.HttpGet]
         public HttpResponseMessage List()
         {
-            var model = (new object()).ToDynamic();
-            var userBudgets = db.BudgetUsers.Where(userBudget => userBudget.UserId == UserId).ToList();
+            return ResponseObject2Json(new {
+                Budgets = db.Budgets
+                    .Include(x => x.Users)
+                    .Where(x => x.OwnerId == UserId)
+                    .OrderBy(x => x.Name)
+                    .ToList()
+                    .Select(x => {
+                        x.Users.ForEach(z =>
+                        {
+                            z.User = db.Members.FirstOrDefault(c => c.UserId == UserId && c.MainMemberId == z.UserId);
+                        });
+                        return x;
+                    })
+                    .ToList(),
 
-            model.budgetUsers = db.BudgetUsers.Include(userBudget => userBudget.Budget).ToList()
-                .Where(x => userBudgets.Contains(x, new UserBudgetComparer()));
+                UserId = UserId,
+            });
+        }
 
-            model.users = db.Members.ToList();
-            return ResponseObject2Json(model);
+        [Method.HttpDelete]
+        public object Delete([FromUri] Guid id)
+        {
+            var m = db.Budgets.FirstOrDefault(x => x.Id == id && x.OwnerId == UserId);
+            if (db.Accounts.Any(x => x.BudgetId == m.Id))
+            {
+                return new
+                {
+                    ok = false,
+                    message = $"Budget {m.Name} have a accounts. Remove accounts first.",
+                };
+            }
+
+            db.Budgets.Remove(m);
+            db.SaveChanges();
+
+            return new
+            {
+                ok = true,
+                message = $"",
+            };
         }
 
         [Method.HttpPut]
@@ -58,91 +79,89 @@ namespace Web.MyOffice.Controllers.API
             newBudget.OwnerId = UserId;
             using (db)
             {
-      
-                var budgetUsers = db.BudgetUsers.Where(budgetUser => budgetUser.UserId == UserId && budgetUser.BudgetId == newBudget.Id);
-                var budgetUsersExists = budgetUsers.Count() == 1;
-                BudgetUser newBudgetUser = null;
-                if (budgetUsersExists)
+                if (newBudget.Id == Guid.Empty)
                 {
-                    newBudgetUser = budgetUsers.FirstOrDefault();
-                    newBudgetUser.BudgetId = newBudget.Id;
+                    newBudget.Id = Guid.NewGuid();
+                    db.Budgets.Add(newBudget);
+                    db.SaveChanges();
                 }
                 else
                 {
-                    newBudgetUser = new BudgetUser()
-                    {
-                        Id = budgetUsersExists ? budgetUsers.FirstOrDefault().Id : Guid.NewGuid(),
-                        BudgetId = newBudget.Id,
-                        UserId = UserId,
-                        Budget = newBudget
-                    };
+                    var m = db.Budgets.FirstOrDefault(x => x.Id == newBudget.Id && x.OwnerId == UserId);
+                    m.Name = newBudget.Name;
+                    db.SaveChanges();
                 }
-
-                db.Entry(newBudgetUser).State = budgetUsersExists ? EntityState.Modified : EntityState.Added;
-                db.SaveChanges();
-
-                newBudget.OwnerId = UserId;
-                var budgetExists = db.Budgets.Where(budget => budget.OwnerId == UserId && budget.Id == newBudget.Id).Count() == 1;
-                db.Entry(newBudget).State = budgetExists ? EntityState.Modified : EntityState.Added;
-                db.SaveChanges();
-
-
             }
-
             return ResponseObject2Json(HttpStatusCode.Accepted);
         }
 
-        public class UpdatingUserList
+        [Method.HttpGet]
+        [Route("api/UserBudgets/findUser")]
+        public object FindUser([FromUri] string email)
         {
-            public List<Member> NewUsers { set; get; }
-            public List<Member> DelUsers { set; get; }
-            public Guid BudgetId { set; get; } 
+            var m = db.Members.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+            if (m != null)
+            {
+                return new
+                {
+                    userId = m.Id,
+                    ok = true,
+                    message = "",
+                };
+            }
+            else
+            {
+                return new
+                {
+                    ok = false,
+                    message = $"User with email {email} not found! Add in members first!",
+                };
+            }
         }
 
         [Method.HttpPost]
-        public HttpResponseMessage PostBudgetUserList(UpdatingUserList UpdatingList)
+        [Route("api/UserBudgets/addUser")]
+        public object AddUser(BudgetUser user)
         {
-            using (db)
+            var b = db.Budgets.FirstOrDefault(x => x.Id == user.BudgetId );
+            var bu = db.BudgetUsers
+                .Include(x => x.User)
+                .FirstOrDefault(x => x.BudgetId == b.Id && x.UserId == user.UserId);
+
+            if (bu != null)
             {
-                //var hasChanges = false;
-                if (UpdatingList != null)
+                return new
                 {
-                    if (UpdatingList.NewUsers != null && UpdatingList.NewUsers.Count > 0)
-                    {
-                        BudgetUser user = null;
-                        foreach (var newUser in UpdatingList.NewUsers)
-                        {
-                            user = new BudgetUser() {BudgetId = UpdatingList.BudgetId, UserId = newUser.Id};
-                            db.Entry(user).State = EntityState.Added;
-                        }
-                        db.SaveChanges();
-                    }
-                    if (UpdatingList.DelUsers != null && UpdatingList.DelUsers.Count > 0)
-                    {
-                        foreach (var delUser in UpdatingList.DelUsers)
-                        {
-                           var user = db.BudgetUsers.Where(budgetUser => budgetUser.UserId == delUser.Id && budgetUser.BudgetId == UpdatingList.BudgetId).First();
-                            db.Entry(user).State = EntityState.Deleted;
-                        }
-                        db.SaveChanges();
-                    }
-                }
-               
+                    ok = false,
+                    message = $"User with email {bu.User.Email} already added!",
+                };
             }
-            return ResponseObject2Json(HttpStatusCode.Accepted);
+
+            db.BudgetUsers.Add(user);
+            db.SaveChanges();
+
+            return new
+            {
+                ok = true,
+                message = "",
+            };
         }
 
         [Method.HttpDelete]
-        public HttpResponseMessage DeleteUser(Guid Id)
+        [Route("api/UserBudgets/deleteUser")]
+        public object deleteUser([FromUri] Guid userId)
         {
+            var bu = db.BudgetUsers
+                .FirstOrDefault(x => x.Budget.OwnerId == UserId && x.UserId == userId);
 
-            using (db)
+            db.BudgetUsers.Remove(bu);
+            db.SaveChanges();
+
+            return new
             {
-                var budgetUsersDel = db.BudgetUsers.Where(user => user.Id == Id).FirstOrDefault();
-                db.Entry(budgetUsersDel).State = EntityState.Deleted;
-                db.SaveChanges();
-            }
-            return ResponseObject2Json(HttpStatusCode.Accepted);
+                ok = true,
+                message = "",
+            };
         }
     }
 }
