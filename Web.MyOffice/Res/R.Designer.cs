@@ -79,6 +79,24 @@ namespace R {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Карта №1.
+        /// </summary>
+        public static string AccountCard {
+            get {
+                return ResourceManager.GetString("AccountCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Наличные.
+        /// </summary>
+        public static string AccountCash {
+            get {
+                return ResourceManager.GetString("AccountCash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Учет.
         /// </summary>
         public static string Accounting {
@@ -264,6 +282,24 @@ namespace R {
         public static string CategoryAccounts {
             get {
                 return ResourceManager.GetString("CategoryAccounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Карты.
+        /// </summary>
+        public static string CategoryCards {
+            get {
+                return ResourceManager.GetString("CategoryCards", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Наличные.
+        /// </summary>
+        public static string CategoryCash {
+            get {
+                return ResourceManager.GetString("CategoryCash", resourceCulture);
             }
         }
         

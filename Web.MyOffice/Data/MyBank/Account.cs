@@ -8,9 +8,9 @@ namespace MyBank.Models
 {
     public class Account : AutoGuidId
     {
-        public Guid BudgetId { get; set; }
-        [Display(ResourceType = typeof(R.R), Name = "Budget")]
-        public Budget Budget { get; set; }
+        //public Guid BudgetId { get; set; }
+        //[Display(ResourceType = typeof(R.R), Name = "Budget")]
+        //public Budget Budget { get; set; }
 
         [Display(ResourceType = typeof(R.R), Name = "Deleted")]
         public bool Deleted { get; set; }

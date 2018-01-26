@@ -13,9 +13,9 @@
     }
 }
 
-<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot/jquery.jqplot.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot/plugins/jqplot.pieRenderer.js")"></script>
-<link rel="stylesheet" type="text/css" hrf="@Url.Content("~/Scripts/jqplot/jquery.jqplot.css")" />
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot/jquery.jqplot.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot/plugins/jqplot.pieRenderer.min.js")"></script>
+<link rel="stylesheet" type="text/css" hrf="@Url.Content("~/Scripts/jqplot/jquery.jqplot.min.css")" />
 
 <div id="options" class="">
     <h1>
@@ -41,7 +41,7 @@
             GlobalDAL dal = new GlobalDAL();
             var q = from items in db.Motions
                     .Include(x => x.Account.Currency)
-                    where items.Account.BudgetId == dal.CurrentOwner.Id & !items.Deleted & items.Account.ShowInRest == (showInRest == 0)
+                    where items.Account.Category.BudgetId == dal.CurrentOwner.Id & !items.Deleted & items.Account.ShowInRest == (showInRest == 0)
 
                     group items by new
                     {

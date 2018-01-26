@@ -362,6 +362,7 @@ namespace Web.MyOffice.Controllers
 
             Guid userId = Guid.Parse(user.Id);
 
+            //Add member
             var currentMember = db.Members.FirstOrDefault(x => x.Id == userId);
             if (currentMember == null)
             {
@@ -375,19 +376,60 @@ namespace Web.MyOffice.Controllers
                 db.SaveChanges();
             }
 
+            //Add default budget
             var budget = db.Budgets.FirstOrDefault(x => x.OwnerId == userId);
             if (budget == null)
             {
-                db.Budgets.Add(new Budget
+                budget = new Budget
                 {
                     Id = Guid.NewGuid(),
                     Name = R.R.MainBudget,
                     OwnerId = userId,
-                });
+                };
+                db.Budgets.Add(budget);
                 db.SaveChanges();
             }
 
-            ExtensionsDB.DefaultCurrency(db, userId);
+            var currency = ExtensionsDB.DefaultCurrency(db, userId);
+
+            if (!db.CategoryAccounts.Any())
+            {
+                var accCat1 = new CategoryAccount
+                {
+                    BudgetId = budget.Id,
+                    Id = Guid.NewGuid(),
+                    Name = R.R.CategoryCash,
+                    Description = R.R.CategoryCash,
+                };
+                var accCat2 = new CategoryAccount
+                {
+                    BudgetId = budget.Id,
+                    Id = Guid.NewGuid(),
+                    Name = R.R.CategoryCards,
+                    Description = R.R.CategoryCards,
+                };
+                db.CategoryAccounts.Add(accCat1);
+                db.CategoryAccounts.Add(accCat2);
+                db.SaveChanges();
+
+                db.Accounts.Add(new Account
+                {
+                    Id = Guid.NewGuid(),
+                    CategoryId = accCat1.Id,
+                    CurrencyId = currency.Id,
+                    Name = R.R.AccountCash,
+                    ShowInRest = true,                    
+                });
+                db.Accounts.Add(new Account
+                {
+                    Id = Guid.NewGuid(),
+                    CategoryId = accCat2.Id,
+                    CurrencyId = currency.Id,
+                    Name = R.R.AccountCard,
+                    ShowInRest = true,
+                });
+                db.SaveChanges();
+            }
         }
 
         private void AddErrors(IdentityResult result)

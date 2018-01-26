@@ -47,7 +47,7 @@ namespace MyBank.Controllers
                 .Include(x => x.Motions)
                 .Include(x => x.Motions.Select(z => z.Item))
                 .Include(x => x.Currency)
-                .Where(x => x.CategoryId == categoryId & x.BudgetId == DAL.CurrentOwner.Id)
+                .Where(x => x.CategoryId == categoryId & x.Category.BudgetId == DAL.CurrentOwner.Id)
                 .ToList();
 
             return View(list);

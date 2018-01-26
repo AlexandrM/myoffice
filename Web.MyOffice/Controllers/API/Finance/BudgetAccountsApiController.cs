@@ -23,7 +23,8 @@ namespace Web.MyOffice.Controllers.API
         {
             using (db)
             {
-                newAccount.BudgetId = db.Budgets.FirstOrDefault(x => x.OwnerId == UserId & x.Id == newAccount.BudgetId).Id;
+                var category = db.CategoryAccounts.FirstOrDefault(x => x.Budget.OwnerId == UserId & x.Id == newAccount.CategoryId);
+                newAccount.CategoryId = category.Id;
 
                 if (db.Accounts.Any(acc=> acc.Id == newAccount.Id))
                 {
@@ -42,7 +43,7 @@ namespace Web.MyOffice.Controllers.API
         [HttpDelete]
         public HttpResponseMessage AccountDelete(Guid accountId)
         {
-            var delAcc = db.Accounts.FirstOrDefault(x => x.Id == accountId && x.Budget.OwnerId == UserId);
+            var delAcc = db.Accounts.FirstOrDefault(x => x.Id == accountId && x.Category.Budget.OwnerId == UserId);
             if (!db.Motions.Any(x => x.AccountId == delAcc.Id))
             {
                 db.Entry(delAcc).State = EntityState.Deleted;

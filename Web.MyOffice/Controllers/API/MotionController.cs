@@ -44,7 +44,7 @@ namespace Web.MyOffice.Controllers.API
 
             var m = db.Motions
                 .Include(x => x.Item)
-                .Where(x => budgets.Contains(x.Account.BudgetId))
+                .Where(x => budgets.Contains(x.Account.Category.BudgetId))
                 .Where(x => x.AccountId == filter.AccountId)
                 .Where(x => x.DateTime >= filter.DateFrom & x.DateTime < filter.DateTo)
                 .ToList();

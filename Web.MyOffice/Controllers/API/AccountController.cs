@@ -30,7 +30,7 @@ namespace Web.MyOffice.Controllers.API
                 .ToList();
 
             var m = db.Accounts
-                .Where(x => budgets.Contains(x.BudgetId))
+                .Where(x => budgets.Contains(x.Category.BudgetId))
                 .Select(x => new {
                     Id = x.Id,
                     Name = x.Name,
@@ -58,7 +58,7 @@ namespace Web.MyOffice.Controllers.API
 
             var m = db.Accounts
                 .Where(x => x.Id == id)
-                .Where(x => budgets.Contains(x.BudgetId))
+                .Where(x => budgets.Contains(x.Category.BudgetId))
                 .OrderBy(x => x.Name)
                 .FirstOrDefault();
 
