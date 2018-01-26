@@ -100,7 +100,7 @@ namespace MyBank.Models
             return db.Accounts
                 .Include(x => x.Motions)
                 .Include(x => x.Currency)
-                .FirstOrDefault(x => x.Id == accountId && x.Budget.Id == CurrentOwner.Id);
+                .FirstOrDefault(x => x.Id == accountId && x.Category.Budget.Id == CurrentOwner.Id);
         }
 
         public Account AccountSaveAdd(Account model)
@@ -124,13 +124,13 @@ namespace MyBank.Models
             if (item == null)
             {
                 item = db.Accounts.Create();
-                item.Budget = CurrentOwner;
+                //item.Budget = CurrentOwner;
                 db.Accounts.Add(item);
             }
             item.Name = name;
             item.Currency = db.Currencies.FirstOrDefault(x => x.Id == currencyId);
             item.Category = db.CategoryAccounts.FirstOrDefault(x => x.Id == categoryId);
-            item.Budget = CurrentOwner;
+            //item.Budget = CurrentOwner;
             item.Deleted = deleted;
             item.Description = description;
             item.CreditLimit = creditLimit;
@@ -164,13 +164,13 @@ namespace MyBank.Models
         {
             get
             {
-                return db.Accounts.Where(x => x.Budget.Id == CurrentOwner.Id).OrderBy(y => y.Name).ToList();
+                return db.Accounts.Where(x => x.Category.Budget.Id == CurrentOwner.Id).OrderBy(y => y.Name).ToList();
             }
         }
 
         public List<Account> AccountsFor(Guid? currencyid, Guid? categoryid)
         {
-            var q = from x in db.Accounts where x.Budget.Id == CurrentOwner.Id select x;
+            var q = from x in db.Accounts where x.Category.Budget.Id == CurrentOwner.Id select x;
             if (currencyid.HasValue)
                 q = q.Where(x => x.Currency.Id == currencyid);
             if (categoryid.HasValue)
@@ -339,7 +339,7 @@ namespace MyBank.Models
                 if (item == main)
                     continue;
 
-                List<Motion> motions = db.Motions.Where(x => x.Account.Budget.Id == CurrentOwner.Id && x.Item.Id == item).ToList();
+                List<Motion> motions = db.Motions.Where(x => x.Account.Category.Budget.Id == CurrentOwner.Id && x.Item.Id == item).ToList();
                 foreach (Motion motion in motions)
                     motion.Item = mainItem;
 
@@ -349,14 +349,14 @@ namespace MyBank.Models
 
         public List<Motion> MotionsByItem(Guid item)
         {
-            return db.Motions.Where(x => x.Account.Budget.Id == CurrentOwner.Id && x.Item.Id == item).ToList();
+            return db.Motions.Where(x => x.Account.Category.Budget.Id == CurrentOwner.Id && x.Item.Id == item).ToList();
         }
 
         public List<Motion> MotionsByItem(Item item)
         {
             return db.Motions
                 .Include(x => x.Account)
-                .Where(x => x.Account.Budget.Id == CurrentOwner.Id && x.Item.Id == item.Id).OrderByDescending(x => x.DateTime).ToList();
+                .Where(x => x.Account.Category.Budget.Id == CurrentOwner.Id && x.Item.Id == item.Id).OrderByDescending(x => x.DateTime).ToList();
         }
         
 
@@ -670,7 +670,7 @@ namespace MyBank.Models
 
         public Motion MotionGet(Guid id)
         {
-            Motion item = db.Motions.FirstOrDefault(x => x.Id == id && x.Account.Budget.Id == CurrentOwner.Id);
+            Motion item = db.Motions.FirstOrDefault(x => x.Id == id && x.Account.Category.Budget.Id == CurrentOwner.Id);
 
             return item;
         }
@@ -717,7 +717,7 @@ namespace MyBank.Models
 
         public bool MotionDeleteRemove(Guid motionId, bool delete)
         {
-            Motion item = db.Motions.FirstOrDefault(x => x.Account.Budget.Id == CurrentOwner.Id && x.Id == motionId);
+            Motion item = db.Motions.FirstOrDefault(x => x.Account.Category.Budget.Id == CurrentOwner.Id && x.Id == motionId);
             return MotionDeleteRemove(item, delete);
         }
 

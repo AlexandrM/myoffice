@@ -54,7 +54,7 @@ namespace Web.MyOffice.Controllers.API
         public object Delete([FromUri] Guid id)
         {
             var m = db.Budgets.FirstOrDefault(x => x.Id == id && x.OwnerId == UserId);
-            if (db.Accounts.Any(x => x.BudgetId == m.Id))
+            if (db.Accounts.Any(x => x.Category.BudgetId == m.Id))
             {
                 return new
                 {

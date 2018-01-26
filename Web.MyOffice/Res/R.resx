@@ -597,4 +597,16 @@
   <data name="MainBudget" xml:space="preserve">
     <value>Основной бюджет</value>
   </data>
+  <data name="AccountCard" xml:space="preserve">
+    <value>Карта №1</value>
+  </data>
+  <data name="AccountCash" xml:space="preserve">
+    <value>Наличные</value>
+  </data>
+  <data name="CategoryCards" xml:space="preserve">
+    <value>Карты</value>
+  </data>
+  <data name="CategoryCash" xml:space="preserve">
+    <value>Наличные</value>
+  </data>
 </root>

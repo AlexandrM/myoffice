@@ -597,4 +597,16 @@
   <data name="MainBudget" xml:space="preserve">
     <value>Main budget</value>
   </data>
+  <data name="AccountCard" xml:space="preserve">
+    <value>Card #1</value>
+  </data>
+  <data name="AccountCash" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="CategoryCards" xml:space="preserve">
+    <value>Cards</value>
+  </data>
+  <data name="CategoryCash" xml:space="preserve">
+    <value>Cash</value>
+  </data>
 </root>

@@ -589,6 +589,10 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Properties\PublishProfiles\Web.MyOffice.pubxml" />
     <None Include="Scripts\jquery-2.2.2.intellisense.js" />
+    <Content Include="Scripts\jit\jit.js" />
+    <Content Include="Scripts\jqPlot\jquery.jqplot.min.css" />
+    <Content Include="Scripts\jqPlot\jquery.jqplot.min.js" />
+    <Content Include="Scripts\jqPlot\plugins\jqplot.pieRenderer.min.js" />
     <Content Include="Scripts\jquery-2.2.2.js" />
     <Content Include="Scripts\jquery-2.2.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -772,7 +776,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="ASE\MVC\Angular\" />
     <Folder Include="Rotativa\" />
-    <Folder Include="Scripts\jqPlot\plugins\" />
     <Folder Include="Views\Counter\" />
     <Folder Include="Views\GlobalSelect\" />
     <Folder Include="Views\Member\" />

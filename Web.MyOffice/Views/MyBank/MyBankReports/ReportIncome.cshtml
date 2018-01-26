@@ -63,7 +63,7 @@
                     from items in db.Motions
                     let rate = db.CurrencyRates.Where(x => x.Currency.Id == items.Account.Currency.Id).Where(x => x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).FirstOrDefault()
                     where
-                         items.Account.BudgetId == dal.CurrentOwner.Id
+                         items.Account.Category.BudgetId == dal.CurrentOwner.Id
                         && items.DateTime >= dtFrom.Date
                         && items.DateTime <= dtTo
                         && !items.Item.Category.Internal
@@ -108,7 +108,7 @@
                     from items in db.Motions
                     let rate = db.CurrencyRates.Where(x => x.Currency.Id == items.Account.Currency.Id).Where(x => x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).FirstOrDefault()
                     where
-                        items.Account.BudgetId == dal.CurrentOwner.Id
+                        items.Account.Category.BudgetId == dal.CurrentOwner.Id
                         && items.Account.Id == item.Account.Id
                         && items.DateTime >= dtFrom.Date
                         && items.DateTime <= dtTo
@@ -151,7 +151,7 @@
                             from items  in db.Motions
                             let rate = db.CurrencyRates.Where(x => x.Currency.Id == items.Account.Currency.Id).Where(x => x.DateTime <= dtTo).OrderByDescending(x => x.DateTime).FirstOrDefault()
                             where
-                                items.Account.BudgetId == dal.CurrentOwner.Id
+                                items.Account.Category.BudgetId == dal.CurrentOwner.Id
                                 && items.Account.Id == item.Account.Id
                                 && items.Item.Category.Id == itemC.Category.Id
                                 && items.DateTime >= dtFrom.Date
@@ -291,7 +291,7 @@
     decimal total = 0;
     var qT = from items in db.Motions
              where
-                 items.Account.BudgetId == dal.CurrentOwnerId
+                 items.Account.Category.BudgetId == dal.CurrentOwnerId
                  && items.DateTime >= dtFrom.Date
                  && items.DateTime <= dtTo
                  && !items.Item.Category.Internal
