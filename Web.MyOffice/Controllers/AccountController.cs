@@ -114,7 +114,7 @@ namespace Web.MyOffice.Controllers
                     {
                         user.LockoutEnabled = false;
                         UserManager.Update(user);
-                        return RedirectToAction("Index", "Currency");
+                        return RedirectToLocal("~/Project#/Currencies");
                     }
 
                     return RedirectToLocal(returnUrl);
@@ -270,23 +270,27 @@ namespace Web.MyOffice.Controllers
                 var eMember = db.Members.FirstOrDefault(x => x.Email == loginInfo.Email & x.Id == x.MainMemberId & x.Id == x.UserId);
                 //Create if exits
                 member = eMember ?? Member.NewMember(loginInfo.Email);
+                //Seek user by email
+                user = UserManager.FindByName(extUser);
                 //Create user
-                user = new ApplicationUser() { UserName = extUser, Id = member.Id.ToString(), Email = loginInfo.Email };
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
+                if (user == null)
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, loginInfo.Login);
-                    //Add member if exits
-                    if (eMember == null)
+                    user = new ApplicationUser() { UserName = extUser, Id = member.Id.ToString(), Email = loginInfo.Email };
+                    var result = await UserManager.CreateAsync(user);
+                    if (result.Succeeded)
                     {
-                        db.Members.Add(member);
-                        db.SaveChanges();
+                        result = await UserManager.AddLoginAsync(user.Id, loginInfo.Login);
+                        //Add member if exits
+                        if (eMember == null)
+                        {
+                            db.Members.Add(member);
+                            db.SaveChanges();
+                        }
                     }
-                    SignInAsync(user, isPersistent: false);
-                    return RedirectToLocal("~/Project#/Currencies");
                 }
 
-                return RedirectToLocal(returnUrl);
+                SignInAsync(user, isPersistent: false);
+                return RedirectToLocal("~/Project#/Currencies");
             }
         }
 

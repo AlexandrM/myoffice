@@ -77,7 +77,8 @@
                         CreditLimit: newAccount.CreditLimit,
                         CategoryId: newAccount.CategoryId,
                         BudgetId: newAccount.BudgetId,
-                        CurrencyId: newAccount.CurrencyId
+                        CurrencyId: newAccount.CurrencyId,
+                        ShowInRest: newAccount.ShowInRest,
                     },
                     function() {
                         ModalWindowService.close('AccountEdit');

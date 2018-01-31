@@ -83,6 +83,10 @@
                 {
                     data.Add(item.Account.Name, sum.ToString("0.00").Replace(",", "."));
                 }
+                else if (sum == 0)
+                {
+                    continue;
+                }
                 <tr>
                     <td>
                         <h5>@item.Account.Name</h5>
