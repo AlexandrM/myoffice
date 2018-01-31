@@ -91,7 +91,7 @@
                 controller: 'itemCtrl'
 			}).
             otherwise({
-                redirectTo: '/project'
+                //redirectTo: '/project'
             });
         }
     ])

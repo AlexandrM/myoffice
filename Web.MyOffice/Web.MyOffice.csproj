@@ -609,6 +609,7 @@
     <Content Include="Scripts\libs\png.js" />
     <Content Include="Scripts\libs\png_support.js" />
     <Content Include="Scripts\libs\zlib.js" />
+    <Content Include="Scripts\locale\messages_en-US.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
