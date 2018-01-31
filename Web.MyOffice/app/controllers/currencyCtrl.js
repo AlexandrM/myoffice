@@ -20,16 +20,7 @@
         $scope.currencyEditDialog = function (currency) {
             $scope.newCurrency = currency || {};
             $scope.newCurrency.isEdited = !currency;
-            var value = 0;
-            if (currency) {
-                value = $scope.currencyTypes[currency.CurrencyType - 1].Name === $scope.baseCurrency ? 1 : currency.Value;
-                value = currency.Value === undefined ||
-                        currency.Value === null ||
-                        currency.Value === '' ? 0 : value;
-
-            }
-
-            $scope.newRate = { Value: value, DateTime: new Date() };
+            $scope.newRate = { Value: currency.Value, DateTime: new Date() };
             ModalWindowService.open('CurrenciesController', 'CurrencyAdd', $scope, 'modal-sm');
         };
 
