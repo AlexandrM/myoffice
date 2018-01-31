@@ -34,8 +34,8 @@ else
     <ul class="nav navbar-nav navbar-right">
         @if (System.Configuration.ConfigurationManager.AppSettings["ASE.AllowRegistration"] == "true")
         {
-            <li>@Html.ActionLink(S.Register, "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink(S.Register, "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", target = "_self" })</li>
         }
-        <li>@Html.ActionLink(S.Login, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>@Html.ActionLink(S.Login, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", target = "_self" })</li>
     </ul>
 }
