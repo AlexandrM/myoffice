@@ -74,7 +74,7 @@
                     {{(currencyTypes | filter: { Id: currency.CurrencyType })[0].Name }}
                 </td>
                 <td>
-                    {{currencyTypes[currency.CurrencyType-1].Name === baseCurrency ? 1 : currency.Value}}
+                    {{currency.Value}}
                 </td>
                 <td>
                     <buton type="button" class="btn btn-primary" ng-click="currencyEditDialog(currency)">@R.R.Edit</buton>
