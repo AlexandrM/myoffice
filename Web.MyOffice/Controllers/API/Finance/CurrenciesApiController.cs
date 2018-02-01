@@ -29,7 +29,6 @@ namespace Web.MyOffice.Controllers.API
                 types = Enum.GetValues(typeof(CurrencyType))
                     .Cast<CurrencyType>()
                     .Select(x => new { Id = x, Name = Enum.GetName(typeof(CurrencyType), x) }).OrderBy(x=>x.Id),
-                },
             };
             return ResponseObject2Json(model);
         }
