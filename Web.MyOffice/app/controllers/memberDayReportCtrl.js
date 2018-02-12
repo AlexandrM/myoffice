@@ -182,7 +182,6 @@
 
         $scope.importRefresh = function (day) {
             if (day) {
-                $scope.importModel.Day = $scope.memberDayReport.DateTime;
                 $scope.importModel.From = new Date($scope.importModel.Day);
                 $scope.importModel.To = new Date($scope.importModel.Day);
             }
@@ -197,6 +196,7 @@
         };
 
         $scope.importStart = function () {
+            $scope.importModel.Day = $scope.memberDayReport.DateTime;
             $('#import').modal();
             $scope.importRefresh(true);
         };
