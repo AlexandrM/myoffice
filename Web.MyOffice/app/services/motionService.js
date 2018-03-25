@@ -6,7 +6,7 @@
     function motionService($resource) {
         return $resource('api/motions/', {}, {
             motionList: { method: 'GET', params: {}, isArray: true },
-            motionDelete: { method: 'DELETE', params: {}, isArray: false },
+            motionDelete: { url: 'api/motions/delete', method: 'POST', params: {}, isArray: false },
             motionUpdate: { method: 'PUT', parmas: {}, isArray: false },
             motionMerge: { method: 'POST', parmas: {}, isArray: false }
         });

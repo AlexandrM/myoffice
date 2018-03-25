@@ -21,6 +21,7 @@ using System.Dynamic;
 
 namespace Web.MyOffice.Controllers.API
 {
+    [Authorize]
     public class MemberDayReportController : ControllerApiAdv<DB>
     {
         [HttpGet]
@@ -31,12 +32,15 @@ namespace Web.MyOffice.Controllers.API
             dateTo = dateTo.Value.AddDays(1);
 
             var model = db.MemberDayReports
+                .AsNoTracking()
                 .Include(x => x.Member)
                 .Include(x => x.Project)
                 .Include(x => x.Project.Members)
                 .Include(x => x.Project.Members.Select(z => z.Member))
                 .Where(x => x.DateTime >= dateFrom.Value & x.DateTime < dateTo)
+                .Where(x => x.Project.Members.Any(z => z.MemberId == UserId))
                 .OrderBy(x => x.DateTime)
+                .Take(500)
                 .ToList();
 
             var r = new {
@@ -51,11 +55,14 @@ namespace Web.MyOffice.Controllers.API
         public HttpResponseMessage Get([FromUri]Guid? id, [FromUri]Guid? projectId)
         {
             var model = db.MemberDayReports
+                .AsNoTracking()
                 .Include(x => x.Member)
                 .Include(x => x.Project)
                 .Include(x => x.Project.Members)
                 .Include(x => x.Project.Members.Select(z => z.Member))
+                .Where(x => x.Project.Members.Any(z => z.MemberId == UserId))
                 .FirstOrDefault(x => x.Id == id);
+
             if (model == null)
             {
                 model = new MemberDayReport

@@ -121,22 +121,36 @@
                     }
                     return total;
                 };
+                $scope.getTotalHours = function (reports) {
+                    var total = 0;
+                    if (reports != null) {
+                        for (var i = 0; i < reports.length; i++) {
+                            total += reports[i].Amount;
+                        }
+                    }
+                    return total;
+                };
 
                 var sum = 0;
+                var sumH = 0;
                 for (var i = 0; i < $scope.memberDayReports.length; i++) {
                     sum += $scope.memberDayReports[i].Amount
                         * $scope.memberDayReports[i].Value
                         * $scope.currencyById($scope.memberDayReports[i].Project.RateCurrencyType).Value;
+                    sumH += $scope.memberDayReports[i].Amount;
 
                     if (i !== $scope.memberDayReports.length - 1) {
                         if (!$scope.dateCompare($scope.memberDayReports[i].DateTime, $scope.memberDayReports[i + 1].DateTime)) {
                             $scope.memberDayReports[i].dayTotal = sum;
+                            $scope.memberDayReports[i].dayTotalH = sumH;
                             sum = 0;
+                            sumH = 0;
                         }
                     }
                 }
                 if ($scope.memberDayReports.length > 0) {
                     $scope.memberDayReports[$scope.memberDayReports.length - 1].dayTotal = sum;
+                    $scope.memberDayReports[$scope.memberDayReports.length - 1].dayTotalH = sumH;
                 }
             });
         };
@@ -182,7 +196,6 @@
 
         $scope.importRefresh = function (day) {
             if (day) {
-                $scope.importModel.Day = $scope.memberDayReport.DateTime;
                 $scope.importModel.From = new Date($scope.importModel.Day);
                 $scope.importModel.To = new Date($scope.importModel.Day);
             }
@@ -197,6 +210,7 @@
         };
 
         $scope.importStart = function () {
+            $scope.importModel.Day = $scope.memberDayReport.DateTime;
             $('#import').modal();
             $scope.importRefresh(true);
         };

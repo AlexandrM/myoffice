@@ -15,5 +15,10 @@ namespace Web.MyOffice.Controllers.MyBank
         {
             return View();
         }
+
+        public ActionResult MotionsList()
+        {
+            return View();
+        }
     }
 }
