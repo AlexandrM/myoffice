@@ -35,7 +35,7 @@
                 <th>@S.Summ</th>
                 <th>@S.Currency</th>
                 <th class="notPrintable">@S.Total ({{myCurrency().ShortName}})</th>
-                <th ng-show="showDayTotalsFlag">@S.DayTotals:{{setMyCurrencyRates(memberDayReports.Currencies)}}</th>
+                <th width="20%" ng-show="showDayTotalsFlag">@S.DayTotals:{{setMyCurrencyRates(memberDayReports.Currencies)}}</th>
                 <th></th>
             </tr>
             <tr ng-repeat="details in memberDayReports">
@@ -60,7 +60,11 @@
                         {{details.Amount * details.Value * currencyById(details.Project.RateCurrencyType).Value | number:2}}
                     </b>
                 </td>
-                <td ng-show="showDayTotalsFlag"><b>{{details.dayTotal | number:2}}</b></td>
+                <td ng-show="showDayTotalsFlag">
+                    <span ng-show="details.dayTotal > 0">
+                        <b>{{details.dayTotal | number:2}}</b> ({{details.dayTotalH | number:2}})
+                    </span>
+                </td>
                 <td class="notPrintable w100">
                     <a class="btn btn-warning" ng-if="details.Project.AuthorId == UserId" ng-href="#/memberdayreport/{{details.Id}}/0">@S.Edit</a>
                     <button class="btn btn-danger" ng-if="details.Project.AuthorId == UserId" ng-click="delete(details)">@S.Delete</button>
@@ -70,7 +74,7 @@
                 <th>@S.Total</th>
                 <th></th>
                 <th></th>
-                <th></th>
+                <th>{{getTotalHours(memberDayReports) | number:2}}</th>
                 <th></th>
                 <th></th>
                 <th ng-show="showDayTotalsFlag"></th>

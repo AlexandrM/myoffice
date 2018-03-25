@@ -51,18 +51,27 @@ namespace Web.MyOffice.Controllers.API
             return ResponseObject2Json(HttpStatusCode.Accepted);
         }
 
-        [Method.HttpDelete]
-        public HttpResponseMessage MotionDelete(Guid motionId)
+        public class MotionDeleteModel
+        {
+            public Guid Id { get; set; }
+
+            public bool Delete { get; set; }
+        }
+
+        [HttpPost]
+        [Route("api/Motions/Delete")]
+        public HttpResponseMessage MotionDelete(MotionDeleteModel model)
         {
             using (db)
             {
-                var deletedMotion = db.Motions.Find(motionId);
-                db.Entry(deletedMotion).State = EntityState.Deleted;
-                db.SaveChanges();
-                var motionAcc = db.Accounts.Find(deletedMotion.AccountId);
-                if (motionAcc.Motions.Count == 0 && motionAcc.Deleted)
+                var deletedMotion = db.Motions.Find(model.Id);
+                if (model.Delete)
                 {
-                    db.Entry(motionAcc).State = EntityState.Deleted;
+                    db.Motions.Remove(deletedMotion);
+                }
+                else
+                {
+                    deletedMotion.Deleted = !deletedMotion.Deleted;
                 }
                 db.SaveChanges();
             }
@@ -75,7 +84,8 @@ namespace Web.MyOffice.Controllers.API
             public Item selectedItem { set; get; }
         }
 
-        [Method.HttpPost]
+        [HttpPost]
+        [Route("api/Motions/Merge")]
         public HttpResponseMessage ItemMerge(MotionMerge motionMerge)
         {
             var mainItem = motionMerge.mainItem;

@@ -79,7 +79,15 @@
         $scope.itemMotionList = function (item) {
             motionService.motionList({ itemId: item.Id }, function (data) {
                 $scope.Motions = data;
-                ModalWindowService.open('MotionsList');
+                ModalWindowService.open('ExpenditureController', 'MotionsList', $scope, 'lg');
+            });
+        };
+
+        $scope.motionDelete = function (motion, full) {
+            motionService.motionDelete({ id: motion.Id, delete: full }, function () {
+                motionService.motionList({ itemId: motion.ItemId }, function (data) {
+                    $scope.Motions = data;
+                });
             });
         };
     };

@@ -1,12 +1,10 @@
-﻿
-<div id="ItemEdit">
-    <form name="MotionsForm">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="windowClose('MotionsList')">&times;</button>
-            <h4 class="modal-title">@R.R.View</h4>
-        </div>
-        <div >
-            
+﻿<form name="MotionsForm">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="MWS.close('MotionsList')">&times;</button>
+        <h4 class="modal-title">@R.R.View</h4>
+    </div>
+
+    <div class="modal-body">
         <table class="table table-bordered">
             <tr>
                 <th>
@@ -14,7 +12,7 @@
                 </th>
                 <th>
                     @R.R.Item
-                    <br/>
+                    <br />
                     @R.R.Note
                 </th>
                 <th>
@@ -22,7 +20,7 @@
                 </th>
                 <th>
                     @R.R.Sum +
-                    <br/>
+                    <br />
                     @R.R.Sum -
                 </th>
                 <th>
@@ -42,7 +40,7 @@
                     {{motion.Note}}
                 </td>
                 <td>
-                    {{motion.DateTime}}
+                    {{motion.DateTime | amDateFormat:'L LT'}}
                 </td>
                 <td class="text_right">
                     <span class="green">{{motion.SumP}}</span>
@@ -50,22 +48,22 @@
                     <span class="red">{{motion.SumM}}</span>
                 </td>
                 <td>
-                    <input type="checkbox" class="form-control" ng-model="motion.Deleted"  ng-click="addToUpdateList(motion)"/>
+                    <input type="checkbox" class="form-control" ng-model="motion.Deleted" ng-click="addToUpdateList(motion)" />
                 </td>
                 <td>
                     <div ng-show="motion.Deleted">
-                        <button class="btn btn-success" ng-click="addToUpdateList(motion)">@R.R.Cancel</button>
-                        <button class="btn btn-danger" ng-click="MotionDelete(motion)">@R.R.Delete</button>
+                        <button class="btn btn-success" ng-click="motionDelete(motion)">@R.R.UnDelete</button>
+                    <button class="btn btn-danger" ng-click="motionDelete(motion, true)">@R.R.Delete</button>
                     </div>
                     <div ng-hide="motion.Deleted">
-                        <button class="btn btn-warning" ng-click="addToUpdateList(motion)">@R.R.Delete</button>
+                        <button class="btn btn-warning" ng-click="motionDelete(motion, false)">@R.R.Delete</button>
                     </div>
                 </td>
             </tr>
         </table>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="MotionUpdate()">@R.R.Save</button>
-        </div>
-    </form>
-</div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="MWS.close('MotionsList')">@R.R.Close</button>
+    </div>
+</form>

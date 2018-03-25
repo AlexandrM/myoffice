@@ -31,11 +31,13 @@ namespace Web.MyOffice.Controllers.API
             dateTo = dateTo.Value.AddDays(1);
 
             var model = db.MemberPayments
+                .AsNoTracking()
                 .Include(x => x.Member)
                 .Include(x => x.Project)
                 .Include(x => x.Project.Members)
                 .Include(x => x.Project.Members.Select(z => z.Member))
                 .Where(x => x.DateTime >= dateFrom.Value & x.DateTime < dateTo)
+                .Where(x => x.Project.Members.Any(z => z.MemberId == UserId))
                 .OrderBy(x => x.DateTime)
                 .ToList();
 
@@ -52,9 +54,12 @@ namespace Web.MyOffice.Controllers.API
         public HttpResponseMessage Get([FromUri]Guid? id, [FromUri]Guid? projectId)
         {
             var model = db.MemberPayments
+                .AsNoTracking()
                 .Include(x => x.Member)
                 .Include(x => x.Project)
+                .Where(x => x.Project.Members.Any(z => z.MemberId == UserId))
                 .FirstOrDefault(x => x.Id == id);
+
             if (model == null)
             {
                 model = new MemberPayment
