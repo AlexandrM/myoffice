@@ -497,18 +497,6 @@
     <Content Include="Images\delete32.png" />
     <Content Include="Images\import32.png" />
     <Content Include="Images\save32.png" />
-    <Content Include="Libs\angular-bootstrap\ui-bootstrap-tpls.min.js" />
-    <Content Include="Libs\angular-bootstrap\ui-bootstrap.min.js" />
-    <Content Include="Libs\angular-moment\angular-moment.min.js" />
-    <Content Include="Libs\angular-resource\angular-resource.min.js" />
-    <Content Include="Libs\angular-route\angular-route.min.js" />
-    <Content Include="Libs\angular\angular.min.js" />
-    <Content Include="Libs\jquery\dist\jquery.min.js" />
-    <Content Include="Libs\moment\locale\ru.js" />
-    <Content Include="Libs\moment\locale\uk.js" />
-    <Content Include="Libs\moment\min\locales.min.js" />
-    <Content Include="Libs\moment\min\moment.min.js" />
-    <Content Include="Libs\ngBootbox\dist\ngBootbox.min.js" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-aria.js" />
@@ -576,6 +564,7 @@
     <EmbeddedResource Include="Res\S.en-US.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>S.en-US.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Content Include="Scripts\angular-moment.min.js.map" />
     <Content Include="Scripts\dis.js" />

@@ -19,7 +19,7 @@ namespace Web.MyOffice.Res {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class S {
@@ -664,6 +664,24 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to различных счетах.
+        /// </summary>
+        public static string DifferentAccounts {
+            get {
+                return ResourceManager.GetString("DifferentAccounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to различных валютах.
+        /// </summary>
+        public static string DifferentCurrencies {
+            get {
+                return ResourceManager.GetString("DifferentCurrencies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Сбросить пароль.
         /// </summary>
         public static string DoResetPassword {
@@ -718,7 +736,7 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Учет личных средств в разрезе статей на различных счетах и в различных валютах.
+        ///   Looks up a localized string similar to Учет личных средств в разрезе статей на {0} и в {1}.
         /// </summary>
         public static string Finance1 {
             get {
@@ -799,7 +817,7 @@ namespace Web.MyOffice.Res {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ведение списка заказчиков и финансовых условий работы.
+        ///   Looks up a localized string similar to Ведение списка {0} и финансовых условий {1}.
         /// </summary>
         public static string ForFreelancer1 {
             get {
@@ -1389,6 +1407,24 @@ namespace Web.MyOffice.Res {
         public static string NotAccepted {
             get {
                 return ResourceManager.GetString("NotAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to работы.
+        /// </summary>
+        public static string OfWork {
+            get {
+                return ResourceManager.GetString("OfWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to заказчиков.
+        /// </summary>
+        public static string OfСustomers {
+            get {
+                return ResourceManager.GetString("OfСustomers", resourceCulture);
             }
         }
         
