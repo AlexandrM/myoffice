@@ -16,18 +16,7 @@
             <a href="@link">@text</a>
         }
 
-        @{  
-            var Member = @Html.ActionLink(@S.OfСustomers, "Index", "Member");
-            var OfWork = CreateLink("/Project#/project" , @S.OfWork);
-
-            var ForFreelancer1 = String.Format(@S.ForFreelancer1, Member, OfWork);
-
-            var DifferentAccounts = CreateLink("/Project#/BankAccounts", @S.DifferentAccounts);
-            var DifferentCurrencies = CreateLink("/Project#/Currencies", @S.DifferentCurrencies);
-
-            var Finance1 = String.Format(@S.Finance1, DifferentAccounts, DifferentCurrencies);
-        }
-        <li>@Html.Raw(@ForFreelancer1) </li>
+        <li>@Html.Raw(String.Format(@S.ForFreelancer1, @Html.ActionLink(@S.OfСustomers, "Index", "Member"), CreateLink("/Project#/project", @S.OfWork))) </li>
         <p></p>
         <li><a href="~/Project#/project">@S.ForFreelancer2</a></li>
         <p></p>
@@ -39,7 +28,7 @@
     </div>
     <div class="col-md-4">
         <h2>@S.Finance</h2>
-        <li>@Html.Raw(Finance1)</li>  
+        <li>@Html.Raw(String.Format(@S.Finance1, CreateLink("/Project#/BankAccounts", @S.DifferentAccounts), CreateLink("/Project#/Currencies", @S.DifferentCurrencies)))</li>  
         <p></p>
         <li>@Html.ActionLink(@S.Finance2, "Index", "MyBankReports")</li> 
         <p></p>
