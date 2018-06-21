@@ -16,7 +16,7 @@
             <a href="@link">@text</a>
         }
 
-        <li>@Html.Raw(String.Format(@S.ForFreelancer1, @Html.ActionLink(@S.OfСustomers, "Index", "Member"), CreateLink("/Project#/project", @S.OfWork))) </li>
+        <li>@Html.Raw(String.Format(@S.ForFreelancer1, @Html.ActionLink(@S.OfСustomers, "Index", "Member"), "<a href=\"/ Project#/project\">"+ @S.OfWork + "</a>"))) </li>
         <p></p>
         <li><a href="~/Project#/project">@S.ForFreelancer2</a></li>
         <p></p>
@@ -28,7 +28,7 @@
     </div>
     <div class="col-md-4">
         <h2>@S.Finance</h2>
-        <li>@Html.Raw(String.Format(@S.Finance1, CreateLink("/Project#/BankAccounts", @S.DifferentAccounts), CreateLink("/Project#/Currencies", @S.DifferentCurrencies)))</li>  
+        <li>@Html.Raw(String.Format(@S.Finance1, CreateLink("/Project#/BankAccounts", @S.DifferentAccounts), "<a href=\"/Project#/Currencies\">" + @S.DifferentCurrencies + "</a>")))</li>  
         <p></p>
         <li>@Html.ActionLink(@S.Finance2, "Index", "MyBankReports")</li> 
         <p></p>
