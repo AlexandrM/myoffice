@@ -274,7 +274,7 @@
     <value>Фінанси</value>
   </data>
   <data name="Finance1" xml:space="preserve">
-    <value>Облік особистих коштів у розрізі статей на різних рахунках і в різних валютах</value>
+    <value>Облік особистих коштів у розрізі статей на {0} і в {1}</value>
   </data>
   <data name="Finance2" xml:space="preserve">
     <value>Звіти про залишки , надходження і витрати</value>
@@ -301,7 +301,7 @@
     <value>Фрилансеру</value>
   </data>
   <data name="ForFreelancer1" xml:space="preserve">
-    <value>Ведення списку замовників і фінансових умов роботи</value>
+    <value>Ведення списку {0} і фінансових умов {1}</value>
   </data>
   <data name="ForFreelancer2" xml:space="preserve">
     <value>Постановка завдання замовником</value>
@@ -743,5 +743,17 @@
   </data>
   <data name="HasDebt" xml:space="preserve">
     <value>Має борг</value>
+  </data>
+  <data name="OfWork" xml:space="preserve">
+    <value>роботи</value>
+  </data>
+  <data name="OfСustomers" xml:space="preserve">
+    <value>замовників</value>
+  </data>
+  <data name="DifferentAccounts" xml:space="preserve">
+    <value>різних рахунках</value>
+  </data>
+  <data name="DifferentCurrencies" xml:space="preserve">
+    <value>різних валютах</value>
   </data>
 </root>

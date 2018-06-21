@@ -10,30 +10,30 @@
 <div class="row">
     <div class="col-md-4">
         <h2>@S.ForFreelancer</h2>
-        <li>@S.ForFreelancer1</li>
+        <li>@Html.Raw(String.Format(@S.ForFreelancer1, @Html.ActionLink(@S.OfСustomers, "Index", "Member"), "<a href=\"/Project#/project\">"+ @S.OfWork + "</a>")) </li>
         <p></p>
-        <li>@S.ForFreelancer2</li>
+        <li><a href="~/Project#/project">@S.ForFreelancer2</a></li>
         <p></p>
-        <li>@S.ForFreelancer3</li>
+        <li><a href="~/Project#/memberdayreport">@S.ForFreelancer3</a></li>
         <p></p>
-        <li>@S.ForFreelancer4</li>
+        <li><a href="~/Project#/Debts/1">@S.ForFreelancer4</a></li>
         <p></p>
-        <p><a class="btn btn-default" href="@Url.Action("ForFreelancer")">@S.MoveTo &raquo;</a></p>
+        @*<p><a class="btn btn-default" href="@Url.Action("ForFreelancer")">@S.MoveTo &raquo;</a></p>*@
     </div>
     <div class="col-md-4">
         <h2>@S.Finance</h2>
-        <li>@S.Finance1</li>
+        <li>@Html.Raw(String.Format(@S.Finance1, "<a href=\"/Project#/BankAccounts\">" + @S.DifferentAccounts + "</a>", "<a href=\"/Project#/Currencies\">" + @S.DifferentCurrencies + "</a>"))</li>  
         <p></p>
-        <li>@S.Finance2</li>
+        <li>@Html.ActionLink(@S.Finance2, "Index", "MyBankReports")</li> 
         <p></p>
-        <p><a class="btn btn-default" href="@Url.Action("Finance")">@S.MoveTo &raquo;</a></p>
+        @*<p><a class="btn btn-default" href="@Url.Action("Finance")">@S.MoveTo &raquo;</a></p>*@
     </div>
     <div class="col-md-4">
         <h2>@S.ForCustomer</h2>
-        <li>@S.ForCustomer1</li>
+        <li><a href="~/Project#/project">@S.ForCustomer1</a></li> 
         <p></p>
-        <li>@S.ForCustomer2</li>
+        <li><a href="~/Project#/Debts/2">@S.ForCustomer2</a></li>
         <p></p>
-        <p><a class="btn btn-default" href="@Url.Action("ForCustomer")">@S.MoveTo &raquo;</a></p>
+        @*<p><a class="btn btn-default" href="@Url.Action("ForCustomer")">@S.MoveTo &raquo;</a></p>*@
     </div>
 </div>
