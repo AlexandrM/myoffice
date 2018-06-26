@@ -292,7 +292,7 @@
     <value>Finances</value>
   </data>
   <data name="Finance1" xml:space="preserve">
-    <value>Accounting for personal funds in the context of articles on various accounts and in different currencies</value>
+    <value>Accounting for personal funds in the context of articles on {0} and in {1}</value>
   </data>
   <data name="Finance2" xml:space="preserve">
     <value>Reports on balances , income and expenditure</value>
@@ -319,7 +319,7 @@
     <value>Freelancer</value>
   </data>
   <data name="ForFreelancer1" xml:space="preserve">
-    <value>Maintain a list of customers and the financial conditions of work</value>
+    <value>Maintain a list {0} and the financial conditions {1}</value>
   </data>
   <data name="ForFreelancer2" xml:space="preserve">
     <value>Statement of the problem by the customer</value>
@@ -755,5 +755,17 @@
   </data>
   <data name="HasDebt" xml:space="preserve">
     <value>Has debt</value>
+  </data>
+  <data name="OfWork" xml:space="preserve">
+    <value>of work</value>
+  </data>
+  <data name="OfСustomers" xml:space="preserve">
+    <value>of customers</value>
+  </data>
+  <data name="DifferentAccounts" xml:space="preserve">
+    <value>various accounts</value>
+  </data>
+  <data name="DifferentCurrencies" xml:space="preserve">
+    <value>different currencies</value>
   </data>
 </root>
