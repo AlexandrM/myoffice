@@ -23,14 +23,18 @@
     </div>
 
     <hr />
-    
-    <button 
-            id="RestsNullShowButton" 
-            type="button" 
-            ng-click="restsNullShowFlag = !restsNullShowFlag" 
-            class="btn btn-primary"
-             ng-class="{'glyphicon glyphicon-plus':restsNullShowFlag, 'glyphicon glyphicon-minus':!restsNullShowFlag}"/>
-    <b> @S.HasDebt</b>
+
+    <input id="RestsNullShowButton"
+           type="checkbox"
+           ng-click="restsNullShowFlag = !restsNullShowFlag"
+           checked="checked"
+           style="float:left;width:43px;height:43px; "/>
+    <b style="padding: 13px 8px; float:left;"> @S.HasDebt</b>
+
+
+
+
+
 
     <table class="table table-striped">
         <tr>
@@ -54,13 +58,13 @@
         </tr>
 
         <tbody ng-repeat="currency in list.Currencies">
-        <tr class="success" ng-show="getCurrencyTotal(currency) != 0">
-            <th></th>
-            <th>{{getCurrencyTotal(currency) | number:2}}</th>
-            <th>{{currency.ShortName}}</th>
-            <th>{{getCurrencyTotal(currency) * currencyById(currency.CurrencyType).Value | number:2}}</th>
-            <th class="notPrintable"></th>
-        </tr>
+            <tr class="success" ng-show="getCurrencyTotal(currency) != 0">
+                <th></th>
+                <th>{{getCurrencyTotal(currency) | number:2}}</th>
+                <th>{{currency.ShortName}}</th>
+                <th>{{getCurrencyTotal(currency) * currencyById(currency.CurrencyType).Value | number:2}}</th>
+                <th class="notPrintable"></th>
+            </tr>
         </tbody>
         <tr class="info">
             <th>@S.Total</th>
