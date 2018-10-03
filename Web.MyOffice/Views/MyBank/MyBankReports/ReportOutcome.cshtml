@@ -291,7 +291,7 @@
     decimal total = 0;
     var qT = from items in db.Motions
              where
-                 items.Account.Category.BudgetId == dal.CurrentOwnerId
+                 items.Account.Category.BudgetId == dal.CurrentOwner.Id
                  && items.DateTime >= dtFrom.Date
                  && items.DateTime <= dtTo
                  && !items.Item.Category.Internal

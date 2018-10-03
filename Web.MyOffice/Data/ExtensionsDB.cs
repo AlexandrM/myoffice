@@ -33,7 +33,8 @@ namespace Web.MyOffice.Data
             else
                 UserId = Guid.Parse(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
-            var curr = db.Currencies.FirstOrDefault(x => x.UserId == UserId & x.CurrencyRates.Count() == 0);
+            //var curr = db.Currencies.FirstOrDefault(x => x.UserId == UserId & x.CurrencyRates.Count() == 0);
+            var curr = db.Currencies.FirstOrDefault(x => x.UserId == UserId & x.MyCurrency);
             if (curr == null)
             {
                 if (db.Currencies.Count(x => x.UserId == UserId) == 0)
