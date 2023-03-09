@@ -6,4 +6,4 @@ Allow manage:
 - time tracker
 
 
-Demo site: https://office.ase.com.ua
+
